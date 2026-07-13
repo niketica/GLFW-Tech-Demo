@@ -62,5 +62,10 @@ namespace niketica::engine
         void input(float deltaTime);
         void update(float deltaTime);
         void render();
+
+        void initWindow();
+        void initSystems();
+
     };
+    
 }

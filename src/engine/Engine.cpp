@@ -11,6 +11,34 @@ namespace niketica::engine
     void Engine::init()
     {
         std::cout << "INFO::Engine::init - Start engine initialization." << std::endl;
+        initWindow();
+        initSystems();
+
+        std::cout << "INFO::Engine::init -     Initializing temporary data...";
+        glGenVertexArrays(1, &VAO);
+        glGenBuffers(1, &VBO);
+        // bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
+        glBindVertexArray(VAO);
+
+        glBindBuffer(GL_ARRAY_BUFFER, VBO);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+        glEnableVertexAttribArray(0);
+
+        // note that this is allowed, the call to glVertexAttribPointer registered VBO as the vertex attribute's bound vertex buffer object so afterwards we can safely unbind
+        glBindBuffer(GL_ARRAY_BUFFER, 0); 
+
+        // You can unbind the VAO afterwards so other VAO calls won't accidentally modify this VAO, but this rarely happens. Modifying other
+        // VAOs requires a call to glBindVertexArray anyways so we generally don't unbind VAOs (nor VBOs) when it's not directly necessary.
+        glBindVertexArray(0);
+        std::cout << "DONE!" << std::endl;
+
+        std::cout << "INFO::Engine::init - Engine initialized." << std::endl;
+    }
+
+    void Engine::initWindow()
+    {
         std::cout << "INFO::Engine::init -     Initializing Window...";
         if (!glfwInit())
         {
@@ -36,35 +64,18 @@ namespace niketica::engine
         
         glfwSwapInterval(0); // turn off vsync
         std::cout << "DONE!" << std::endl;
+    }
 
-        std::cout << "INFO::Engine::init -     Initializing internal systems...";
+    void Engine::initSystems()
+    {
+        std::cout << "INFO::Engine::init -     Initializing internal systems..." << std::endl;
 
         pakReader = std::make_unique<niketica::asset::PakReader>(niketica::asset::COMPRESSION_PASSPHRASE);
         niketica::asset::AssetManager::Get().RegisterLoader<niketica::asset::File>(std::make_shared<niketica::asset::FileLoader>(pakReader.get()));
 
         basicShader = std::make_shared<niketica::renderer::Shader>("shaders/basic_shader.vert", "shaders/basic_shader.frag");
 
-        std::cout << "DONE!" << std::endl;
-
-        glGenVertexArrays(1, &VAO);
-        glGenBuffers(1, &VBO);
-        // bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
-        glBindVertexArray(VAO);
-
-        glBindBuffer(GL_ARRAY_BUFFER, VBO);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-        glEnableVertexAttribArray(0);
-
-        // note that this is allowed, the call to glVertexAttribPointer registered VBO as the vertex attribute's bound vertex buffer object so afterwards we can safely unbind
-        glBindBuffer(GL_ARRAY_BUFFER, 0); 
-
-        // You can unbind the VAO afterwards so other VAO calls won't accidentally modify this VAO, but this rarely happens. Modifying other
-        // VAOs requires a call to glBindVertexArray anyways so we generally don't unbind VAOs (nor VBOs) when it's not directly necessary.
-        glBindVertexArray(0);
-
-        std::cout << "INFO::Engine::init - Engine initialized." << std::endl;
+        std::cout << "INFO::Engine::init -     Done initializing internal systems." << std::endl;
     }
 
     void Engine::loop()

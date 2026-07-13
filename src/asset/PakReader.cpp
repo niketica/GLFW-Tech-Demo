@@ -9,7 +9,7 @@ namespace niketica::asset
             return true;
         }
 
-        std::cout << "PakReader::load - path=" << pak_file << std::endl;
+        std::cout << "INFO::PakReader::load - path=" << pak_file << std::endl;
 
         pak_stream.open(pak_file, std::ios::binary);
         if (!pak_stream.is_open())
