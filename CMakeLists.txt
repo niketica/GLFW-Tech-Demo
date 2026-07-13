@@ -76,6 +76,9 @@ add_library(engine
 
     # src/renderer
     src/renderer/Shader.cpp
+
+    # src/systems
+    src/systems/SystemRepository.cpp
 )
 
 target_include_directories(engine PUBLIC

@@ -8,11 +8,18 @@
 #define GLFW_INCLUDE_NONE
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <entt/entt.hpp>
 
 #include "asset/AssetManager.h"
 #include "asset/PakReader.h"
 #include "asset/FileLoader.h"
 #include "renderer/Shader.h"
+#include "component/Common.h"
+#include "component/Input.h"
+#include "engine/input/InputState.h"
+#include "engine/input/InputBackendGLFW.h"
+#include "engine/input/InputMap.h"
+#include "systems/SystemRepository.h"
 
 namespace niketica::engine
 {
@@ -48,6 +55,12 @@ namespace niketica::engine
         std::unique_ptr<niketica::asset::PakReader> pakReader;
         std::shared_ptr<niketica::renderer::Shader> basicShader;
 
+        std::unique_ptr<entt::registry> registry;
+        std::unique_ptr<InputState> inputState;
+        std::unique_ptr<InputBackendGLFW> inputBackend;
+        std::unique_ptr<InputMap> inputMap;
+        std::unique_ptr<niketica::systems::SystemRepository> systemRepository;
+
         float vertices[9] = {
             -0.5f, -0.5f, 0.0f,
             0.5f, -0.5f, 0.0f,
@@ -65,7 +78,8 @@ namespace niketica::engine
 
         void initWindow();
         void initSystems();
+        void initInput();
 
     };
-    
+
 }
