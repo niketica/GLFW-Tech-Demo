@@ -45,6 +45,12 @@ namespace niketica::engine
             std::cerr << "ERROR::Engine::init - Cannot initialize GLFW" << std::endl;
             throw std::invalid_argument( "Cannot initialize GLFW" );
         }
+        
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+        glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+        glfwWindowHint(GLFW_DEPTH_BITS, 24);
 
         window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "GLFW Tech Demo", NULL, NULL);
         if (!window)
