@@ -76,6 +76,8 @@ add_library(engine
 
     # src/renderer
     src/renderer/Shader.cpp
+    src/renderer/SimpleRenderer.cpp
+    src/renderer/RendererRepository.cpp
 
     # src/systems
     src/systems/SystemRepository.cpp

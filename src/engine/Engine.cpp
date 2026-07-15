@@ -17,26 +17,7 @@ namespace niketica::engine
         initSystems();
 
         std::cout << "INFO::Engine::init -     Initializing temporary data...";
-        glGenVertexArrays(1, &VAO);
-        glGenBuffers(1, &VBO);
-        // bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
-        glBindVertexArray(VAO);
-
-        glBindBuffer(GL_ARRAY_BUFFER, VBO);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-        glEnableVertexAttribArray(0);
-
-        // note that this is allowed, the call to glVertexAttribPointer registered VBO as the vertex attribute's bound vertex buffer object so afterwards we can safely unbind
-        glBindBuffer(GL_ARRAY_BUFFER, 0); 
-
-        // You can unbind the VAO afterwards so other VAO calls won't accidentally modify this VAO, but this rarely happens. Modifying other
-        // VAOs requires a call to glBindVertexArray anyways so we generally don't unbind VAOs (nor VBOs) when it's not directly necessary.
-        glBindVertexArray(0);
-
         registry->emplace<niketica::component::Window>(registry->create());
-
         std::cout << "DONE!" << std::endl;
 
         std::cout << "INFO::Engine::init - Engine initialized." << std::endl;
@@ -84,8 +65,7 @@ namespace niketica::engine
         pakReader = std::make_unique<niketica::asset::PakReader>(niketica::asset::COMPRESSION_PASSPHRASE);
         niketica::asset::AssetManager::Get().RegisterLoader<niketica::asset::File>(std::make_shared<niketica::asset::FileLoader>(pakReader.get()));
         systemRepository = std::make_unique<niketica::systems::SystemRepository>(registry.get(), *inputState, *inputMap);
-
-        basicShader = std::make_shared<niketica::renderer::Shader>("shaders/basic_shader.vert", "shaders/basic_shader.frag");
+        rendererRepository = std::make_unique<niketica::renderer::RendererRepository>();
 
         std::cout << "INFO::Engine::init -     Done initializing internal systems." << std::endl;
     }
@@ -247,18 +227,12 @@ namespace niketica::engine
 
     void Engine::render()
     {
-        /* Render here */
         glClearColor(clearColor.x, clearColor.y, clearColor.z, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        basicShader->use();
-        glBindVertexArray(VAO);
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        rendererRepository->getSimpleRenderer()->render();
 
-        /* Swap front and back buffers */
         glfwSwapBuffers(window);
-
-        /* Poll for and process events */
         glfwPollEvents();
     }
 }

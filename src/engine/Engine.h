@@ -13,7 +13,7 @@
 #include "asset/AssetManager.h"
 #include "asset/PakReader.h"
 #include "asset/FileLoader.h"
-#include "renderer/Shader.h"
+#include "renderer/RendererRepository.h"
 #include "component/Common.h"
 #include "component/Input.h"
 #include "engine/input/InputState.h"
@@ -53,21 +53,13 @@ namespace niketica::engine
         glm::vec3 clearColor = glm::vec3(0.2f, 0.3f, 0.3f);
 
         std::unique_ptr<niketica::asset::PakReader> pakReader;
-        std::shared_ptr<niketica::renderer::Shader> basicShader;
+        std::unique_ptr<niketica::renderer::RendererRepository> rendererRepository;
 
         std::unique_ptr<entt::registry> registry;
         std::unique_ptr<InputState> inputState;
         std::unique_ptr<InputBackendGLFW> inputBackend;
         std::unique_ptr<InputMap> inputMap;
         std::unique_ptr<niketica::systems::SystemRepository> systemRepository;
-
-        float vertices[9] = {
-            -0.5f, -0.5f, 0.0f,
-            0.5f, -0.5f, 0.0f,
-            0.0f,  0.5f, 0.0f
-        };
-        unsigned int VBO;
-        unsigned int VAO;
 
         void init();
         void loop();
