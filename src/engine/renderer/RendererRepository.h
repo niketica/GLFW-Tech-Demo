@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include "renderer/SimpleRenderer.h"
+#include "engine/renderer/SimpleRenderer.h"
 
 namespace niketica::renderer
 {

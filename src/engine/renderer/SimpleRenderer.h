@@ -3,7 +3,7 @@
 #include <memory>
 #include <glad/glad.h>
 
-#include "renderer/Shader.h"
+#include "engine/renderer/Shader.h"
 
 namespace niketica::renderer
 {
