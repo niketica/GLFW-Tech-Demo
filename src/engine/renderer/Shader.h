@@ -9,8 +9,8 @@
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 
-#include "asset/File.h"
-#include "asset/AssetManager.h"
+#include "engine/asset/File.h"
+#include "engine/asset/AssetManager.h"
 
 namespace niketica::renderer
 {

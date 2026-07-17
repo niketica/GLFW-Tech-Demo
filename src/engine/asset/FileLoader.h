@@ -3,9 +3,9 @@
 #include <iostream>
 #include <filesystem>
 
-#include "asset/IAssetLoader.h"
-#include "asset/PakReader.h"
-#include "asset/File.h"
+#include "engine/asset/IAssetLoader.h"
+#include "engine/asset/PakReader.h"
+#include "engine/asset/File.h"
 
 namespace niketica::asset
 {

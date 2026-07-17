@@ -10,12 +10,12 @@
 #include <GLFW/glfw3.h>
 #include <entt/entt.hpp>
 
-#include "asset/AssetManager.h"
-#include "asset/PakReader.h"
-#include "asset/FileLoader.h"
-#include "engine/renderer/RendererRepository.h"
 #include "component/Common.h"
 #include "component/Input.h"
+#include "engine/asset/AssetManager.h"
+#include "engine/asset/PakReader.h"
+#include "engine/asset/FileLoader.h"
+#include "engine/renderer/RendererRepository.h"
 #include "engine/input/InputState.h"
 #include "engine/input/InputBackendGLFW.h"
 #include "engine/input/InputMap.h"

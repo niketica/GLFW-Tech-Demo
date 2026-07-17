@@ -67,15 +67,13 @@ add_library(engine
     
     # src/engine
     src/engine/Engine.cpp
+    src/engine/asset/FileLoader.cpp
+    src/engine/asset/IAssetLoader.cpp
+    src/engine/asset/PakReader.cpp
+    src/engine/asset/EncryptionUtil.cpp
     src/engine/renderer/Shader.cpp
     src/engine/renderer/SimpleRenderer.cpp
     src/engine/renderer/RendererRepository.cpp
-    
-    # src/asset
-    src/asset/FileLoader.cpp
-    src/asset/IAssetLoader.cpp
-    src/asset/PakReader.cpp
-    src/asset/EncryptionUtil.cpp
 
     # src/systems
     src/systems/SystemRepository.cpp

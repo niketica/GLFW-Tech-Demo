@@ -7,7 +7,7 @@
 #include <vector>
 #include <zlib.h>
 
-#include "EncryptionUtil.h"
+#include "engine/asset/EncryptionUtil.h"
 
 namespace niketica::asset
 {

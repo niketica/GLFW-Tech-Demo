@@ -4,8 +4,8 @@
 #include <unordered_map>
 #include <algorithm>
 
-#include "asset/AssetHandle.h"
-#include "asset/IAssetLoader.h"
+#include "engine/asset/AssetHandle.h"
+#include "engine/asset/IAssetLoader.h"
 
 namespace niketica::asset
 {
