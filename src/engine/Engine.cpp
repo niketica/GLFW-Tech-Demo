@@ -17,7 +17,42 @@ namespace niketica::engine
         initSystems();
 
         std::cout << "INFO::Engine::init -     Initializing temporary data...";
-        registry->emplace<niketica::component::Window>(registry->create());
+        
+        float w = windowWidth;
+        float h = windowHeight;
+
+        auto windowComponent = niketica::component::Window();
+        windowComponent.x = 100;
+        windowComponent.y = 100;
+        windowComponent.width = (float)SCR_WIDTH;
+        windowComponent.height = (float)SCR_HEIGHT;
+        windowComponent.projection = glm::ortho(
+            0.f, windowWidth,
+            0.f, windowHeight,
+            -10.f, 10.f
+        );
+        windowComponent.scale = 1.0f;
+        windowComponent.view = glm::mat4(1.0f);
+
+        registry->emplace<niketica::component::Window>(registry->create(), windowComponent);
+        
+        auto texture = rendererRepository->getTextureLoader()->acquire("textures/background/main_menu_background.dds");
+        component::Sprite sprite;
+
+        component::Transform transform;
+        transform.position = { 0.0f, 0.0f, 0.0f };
+        transform.scale = { 1.0f, 1.0f, 1.0f };
+        transform.size = { 1920.0f, 1080.0f, 1.0f };
+
+        component::Color color = { { 1.0f,1.0f,1.0f,1.0f } };
+
+        auto entity = registry->create();
+        registry->emplace<component::Sprite>(entity, sprite);
+        registry->emplace<component::Transform>(entity, transform);
+        registry->emplace<component::Color>(entity, color);
+        registry->emplace<component::TextureHandle>(entity, texture);
+        registry->emplace<component::RenderSprite>(entity);
+
         std::cout << "DONE!" << std::endl;
 
         std::cout << "INFO::Engine::init - Engine initialized." << std::endl;
@@ -53,8 +88,13 @@ namespace niketica::engine
             std::cerr << "ERROR::Engine::init - Cannot initialize GLAD" << std::endl;
             throw std::invalid_argument( "Cannot initialize GLAD" );
         }
+        glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
         
         glfwSwapInterval(0); // turn off vsync
+
+        glEnable(GL_DEPTH_TEST);
+        glDepthFunc(GL_LEQUAL);
+
         std::cout << "DONE!" << std::endl;
     }
 
@@ -223,14 +263,27 @@ namespace niketica::engine
         {
             std::cout << "INFO::Engine::update - W key pressed." << std::endl;
         }
+
+        rendererRepository->getSpriteInstancedRenderer()->clear();
+
+        auto spriteView = registry->view<niketica::component::Sprite, niketica::component::Transform, niketica::component::TextureHandle>();
+        for (auto entity : spriteView)
+        {
+            auto& sprite = spriteView.get<niketica::component::Sprite>(entity);
+            auto& transform = spriteView.get<niketica::component::Transform>(entity);
+            auto& textureHandle = spriteView.get<niketica::component::TextureHandle>(entity);
+            rendererRepository->getSpriteInstancedRenderer()->submit(textureHandle.id, sprite, transform.position, transform.size, 1.0f);
+        }
     }
 
     void Engine::render()
     {
         glClearColor(clearColor.x, clearColor.y, clearColor.z, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        rendererRepository->getSimpleRenderer()->render();
+        auto windowView = registry->view<niketica::component::Window>();
+        auto &windowComponent = windowView.get<niketica::component::Window>(windowView.front());
+        rendererRepository->getSpriteInstancedRenderer()->render(windowComponent.projection, windowComponent.view);
 
         glfwSwapBuffers(window);
         glfwPollEvents();

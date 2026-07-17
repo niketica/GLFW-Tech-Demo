@@ -1,6 +1,8 @@
 build-release/
 build-debug/
 
+assets/textures/
+
 data.pak
 libzlib.dll
 compressor.exe

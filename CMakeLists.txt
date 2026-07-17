@@ -58,6 +58,7 @@ target_include_directories(vscode_glfw_basic PRIVATE
     vendor/glad/include
     vendor/entt/include
     vendor/glm/include
+    vendor/stb/include
     src
 )
 
@@ -72,7 +73,9 @@ add_library(engine
     src/engine/asset/PakReader.cpp
     src/engine/asset/EncryptionUtil.cpp
     src/engine/renderer/Shader.cpp
+    src/engine/renderer/TextureLoader.cpp
     src/engine/renderer/SimpleRenderer.cpp
+    src/engine/renderer/SpriteInstancedRenderer.cpp
     src/engine/renderer/RendererRepository.cpp
 
     # src/systems
@@ -83,6 +86,7 @@ target_include_directories(engine PUBLIC
     vendor/glad/include
     vendor/entt/include
     vendor/glm/include
+    vendor/stb/include
     src
 )
 
