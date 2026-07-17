@@ -3,7 +3,7 @@
 #include <memory>
 #include <entt/entt.hpp>
 
-#include "systems/engine/InputSystem.h"
+#include "systems/input/InputSystem.h"
 
 namespace niketica::systems
 {
