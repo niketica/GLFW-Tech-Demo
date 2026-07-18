@@ -158,7 +158,6 @@ namespace niketica::renderer {
     {
         if (sprites.empty())
         {
-            std::cout << "INFO::SpriteInstancedRenderer::render - No sprites to render." << std::endl;
             return;
         }
 

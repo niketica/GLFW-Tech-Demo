@@ -20,6 +20,7 @@
 #include "engine/input/InputBackendGLFW.h"
 #include "engine/input/InputMap.h"
 #include "systems/SystemRepository.h"
+#include "scene/SceneRepository.h"
 
 namespace niketica::engine
 {
@@ -60,6 +61,7 @@ namespace niketica::engine
         std::unique_ptr<InputBackendGLFW> inputBackend;
         std::unique_ptr<InputMap> inputMap;
         std::unique_ptr<niketica::systems::SystemRepository> systemRepository;
+        std::unique_ptr<niketica::scene::SceneRepository> sceneRepository;
 
         void init();
         void loop();

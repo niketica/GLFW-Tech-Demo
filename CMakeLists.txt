@@ -80,6 +80,10 @@ add_library(engine
 
     # src/systems
     src/systems/SystemRepository.cpp
+
+    # src/scene
+    src/scene/SceneRepository.cpp
+    src/scene/TestScene.cpp
 )
 
 target_include_directories(engine PUBLIC

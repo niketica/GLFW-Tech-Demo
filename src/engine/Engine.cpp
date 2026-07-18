@@ -35,23 +35,6 @@ namespace niketica::engine
         windowComponent.view = glm::mat4(1.0f);
 
         registry->emplace<niketica::component::Window>(registry->create(), windowComponent);
-        
-        auto texture = rendererRepository->getTextureLoader()->acquire("textures/background/main_menu_background.dds");
-        component::Sprite sprite;
-
-        component::Transform transform;
-        transform.position = { 0.0f, 0.0f, 0.0f };
-        transform.scale = { 1.0f, 1.0f, 1.0f };
-        transform.size = { 1920.0f, 1080.0f, 1.0f };
-
-        component::Color color = { { 1.0f,1.0f,1.0f,1.0f } };
-
-        auto entity = registry->create();
-        registry->emplace<component::Sprite>(entity, sprite);
-        registry->emplace<component::Transform>(entity, transform);
-        registry->emplace<component::Color>(entity, color);
-        registry->emplace<component::TextureHandle>(entity, texture);
-        registry->emplace<component::RenderSprite>(entity);
 
         std::cout << "DONE!" << std::endl;
 
@@ -106,6 +89,8 @@ namespace niketica::engine
         niketica::asset::AssetManager::Get().RegisterLoader<niketica::asset::File>(std::make_shared<niketica::asset::FileLoader>(pakReader.get()));
         systemRepository = std::make_unique<niketica::systems::SystemRepository>(registry.get(), *inputState, *inputMap);
         rendererRepository = std::make_unique<niketica::renderer::RendererRepository>();
+
+        sceneRepository = std::make_unique<niketica::scene::SceneRepository>(registry.get(), systemRepository.get(), rendererRepository.get());
 
         std::cout << "INFO::Engine::init -     Done initializing internal systems." << std::endl;
     }
@@ -246,10 +231,7 @@ namespace niketica::engine
     {
         systemRepository->getInputSystem()->update();
         inputBackend->clearState();
-    }
-
-    void Engine::update(float deltaTime)
-    {
+        
         auto inputView = registry->view<niketica::component::InputComponent>();
         auto& input = inputView.get<niketica::component::InputComponent>(inputView.front());
 
@@ -257,23 +239,16 @@ namespace niketica::engine
         {
             std::cout << "INFO::Engine::update - Escape key pressed, exiting loop." << std::endl;
             running = false;
+            return;
         }
 
-        if (input.actions[niketica::component::Action::W].pressed)
-        {
-            std::cout << "INFO::Engine::update - W key pressed." << std::endl;
-        }
+        sceneRepository->getTestScene()->input();
+    }
 
-        rendererRepository->getSpriteInstancedRenderer()->clear();
+    void Engine::update(float deltaTime)
+    {
 
-        auto spriteView = registry->view<niketica::component::Sprite, niketica::component::Transform, niketica::component::TextureHandle>();
-        for (auto entity : spriteView)
-        {
-            auto& sprite = spriteView.get<niketica::component::Sprite>(entity);
-            auto& transform = spriteView.get<niketica::component::Transform>(entity);
-            auto& textureHandle = spriteView.get<niketica::component::TextureHandle>(entity);
-            rendererRepository->getSpriteInstancedRenderer()->submit(textureHandle.id, sprite, transform.position, transform.size, 1.0f);
-        }
+        sceneRepository->getTestScene()->update(deltaTime);
     }
 
     void Engine::render()
@@ -281,9 +256,7 @@ namespace niketica::engine
         glClearColor(clearColor.x, clearColor.y, clearColor.z, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        auto windowView = registry->view<niketica::component::Window>();
-        auto &windowComponent = windowView.get<niketica::component::Window>(windowView.front());
-        rendererRepository->getSpriteInstancedRenderer()->render(windowComponent.projection, windowComponent.view);
+        sceneRepository->getTestScene()->render();
 
         glfwSwapBuffers(window);
         glfwPollEvents();
