@@ -19,6 +19,7 @@
 #include "engine/input/InputState.h"
 #include "engine/input/InputBackendGLFW.h"
 #include "engine/input/InputMap.h"
+#include "engine/sound/SoundBackendMiniaudio.h"
 #include "systems/SystemRepository.h"
 #include "scene/SceneRepository.h"
 
@@ -62,6 +63,7 @@ namespace niketica::engine
         std::unique_ptr<InputMap> inputMap;
         std::unique_ptr<niketica::systems::SystemRepository> systemRepository;
         std::unique_ptr<niketica::scene::SceneRepository> sceneRepository;
+        std::unique_ptr<niketica::sound::SoundBackendMiniaudio> soundBackend;
 
         void init();
         void loop();

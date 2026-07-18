@@ -2,6 +2,7 @@ build-release/
 build-debug/
 
 assets/textures/
+assets/sound/
 
 data.pak
 libzlib.dll

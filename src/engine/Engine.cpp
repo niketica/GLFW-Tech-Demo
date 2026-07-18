@@ -87,8 +87,12 @@ namespace niketica::engine
 
         pakReader = std::make_unique<niketica::asset::PakReader>(niketica::asset::COMPRESSION_PASSPHRASE);
         niketica::asset::AssetManager::Get().RegisterLoader<niketica::asset::File>(std::make_shared<niketica::asset::FileLoader>(pakReader.get()));
-        systemRepository = std::make_unique<niketica::systems::SystemRepository>(registry.get(), *inputState, *inputMap);
         rendererRepository = std::make_unique<niketica::renderer::RendererRepository>();
+
+        soundBackend = std::make_unique<niketica::sound::SoundBackendMiniaudio>();
+        soundBackend->init();
+
+        systemRepository = std::make_unique<niketica::systems::SystemRepository>(registry.get(), *inputState, *inputMap, soundBackend.get());
 
         sceneRepository = std::make_unique<niketica::scene::SceneRepository>(registry.get(), systemRepository.get(), rendererRepository.get());
 

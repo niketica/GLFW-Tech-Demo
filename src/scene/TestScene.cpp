@@ -41,6 +41,26 @@ namespace niketica::scene
         if (input.actions[niketica::component::Action::W].pressed)
         {
             std::cout << "INFO::Engine::update - W key pressed." << std::endl;
+            auto sound = niketica::component::SoundEffect{ "sound/sfx/menu/23910__nightflame__menuui-sounds/397604__nightflame__menu-fx-01.wav" };
+            registry->emplace<niketica::component::SoundEffect>(registry->create(), sound);
+        }
+        if (input.actions[niketica::component::Action::A].pressed)
+        {
+            std::cout << "INFO::Engine::update - A key pressed." << std::endl;
+            auto sound = niketica::component::SoundEffect{ "sound/sfx/menu/23910__nightflame__menuui-sounds/397599__nightflame__menu-fx-02.wav" };
+            registry->emplace<niketica::component::SoundEffect>(registry->create(), sound);
+        }
+        if (input.actions[niketica::component::Action::S].pressed)
+        {
+            std::cout << "INFO::Engine::update - S key pressed." << std::endl;
+            auto sound = niketica::component::SoundEffect{ "sound/sfx/menu/23910__nightflame__menuui-sounds/422514__nightflame__menu-fx-03-normal.wav" };
+            registry->emplace<niketica::component::SoundEffect>(registry->create(), sound);
+        }
+        if (input.actions[niketica::component::Action::D].pressed)
+        {
+            std::cout << "INFO::Engine::update - D key pressed." << std::endl;
+            auto sound = niketica::component::SoundEffect{ "sound/sfx/menu/23910__nightflame__menuui-sounds/422515__nightflame__menu-fx-03-descending.wav" };
+            registry->emplace<niketica::component::SoundEffect>(registry->create(), sound);
         }
 
     }
@@ -57,6 +77,8 @@ namespace niketica::scene
             auto& textureHandle = spriteView.get<niketica::component::TextureHandle>(entity);
             rendererRepository->getSpriteInstancedRenderer()->submit(textureHandle.id, sprite, transform.position, transform.size, 1.0f);
         }
+
+        systemRepository->getSoundSystem()->update(deltaTime);
     }
 
     void TestScene::render()

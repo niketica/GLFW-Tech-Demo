@@ -4,6 +4,7 @@
 
 #include "component/Input.h"
 #include "component/Sprite.h"
+#include "component/Sound.h"
 #include "component/Transform.h"
 #include "component/TextureHandle.h"
 #include "component/Window.h"

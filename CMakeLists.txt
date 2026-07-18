@@ -59,6 +59,7 @@ target_include_directories(vscode_glfw_basic PRIVATE
     vendor/entt/include
     vendor/glm/include
     vendor/stb/include
+    vendor/miniaudio/include
     src
 )
 
@@ -77,8 +78,10 @@ add_library(engine
     src/engine/renderer/SimpleRenderer.cpp
     src/engine/renderer/SpriteInstancedRenderer.cpp
     src/engine/renderer/RendererRepository.cpp
+    src/engine/sound/SoundBackendMiniaudio.cpp
 
     # src/systems
+    src/systems/sound/SoundSystem.cpp
     src/systems/SystemRepository.cpp
 
     # src/scene
@@ -91,6 +94,7 @@ target_include_directories(engine PUBLIC
     vendor/entt/include
     vendor/glm/include
     vendor/stb/include
+    vendor/miniaudio/include
     src
 )
 
