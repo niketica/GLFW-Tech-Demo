@@ -1,9 +1,13 @@
 cmake_minimum_required(VERSION 3.20)
+# Fix for CMake 4.x + older subprojects (freetype, zlib, etc.)
+set(CMAKE_POLICY_VERSION_MINIMUM 3.5)
+
 project(vscode_glfw_basic
     VERSION 0.1.0
     LANGUAGES C CXX
 )
 
+cmake_policy(SET CMP0072 NEW)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
@@ -52,6 +56,34 @@ if (NOT ZLIB_FOUND)
     add_library(ZLIB::ZLIB ALIAS zlib)
 endif()
 
+# --- Freetype ---
+find_package(Freetype QUIET)
+
+if (NOT Freetype_FOUND)
+    message(STATUS "Freetype not found, fetching with FetchContent")
+
+    include(FetchContent)
+    
+    set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
+
+    FetchContent_Declare(
+        freetype
+        GIT_REPOSITORY https://gitlab.freedesktop.org/freetype/freetype.git
+        GIT_TAG VER-2-13-2
+    )
+
+    # Tell freetype to use our zlib
+    set(FT_DISABLE_BZIP2 TRUE CACHE BOOL "" FORCE)
+    set(FT_DISABLE_PNG TRUE CACHE BOOL "" FORCE)
+    set(FT_DISABLE_HARFBUZZ TRUE CACHE BOOL "" FORCE)
+    set(FT_DISABLE_BROTLI TRUE CACHE BOOL "" FORCE)
+
+    FetchContent_MakeAvailable(freetype)
+
+    # Normalize the target name
+    add_library(Freetype::Freetype ALIAS freetype)
+endif()
+
 add_executable(vscode_glfw_basic src/main.cpp)
 
 target_include_directories(vscode_glfw_basic PRIVATE
@@ -79,6 +111,8 @@ add_library(engine
     src/engine/renderer/SpriteInstancedRenderer.cpp
     src/engine/renderer/RendererRepository.cpp
     src/engine/sound/SoundBackendMiniaudio.cpp
+    src/engine/renderer/text/Font.cpp
+    src/engine/renderer/text/TextRenderer.cpp
 
     # src/systems
     src/systems/sound/SoundSystem.cpp
@@ -103,6 +137,7 @@ target_link_libraries(engine
         OpenGL::GL
         glfw
         ZLIB::ZLIB
+        Freetype::Freetype
 )
 
 target_link_libraries(vscode_glfw_basic
@@ -110,6 +145,7 @@ target_link_libraries(vscode_glfw_basic
         OpenGL::GL
         glfw
         ZLIB::ZLIB
+        Freetype::Freetype
         engine
 )
 

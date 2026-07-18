@@ -1,0 +1,1 @@
+Source: https://gitlab.freedesktop.org/freetype/freetype.git

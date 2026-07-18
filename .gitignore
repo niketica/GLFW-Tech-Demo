@@ -3,6 +3,7 @@ build-debug/
 
 assets/textures/
 assets/sound/
+assets/fonts/
 
 data.pak
 libzlib.dll
