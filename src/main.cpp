@@ -1,6 +1,7 @@
 #include <memory>
 
 #include "engine/core/Engine.h"
+#include "engine/core/EngineServices.h"
 #include "engine/core/renderer/IRenderContext.h"
 #include "engine/adapter/asset/AssetManager.h"
 #include "engine/adapter/asset/PakReader.h"
@@ -23,7 +24,9 @@ int main()
     auto soundBackend = std::make_unique<niketica::sound::SoundBackendMiniaudio>();
     soundBackend->init();
 
-    niketica::engine::Engine engine(std::move(pakReader), std::move(renderContext), std::move(inputContext), std::move(soundBackend));
+    auto engineServices = std::make_unique<niketica::engine::EngineServices>(std::move(pakReader), std::move(inputContext), std::move(soundBackend), std::move(renderContext));
+
+    niketica::engine::Engine engine(std::move(engineServices));
     engine.start();
     return 0;
 }

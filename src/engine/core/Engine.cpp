@@ -4,11 +4,8 @@ namespace niketica::engine
 {
 
     Engine::Engine(
-            std::unique_ptr<niketica::asset::IAssetReader> assetReader,
-            std::unique_ptr<niketica::renderer::IRenderContext> renderContext,
-            std::unique_ptr<niketica::input::IInputContext> inputContext,
-            std::unique_ptr<niketica::sound::ISoundContext> soundContext
-        ) : assetReader(std::move(assetReader)), renderContext(std::move(renderContext)), inputContext(std::move(inputContext)), soundContext(std::move(soundContext))
+            std::unique_ptr<EngineServices> engineServices
+        ) : engineServices(std::move(engineServices))
     {}
 
     void Engine::start()
@@ -54,10 +51,16 @@ namespace niketica::engine
         std::cout << "INFO::Engine::init -     Initializing internal systems..." << std::endl;
 
         std::cout << "INFO::Engine::init -     Initializing ECS systems..." << std::endl;
-        systemRepository = std::make_unique<niketica::systems::SystemRepository>(registry.get(), inputContext->getInputState(), inputContext->getInputMap(), soundContext.get());
+        systemRepository = std::make_unique<niketica::systems::SystemRepository>
+        (
+            registry.get(),
+            engineServices->getInputContext()->getInputState(),
+            engineServices->getInputContext()->getInputMap(),
+            engineServices->getSoundContext()
+        );
 
         std::cout << "INFO::Engine::init -     Initializing scenes..." << std::endl;
-        sceneRepository = std::make_unique<niketica::scene::SceneRepository>(registry.get(), systemRepository.get(), renderContext.get());
+        sceneRepository = std::make_unique<niketica::scene::SceneRepository>(registry.get(), systemRepository.get(), engineServices->getRenderContext());
 
         std::cout << "INFO::Engine::init -     Done initializing internal systems." << std::endl;
     }
@@ -97,7 +100,7 @@ namespace niketica::engine
 
             while (accumulator >= fixedDeltaTime && updates < maxUpdatesPerFrame)
             {
-                if (renderContext->windowShouldClose())
+                if (engineServices->getRenderContext()->windowShouldClose())
                 {
                     std::cout << "INFO::Engine::loop - Window close requested, exiting loop." << std::endl;
                     running = false;
@@ -122,7 +125,7 @@ namespace niketica::engine
 
                 std::string title("GLFW Tech Demo - FPS: ");
                 title += std::to_string(fps);
-                renderContext->setWindowTitle(title.c_str());
+                engineServices->getRenderContext()->setWindowTitle(title.c_str());
             }
         }
 
@@ -133,7 +136,7 @@ namespace niketica::engine
     void Engine::input(float deltaTime)
     {
         systemRepository->getInputSystem()->update();
-        inputContext->clearState();
+        engineServices->getInputContext()->clearState();
         
         auto inputView = registry->view<niketica::component::InputComponent>();
         auto& input = inputView.get<niketica::component::InputComponent>(inputView.front());
@@ -156,8 +159,8 @@ namespace niketica::engine
 
     void Engine::render()
     {
-        renderContext->startFrame();
+        engineServices->getRenderContext()->startFrame();
         sceneRepository->getTestScene()->render();
-        renderContext->endFrame();
+        engineServices->getRenderContext()->endFrame();
     }
 }

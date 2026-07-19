@@ -16,6 +16,7 @@
 #include "engine/core/asset/IAssetReader.h"
 #include "engine/core/input/IInputContext.h"
 #include "engine/core/sound/ISoundContext.h"
+#include "engine/core/EngineServices.h"
 #include "systems/SystemRepository.h"
 #include "scene/SceneRepository.h"
 
@@ -24,12 +25,7 @@ namespace niketica::engine
     class Engine
     {
     public:
-        Engine(
-            std::unique_ptr<niketica::asset::IAssetReader> assetReader,
-            std::unique_ptr<niketica::renderer::IRenderContext> renderContext,
-            std::unique_ptr<niketica::input::IInputContext> inputContext,
-            std::unique_ptr<niketica::sound::ISoundContext> soundContext
-        );
+        Engine(std::unique_ptr<EngineServices> engineServices);
         ~Engine() = default;
 
         void start();
@@ -54,14 +50,10 @@ namespace niketica::engine
 
         glm::vec3 clearColor = glm::vec3(0.2f, 0.3f, 0.3f);
 
-        std::unique_ptr<niketica::asset::IAssetReader> assetReader;
-
+        std::unique_ptr<EngineServices> engineServices;
         std::unique_ptr<entt::registry> registry;
-        std::unique_ptr<niketica::input::IInputContext> inputContext;
         std::unique_ptr<niketica::systems::SystemRepository> systemRepository;
         std::unique_ptr<niketica::scene::SceneRepository> sceneRepository;
-        std::unique_ptr<niketica::sound::ISoundContext> soundContext;
-        std::unique_ptr<niketica::renderer::IRenderContext> renderContext;
 
         void init();
         void loop();
