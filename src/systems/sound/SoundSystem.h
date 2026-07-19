@@ -2,7 +2,7 @@
 
 #include <entt/entt.hpp>
 
-#include "engine/sound/SoundBackendMiniaudio.h"
+#include "engine/adapter/sound/SoundBackendMiniaudio.h"
 #include "component/Sound.h"
 
 namespace niketica::systems

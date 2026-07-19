@@ -100,19 +100,19 @@ add_library(engine
     vendor/glad/src/glad.c
     
     # src/engine
-    src/engine/Engine.cpp
-    src/engine/asset/FileLoader.cpp
-    src/engine/asset/IAssetLoader.cpp
-    src/engine/asset/PakReader.cpp
-    src/engine/asset/EncryptionUtil.cpp
-    src/engine/renderer/Shader.cpp
-    src/engine/renderer/TextureLoader.cpp
-    src/engine/renderer/SimpleRenderer.cpp
-    src/engine/renderer/SpriteInstancedRenderer.cpp
-    src/engine/renderer/RendererRepository.cpp
-    src/engine/sound/SoundBackendMiniaudio.cpp
-    src/engine/renderer/text/Font.cpp
-    src/engine/renderer/text/TextRenderer.cpp
+    src/engine/core/Engine.cpp
+    src/engine/adapter/asset/FileLoader.cpp
+    src/engine/adapter/asset/IAssetLoader.cpp
+    src/engine/adapter/asset/PakReader.cpp
+    src/engine/adapter/asset/EncryptionUtil.cpp
+    src/engine/adapter/renderer/Shader.cpp
+    src/engine/adapter/renderer/TextureLoader.cpp
+    src/engine/adapter/renderer/SimpleRenderer.cpp
+    src/engine/adapter/renderer/SpriteInstancedRenderer.cpp
+    src/engine/adapter/renderer/RenderContext.cpp
+    src/engine/adapter/renderer/text/Font.cpp
+    src/engine/adapter/renderer/text/TextRenderer.cpp
+    src/engine/adapter/sound/SoundBackendMiniaudio.cpp
 
     # src/systems
     src/systems/sound/SoundSystem.cpp

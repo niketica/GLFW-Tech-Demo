@@ -5,17 +5,17 @@ namespace niketica::scene
     TestScene::TestScene(
             entt::registry* registry,
             niketica::systems::SystemRepository* systemRepository,
-            niketica::renderer::RendererRepository* rendererRepository
+            niketica::renderer::IRenderContext* renderContext
         ) : registry(registry),
             systemRepository(systemRepository),
-            rendererRepository(rendererRepository)
+            renderContext(renderContext)
     {
         init();
     }
 
     void TestScene::init()
     {
-        auto texture = rendererRepository->getTextureLoader()->acquire("textures/background/main_menu_background.dds");
+        auto texture = renderContext->getTextureLoader()->acquire("textures/background/main_menu_background.dds");
         component::Sprite sprite;
 
         component::Transform transform;
@@ -67,7 +67,7 @@ namespace niketica::scene
 
     void TestScene::update(float deltaTime)
     {
-        rendererRepository->getSpriteInstancedRenderer()->clear();
+        renderContext->getSpriteInstancedRenderer()->clear();
 
         auto spriteView = registry->view<niketica::component::Sprite, niketica::component::Transform, niketica::component::TextureHandle>();
         for (auto entity : spriteView)
@@ -75,7 +75,7 @@ namespace niketica::scene
             auto& sprite = spriteView.get<niketica::component::Sprite>(entity);
             auto& transform = spriteView.get<niketica::component::Transform>(entity);
             auto& textureHandle = spriteView.get<niketica::component::TextureHandle>(entity);
-            rendererRepository->getSpriteInstancedRenderer()->submit(textureHandle.id, sprite, transform.position, transform.size, 1.0f);
+            renderContext->getSpriteInstancedRenderer()->submit(textureHandle.id, sprite, transform.position, transform.size, 1.0f);
         }
 
         systemRepository->getSoundSystem()->update(deltaTime);
@@ -85,26 +85,26 @@ namespace niketica::scene
     {
         auto windowView = registry->view<niketica::component::Window>();
         auto &windowComponent = windowView.get<niketica::component::Window>(windowView.front());
-        rendererRepository->getSpriteInstancedRenderer()->render(windowComponent.projection, windowComponent.view);
+        renderContext->getSpriteInstancedRenderer()->render(windowComponent.projection, windowComponent.view);
 
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-        rendererRepository->getTextRenderer()->begin(windowComponent.projection, *rendererRepository->getTextRenderer()->getSampleFont());
 
         auto positionTopLeft = glm::vec2(100.0f, windowComponent.height - 100.0f);
         auto colorRed = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
         auto textValue = "Hello, World!";
         auto scale = 5.0f;
 
-        rendererRepository->getTextRenderer()->submitText(
-            *rendererRepository->getTextRenderer()->getSampleFont(),
+        renderContext->getTextRenderer()->begin(windowComponent.projection, niketica::renderer::FontType::OPEN_SANS_REGULAR);
+        renderContext->getTextRenderer()->submitText(
+            niketica::renderer::FontType::OPEN_SANS_REGULAR,
             textValue,
             positionTopLeft,
             scale,
             colorRed
         );
 
-        rendererRepository->getTextRenderer()->flush();
+        renderContext->getTextRenderer()->flush();
     }
+
 }

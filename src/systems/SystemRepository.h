@@ -3,9 +3,9 @@
 #include <memory>
 #include <entt/entt.hpp>
 
-#include "engine/input/InputState.h"
-#include "engine/input/InputMap.h"
-#include "engine/sound/SoundBackendMiniaudio.h"
+#include "engine/adapter/input/InputState.h"
+#include "engine/adapter/input/InputMap.h"
+#include "engine/adapter/sound/SoundBackendMiniaudio.h"
 #include "systems/input/InputSystem.h"
 #include "systems/sound/SoundSystem.h"
 

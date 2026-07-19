@@ -4,8 +4,8 @@
 
 #include "component/Input.h"
 #include "component/Window.h"
-#include "engine/input/InputState.h"
-#include "engine/input/InputMap.h"
+#include "engine/adapter/input/InputState.h"
+#include "engine/adapter/input/InputMap.h"
 
 namespace niketica::systems
 {

@@ -1,14 +1,16 @@
 #pragma once
 
 #include <entt/entt.hpp>
+#include <glad/glad.h>
 
+#include "component/Color.h"
 #include "component/Input.h"
 #include "component/Sprite.h"
 #include "component/Sound.h"
 #include "component/Transform.h"
 #include "component/TextureHandle.h"
 #include "component/Window.h"
-#include "engine/renderer/RendererRepository.h"
+#include "engine/core/renderer/IRenderContext.h"
 #include "systems/SystemRepository.h"
 
 namespace niketica::scene
@@ -19,7 +21,7 @@ namespace niketica::scene
         TestScene(
             entt::registry* registry,
             niketica::systems::SystemRepository* systemRepository,
-            niketica::renderer::RendererRepository* rendererRepository
+            niketica::renderer::IRenderContext* renderContext
         );
         ~TestScene() = default;
 
@@ -30,7 +32,7 @@ namespace niketica::scene
     private:
         entt::registry* registry;
         niketica::systems::SystemRepository* systemRepository;
-        niketica::renderer::RendererRepository* rendererRepository;
+        niketica::renderer::IRenderContext* renderContext;
 
         void init();
 
