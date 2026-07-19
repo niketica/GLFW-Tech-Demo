@@ -6,9 +6,9 @@ namespace niketica::systems
         entt::registry* registry,
         const niketica::input::InputState* state,
         const niketica::input::InputMap* map,
-        niketica::sound::SoundBackendMiniaudio* soundBackend
+        niketica::sound::ISoundContext* soundContext
     )
-        : registry(registry), state(state), map(map), soundBackend(soundBackend)
+        : registry(registry), state(state), map(map), soundContext(soundContext)
     {
         initSystems();
     }
@@ -23,7 +23,7 @@ namespace niketica::systems
     void SystemRepository::initSystems()
     {
         inputSystem = std::make_unique<InputSystem>(state, map, registry);
-        soundSystem = std::make_unique<SoundSystem>(registry, soundBackend);
+        soundSystem = std::make_unique<SoundSystem>(registry, soundContext);
     }
 
 }

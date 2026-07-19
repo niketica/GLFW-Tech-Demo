@@ -6,8 +6,9 @@ namespace niketica::engine
     Engine::Engine(
             std::unique_ptr<niketica::asset::IAssetReader> assetReader,
             std::unique_ptr<niketica::renderer::IRenderContext> renderContext,
-            std::unique_ptr<niketica::input::IInputContext> inputContext
-        ) : assetReader(std::move(assetReader)), renderContext(std::move(renderContext)), inputContext(std::move(inputContext))
+            std::unique_ptr<niketica::input::IInputContext> inputContext,
+            std::unique_ptr<niketica::sound::ISoundContext> soundContext
+        ) : assetReader(std::move(assetReader)), renderContext(std::move(renderContext)), inputContext(std::move(inputContext)), soundContext(std::move(soundContext))
     {}
 
     void Engine::start()
@@ -52,12 +53,8 @@ namespace niketica::engine
     {
         std::cout << "INFO::Engine::init -     Initializing internal systems..." << std::endl;
 
-        std::cout << "INFO::Engine::init -     Initializing sound..." << std::endl;
-        soundBackend = std::make_unique<niketica::sound::SoundBackendMiniaudio>();
-        soundBackend->init();
-
         std::cout << "INFO::Engine::init -     Initializing ECS systems..." << std::endl;
-        systemRepository = std::make_unique<niketica::systems::SystemRepository>(registry.get(), inputContext->getInputState(), inputContext->getInputMap(), soundBackend.get());
+        systemRepository = std::make_unique<niketica::systems::SystemRepository>(registry.get(), inputContext->getInputState(), inputContext->getInputMap(), soundContext.get());
 
         std::cout << "INFO::Engine::init -     Initializing scenes..." << std::endl;
         sceneRepository = std::make_unique<niketica::scene::SceneRepository>(registry.get(), systemRepository.get(), renderContext.get());

@@ -8,7 +8,7 @@ namespace niketica::systems
         for (auto entity : viewSFX)
         {
             const auto& sound = viewSFX.get<component::SoundEffect>(entity);
-            soundBackend->playSoundAssetFile(sound.path.c_str());
+            soundContext->playSoundAssetFile(sound.path.c_str());
             registry->destroy(entity);
         }
 
@@ -16,7 +16,7 @@ namespace niketica::systems
         for (auto entity : viewMusic)
         {
             const auto& music = viewMusic.get<component::Music>(entity);
-            soundBackend->playSoundAssetFile(music.path.c_str(), true);
+            soundContext->playSoundAssetFile(music.path.c_str(), true);
             registry->destroy(entity);
         }
     }

@@ -15,7 +15,7 @@
 #include "engine/core/renderer/IRenderContext.h"
 #include "engine/core/asset/IAssetReader.h"
 #include "engine/core/input/IInputContext.h"
-#include "engine/adapter/sound/SoundBackendMiniaudio.h"
+#include "engine/core/sound/ISoundContext.h"
 #include "systems/SystemRepository.h"
 #include "scene/SceneRepository.h"
 
@@ -27,7 +27,8 @@ namespace niketica::engine
         Engine(
             std::unique_ptr<niketica::asset::IAssetReader> assetReader,
             std::unique_ptr<niketica::renderer::IRenderContext> renderContext,
-            std::unique_ptr<niketica::input::IInputContext> inputContext
+            std::unique_ptr<niketica::input::IInputContext> inputContext,
+            std::unique_ptr<niketica::sound::ISoundContext> soundContext
         );
         ~Engine() = default;
 
@@ -59,8 +60,7 @@ namespace niketica::engine
         std::unique_ptr<niketica::input::IInputContext> inputContext;
         std::unique_ptr<niketica::systems::SystemRepository> systemRepository;
         std::unique_ptr<niketica::scene::SceneRepository> sceneRepository;
-        std::unique_ptr<niketica::sound::SoundBackendMiniaudio> soundBackend;
-
+        std::unique_ptr<niketica::sound::ISoundContext> soundContext;
         std::unique_ptr<niketica::renderer::IRenderContext> renderContext;
 
         void init();

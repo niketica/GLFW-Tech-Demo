@@ -8,6 +8,7 @@
 #include "engine/adapter/renderer/RenderContext.h"
 #include "engine/adapter/asset/PakReader.h"
 #include "engine/adapter/input/InputBackendGLFW.h"
+#include "engine/adapter/sound/SoundBackendMiniaudio.h"
 
 int main()
 {
@@ -19,7 +20,10 @@ int main()
 
     auto inputContext = std::make_unique<niketica::input::InputBackendGLFW>(renderContext->getWindow());
 
-    niketica::engine::Engine engine(std::move(pakReader), std::move(renderContext), std::move(inputContext));
+    auto soundBackend = std::make_unique<niketica::sound::SoundBackendMiniaudio>();
+    soundBackend->init();
+
+    niketica::engine::Engine engine(std::move(pakReader), std::move(renderContext), std::move(inputContext), std::move(soundBackend));
     engine.start();
     return 0;
 }

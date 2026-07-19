@@ -2,8 +2,8 @@
 
 #include <entt/entt.hpp>
 
-#include "engine/adapter/sound/SoundBackendMiniaudio.h"
 #include "component/Sound.h"
+#include "engine/core/sound/ISoundContext.h"
 
 namespace niketica::systems
 {
@@ -11,15 +11,15 @@ namespace niketica::systems
     class SoundSystem
     {
     public:
-        SoundSystem(entt::registry* registry, niketica::sound::SoundBackendMiniaudio* soundBackend)
-            : registry(registry), soundBackend(soundBackend) {}
+        SoundSystem(entt::registry* registry, niketica::sound::ISoundContext* soundContext)
+            : registry(registry), soundContext(soundContext) {}
         ~SoundSystem() = default;
 
         void update(float deltaTime);
 
     private:
         entt::registry* registry;
-        niketica::sound::SoundBackendMiniaudio* soundBackend;
+        niketica::sound::ISoundContext* soundContext;
     };
 
 }
