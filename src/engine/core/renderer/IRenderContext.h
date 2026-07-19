@@ -16,6 +16,11 @@ namespace niketica::renderer
 
         virtual void init() = 0;
 
+        virtual bool windowShouldClose() = 0;
+        virtual void startFrame() = 0;
+        virtual void endFrame() = 0;
+        virtual void setWindowTitle(const char* title) = 0;
+
         ITextureLoader* getTextureLoader() const
         {
             return textureLoader.get();

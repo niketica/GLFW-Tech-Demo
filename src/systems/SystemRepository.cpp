@@ -4,8 +4,8 @@ namespace niketica::systems
 {
     SystemRepository::SystemRepository(
         entt::registry* registry,
-        const niketica::engine::InputState& state,
-        const niketica::engine::InputMap& map,
+        const niketica::input::InputState* state,
+        const niketica::input::InputMap* map,
         niketica::sound::SoundBackendMiniaudio* soundBackend
     )
         : registry(registry), state(state), map(map), soundBackend(soundBackend)

@@ -5,7 +5,7 @@
 
 #include "component/Input.h"
 
-namespace niketica::engine
+namespace niketica::input
 {
 
     class InputState

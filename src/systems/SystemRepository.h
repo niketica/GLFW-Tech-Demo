@@ -3,8 +3,8 @@
 #include <memory>
 #include <entt/entt.hpp>
 
-#include "engine/adapter/input/InputState.h"
-#include "engine/adapter/input/InputMap.h"
+#include "engine/core/input/InputState.h"
+#include "engine/core/input/InputMap.h"
 #include "engine/adapter/sound/SoundBackendMiniaudio.h"
 #include "systems/input/InputSystem.h"
 #include "systems/sound/SoundSystem.h"
@@ -16,8 +16,8 @@ namespace niketica::systems
         public:
             SystemRepository(
                 entt::registry* registry,
-                const niketica::engine::InputState& state,
-                const niketica::engine::InputMap& map,
+                const niketica::input::InputState* state,
+                const niketica::input::InputMap* map,
                 niketica::sound::SoundBackendMiniaudio* soundBackend
             );
             ~SystemRepository() = default;
@@ -29,8 +29,8 @@ namespace niketica::systems
 
         private:
             entt::registry* registry;
-            const niketica::engine::InputState& state;
-            const niketica::engine::InputMap& map;
+            const niketica::input::InputState* state;
+            const niketica::input::InputMap* map;
             niketica::sound::SoundBackendMiniaudio* soundBackend;
 
             std::unique_ptr<InputSystem> inputSystem;

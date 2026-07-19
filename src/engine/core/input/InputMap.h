@@ -1,10 +1,11 @@
 #pragma once
 
+#include <iostream>
 #include <unordered_map>
 
 #include "component/Input.h"
 
-namespace niketica::engine
+namespace niketica::input
 {
     struct ActionBinding
     {
@@ -16,7 +17,9 @@ namespace niketica::engine
     public:
         void bind(niketica::component::Action action, int key)
         {
+            std::cout << "INFO::InputMap::bind - START" << std::endl;
             bindings[action] = { key };
+            std::cout << "INFO::InputMap::bind - END" << std::endl;
         }
 
         const ActionBinding* get(niketica::component::Action action) const

@@ -14,9 +14,7 @@
 #include "component/Input.h"
 #include "engine/core/renderer/IRenderContext.h"
 #include "engine/core/asset/IAssetReader.h"
-#include "engine/adapter/input/InputState.h"
-#include "engine/adapter/input/InputBackendGLFW.h"
-#include "engine/adapter/input/InputMap.h"
+#include "engine/core/input/IInputContext.h"
 #include "engine/adapter/sound/SoundBackendMiniaudio.h"
 #include "systems/SystemRepository.h"
 #include "scene/SceneRepository.h"
@@ -28,7 +26,8 @@ namespace niketica::engine
     public:
         Engine(
             std::unique_ptr<niketica::asset::IAssetReader> assetReader,
-            std::unique_ptr<niketica::renderer::IRenderContext> renderContext
+            std::unique_ptr<niketica::renderer::IRenderContext> renderContext,
+            std::unique_ptr<niketica::input::IInputContext> inputContext
         );
         ~Engine() = default;
 
@@ -52,15 +51,12 @@ namespace niketica::engine
         
         bool running = false;
 
-        GLFWwindow* window;
         glm::vec3 clearColor = glm::vec3(0.2f, 0.3f, 0.3f);
 
         std::unique_ptr<niketica::asset::IAssetReader> assetReader;
 
         std::unique_ptr<entt::registry> registry;
-        std::unique_ptr<InputState> inputState;
-        std::unique_ptr<InputBackendGLFW> inputBackend;
-        std::unique_ptr<InputMap> inputMap;
+        std::unique_ptr<niketica::input::IInputContext> inputContext;
         std::unique_ptr<niketica::systems::SystemRepository> systemRepository;
         std::unique_ptr<niketica::scene::SceneRepository> sceneRepository;
         std::unique_ptr<niketica::sound::SoundBackendMiniaudio> soundBackend;
@@ -74,7 +70,6 @@ namespace niketica::engine
         void update(float deltaTime);
         void render();
 
-        void initWindow();
         void initSystems();
         void initInput();
 
