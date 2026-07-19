@@ -4,9 +4,9 @@ namespace niketica::engine
 {
 
     Engine::Engine(
-            std::unique_ptr<niketica::asset::PakReader> pakReader,
+            std::unique_ptr<niketica::asset::IAssetReader> assetReader,
             std::unique_ptr<niketica::renderer::IRenderContext> renderContext
-        ) : pakReader(std::move(pakReader)), renderContext(std::move(renderContext))
+        ) : assetReader(std::move(assetReader)), renderContext(std::move(renderContext))
     {}
 
     void Engine::start()

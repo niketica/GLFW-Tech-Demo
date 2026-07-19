@@ -13,9 +13,7 @@
 #include "component/Common.h"
 #include "component/Input.h"
 #include "engine/core/renderer/IRenderContext.h"
-#include "engine/adapter/asset/AssetManager.h"
-#include "engine/adapter/asset/PakReader.h"
-#include "engine/adapter/asset/FileLoader.h"
+#include "engine/core/asset/IAssetReader.h"
 #include "engine/adapter/input/InputState.h"
 #include "engine/adapter/input/InputBackendGLFW.h"
 #include "engine/adapter/input/InputMap.h"
@@ -29,7 +27,7 @@ namespace niketica::engine
     {
     public:
         Engine(
-            std::unique_ptr<niketica::asset::PakReader> pakReader,
+            std::unique_ptr<niketica::asset::IAssetReader> assetReader,
             std::unique_ptr<niketica::renderer::IRenderContext> renderContext
         );
         ~Engine() = default;
@@ -57,7 +55,7 @@ namespace niketica::engine
         GLFWwindow* window;
         glm::vec3 clearColor = glm::vec3(0.2f, 0.3f, 0.3f);
 
-        std::unique_ptr<niketica::asset::PakReader> pakReader;
+        std::unique_ptr<niketica::asset::IAssetReader> assetReader;
 
         std::unique_ptr<entt::registry> registry;
         std::unique_ptr<InputState> inputState;

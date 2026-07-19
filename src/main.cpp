@@ -2,6 +2,9 @@
 
 #include "engine/core/Engine.h"
 #include "engine/core/renderer/IRenderContext.h"
+#include "engine/adapter/asset/AssetManager.h"
+#include "engine/adapter/asset/PakReader.h"
+#include "engine/adapter/asset/FileLoader.h"
 #include "engine/adapter/renderer/RenderContext.h"
 #include "engine/adapter/asset/PakReader.h"
 

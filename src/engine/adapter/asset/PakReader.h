@@ -7,6 +7,7 @@
 #include <vector>
 #include <zlib.h>
 
+#include "engine/core/asset/IAssetReader.h"
 #include "engine/adapter/asset/EncryptionUtil.h"
 
 namespace niketica::asset
@@ -17,7 +18,7 @@ namespace niketica::asset
         uint32_t original_size;
     };
 
-    class PakReader {
+    class PakReader : public IAssetReader {
     public:
         explicit PakReader(const char* passphrase) : passphrase(passphrase) {}
         ~PakReader() = default;
