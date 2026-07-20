@@ -4,28 +4,29 @@
 #include <entt/entt.hpp>
 
 #include "engine/core/EngineServices.h"
+#include "engine/core/scene/ISceneContext.h"
 #include "scene/TestScene.h"
 
 namespace niketica::scene
 {
-    class SceneRepository
+    class SceneContext : public ISceneContext
     {
     public:
-        SceneRepository(
-            entt::registry* registry,
+        SceneContext(
             niketica::engine::EngineServices* engineServices
         );
-        ~SceneRepository() = default;
+        ~SceneContext() = default;
 
-        TestScene* getTestScene() const { return testScene.get(); }
+        void input() override { testScene->input(); };
+        void update(float dt) override { testScene->update(dt); };
+        void render() override { testScene->render(); };
+
+        void initScenes() override;
 
     private:
-        entt::registry* registry;
         niketica::engine::EngineServices* engineServices;
 
         std::unique_ptr<TestScene> testScene;
-
-        void initScenes();
 
     };
 }

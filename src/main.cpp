@@ -10,6 +10,7 @@
 #include "engine/adapter/asset/PakReader.h"
 #include "engine/adapter/input/InputBackendGLFW.h"
 #include "engine/adapter/sound/SoundBackendMiniaudio.h"
+#include "scene/SceneContext.h"
 
 int main()
 {
@@ -26,7 +27,9 @@ int main()
 
     auto engineServices = std::make_unique<niketica::engine::EngineServices>(std::move(pakReader), std::move(inputContext), std::move(soundBackend), std::move(renderContext));
 
-    niketica::engine::Engine engine(std::move(engineServices));
+    auto sceneContext = std::make_unique<niketica::scene::SceneContext>(engineServices.get());
+
+    niketica::engine::Engine engine(std::move(engineServices), std::move(sceneContext));
     engine.start();
     return 0;
 }

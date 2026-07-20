@@ -4,8 +4,9 @@ namespace niketica::engine
 {
 
     Engine::Engine(
-            std::unique_ptr<EngineServices> engineServices
-        ) : engineServices(std::move(engineServices))
+            std::unique_ptr<EngineServices> engineServices,
+            std::unique_ptr<niketica::scene::ISceneContext> sceneContext
+        ) : engineServices(std::move(engineServices)), sceneContext(std::move(sceneContext))
     {}
 
     void Engine::start()
@@ -40,6 +41,9 @@ namespace niketica::engine
         windowComponent.view = glm::mat4(1.0f);
 
         registry->emplace<niketica::component::Window>(registry->create(), windowComponent);
+        
+        sceneContext->setRegistry(registry.get());
+        sceneContext->initScenes();
 
         std::cout << "DONE!" << std::endl;
 
@@ -51,7 +55,6 @@ namespace niketica::engine
         std::cout << "INFO::Engine::init -     Initializing internal systems..." << std::endl;
 
         std::cout << "INFO::Engine::init -     Initializing scenes..." << std::endl;
-        sceneRepository = std::make_unique<niketica::scene::SceneRepository>(registry.get(), engineServices.get());
 
         std::cout << "INFO::Engine::init -     Done initializing internal systems." << std::endl;
     }
@@ -126,7 +129,7 @@ namespace niketica::engine
 
     void Engine::input()
     {        
-        sceneRepository->getTestScene()->input();
+        sceneContext->input();
 
         auto inputView = registry->view<niketica::component::InputComponent>();
         auto& input = inputView.get<niketica::component::InputComponent>(inputView.front());
@@ -142,13 +145,13 @@ namespace niketica::engine
     void Engine::update(float deltaTime)
     {
 
-        sceneRepository->getTestScene()->update(deltaTime);
+        sceneContext->update(deltaTime);
     }
 
     void Engine::render()
     {
         engineServices->getRenderContext()->startFrame();
-        sceneRepository->getTestScene()->render();
+        sceneContext->render();
         engineServices->getRenderContext()->endFrame();
     }
 }

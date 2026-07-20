@@ -117,7 +117,7 @@ add_library(engine
     src/engine/adapter/systems/SystemContext.cpp
 
     # src/scene
-    src/scene/SceneRepository.cpp
+    src/scene/SceneContext.cpp
     src/scene/TestScene.cpp
 )
 

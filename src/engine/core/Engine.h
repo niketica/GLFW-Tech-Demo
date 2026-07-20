@@ -12,15 +12,16 @@
 
 #include "component/Common.h"
 #include "component/Input.h"
+#include "component/Window.h"
 #include "engine/core/EngineServices.h"
-#include "scene/SceneRepository.h"
+#include "engine/core/scene/ISceneContext.h"
 
 namespace niketica::engine
 {
     class Engine
     {
     public:
-        Engine(std::unique_ptr<EngineServices> engineServices);
+        Engine(std::unique_ptr<EngineServices> engineServices, std::unique_ptr<niketica::scene::ISceneContext> sceneContext);
         ~Engine() = default;
 
         void start();
@@ -47,7 +48,7 @@ namespace niketica::engine
 
         std::unique_ptr<EngineServices> engineServices;
         std::unique_ptr<entt::registry> registry;
-        std::unique_ptr<niketica::scene::SceneRepository> sceneRepository;
+        std::unique_ptr<niketica::scene::ISceneContext> sceneContext;
 
         void init();
         void loop();
