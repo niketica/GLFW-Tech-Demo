@@ -1,4 +1,4 @@
-#include "systems/sound/SoundSystem.h"
+#include "engine/adapter/systems/sound/SoundSystem.h"
 
 namespace niketica::systems
 {
@@ -8,7 +8,7 @@ namespace niketica::systems
         for (auto entity : viewSFX)
         {
             const auto& sound = viewSFX.get<component::SoundEffect>(entity);
-            soundContext->playSoundAssetFile(sound.path.c_str());
+            engineServices->getSoundContext()->playSoundAssetFile(sound.path.c_str());
             registry->destroy(entity);
         }
 
@@ -16,7 +16,7 @@ namespace niketica::systems
         for (auto entity : viewMusic)
         {
             const auto& music = viewMusic.get<component::Music>(entity);
-            soundContext->playSoundAssetFile(music.path.c_str(), true);
+            engineServices->getSoundContext()->playSoundAssetFile(music.path.c_str(), true);
             registry->destroy(entity);
         }
     }

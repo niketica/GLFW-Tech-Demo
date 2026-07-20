@@ -50,17 +50,8 @@ namespace niketica::engine
     {
         std::cout << "INFO::Engine::init -     Initializing internal systems..." << std::endl;
 
-        std::cout << "INFO::Engine::init -     Initializing ECS systems..." << std::endl;
-        systemRepository = std::make_unique<niketica::systems::SystemRepository>
-        (
-            registry.get(),
-            engineServices->getInputContext()->getInputState(),
-            engineServices->getInputContext()->getInputMap(),
-            engineServices->getSoundContext()
-        );
-
         std::cout << "INFO::Engine::init -     Initializing scenes..." << std::endl;
-        sceneRepository = std::make_unique<niketica::scene::SceneRepository>(registry.get(), systemRepository.get(), engineServices->getRenderContext());
+        sceneRepository = std::make_unique<niketica::scene::SceneRepository>(registry.get(), engineServices.get());
 
         std::cout << "INFO::Engine::init -     Done initializing internal systems." << std::endl;
     }
@@ -107,7 +98,7 @@ namespace niketica::engine
                     break;
                 }
                 
-                input(fixedDeltaTime);
+                input();
                 update(fixedDeltaTime);
                 accumulator -= fixedDeltaTime;
                 updates++;
@@ -133,11 +124,10 @@ namespace niketica::engine
         glfwTerminate();
     }
 
-    void Engine::input(float deltaTime)
-    {
-        systemRepository->getInputSystem()->update();
-        engineServices->getInputContext()->clearState();
-        
+    void Engine::input()
+    {        
+        sceneRepository->getTestScene()->input();
+
         auto inputView = registry->view<niketica::component::InputComponent>();
         auto& input = inputView.get<niketica::component::InputComponent>(inputView.front());
 
@@ -147,8 +137,6 @@ namespace niketica::engine
             running = false;
             return;
         }
-
-        sceneRepository->getTestScene()->input();
     }
 
     void Engine::update(float deltaTime)

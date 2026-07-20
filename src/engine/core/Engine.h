@@ -12,12 +12,7 @@
 
 #include "component/Common.h"
 #include "component/Input.h"
-#include "engine/core/renderer/IRenderContext.h"
-#include "engine/core/asset/IAssetReader.h"
-#include "engine/core/input/IInputContext.h"
-#include "engine/core/sound/ISoundContext.h"
 #include "engine/core/EngineServices.h"
-#include "systems/SystemRepository.h"
 #include "scene/SceneRepository.h"
 
 namespace niketica::engine
@@ -52,13 +47,12 @@ namespace niketica::engine
 
         std::unique_ptr<EngineServices> engineServices;
         std::unique_ptr<entt::registry> registry;
-        std::unique_ptr<niketica::systems::SystemRepository> systemRepository;
         std::unique_ptr<niketica::scene::SceneRepository> sceneRepository;
 
         void init();
         void loop();
 
-        void input(float deltaTime);
+        void input();
         void update(float deltaTime);
         void render();
 

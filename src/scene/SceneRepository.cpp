@@ -4,17 +4,15 @@ namespace niketica::scene
 {
     SceneRepository::SceneRepository(
             entt::registry* registry,
-            niketica::systems::SystemRepository* systemRepository,
-            niketica::renderer::IRenderContext* renderContext
+            niketica::engine::EngineServices* engineServices
         ) : registry(registry),
-            systemRepository(systemRepository),
-            renderContext(renderContext)
+            engineServices(engineServices)
     {
         initScenes();
     }
 
     void SceneRepository::initScenes()
     {
-        testScene = std::make_unique<TestScene>(registry, systemRepository, renderContext);
+        testScene = std::make_unique<TestScene>(registry, engineServices);
     }
 }

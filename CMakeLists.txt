@@ -113,10 +113,8 @@ add_library(engine
     src/engine/adapter/renderer/text/Font.cpp
     src/engine/adapter/renderer/text/TextRenderer.cpp
     src/engine/adapter/sound/SoundBackendMiniaudio.cpp
-
-    # src/systems
-    src/systems/sound/SoundSystem.cpp
-    src/systems/SystemRepository.cpp
+    src/engine/adapter/systems/sound/SoundSystem.cpp
+    src/engine/adapter/systems/SystemContext.cpp
 
     # src/scene
     src/scene/SceneRepository.cpp

@@ -4,18 +4,19 @@ namespace niketica::scene
 {
     TestScene::TestScene(
             entt::registry* registry,
-            niketica::systems::SystemRepository* systemRepository,
-            niketica::renderer::IRenderContext* renderContext
+            niketica::engine::EngineServices* engineServices
         ) : registry(registry),
-            systemRepository(systemRepository),
-            renderContext(renderContext)
+            engineServices(engineServices)
     {
         init();
     }
 
     void TestScene::init()
     {
-        auto texture = renderContext->getTextureLoader()->acquire("textures/background/main_menu_background.dds");
+        systemContext = std::make_unique<niketica::systems::SystemContext>(registry, engineServices);
+        systemContext->init();
+        
+        auto texture = engineServices->getRenderContext()->getTextureLoader()->acquire("textures/background/main_menu_background.dds");
         component::Sprite sprite;
 
         component::Transform transform;
@@ -35,6 +36,8 @@ namespace niketica::scene
 
     void TestScene::input()
     {
+        systemContext->input();
+
         auto inputView = registry->view<niketica::component::InputComponent>();
         auto& input = inputView.get<niketica::component::InputComponent>(inputView.front());
 
@@ -67,7 +70,9 @@ namespace niketica::scene
 
     void TestScene::update(float deltaTime)
     {
-        renderContext->getSpriteInstancedRenderer()->clear();
+        systemContext->update(deltaTime);
+
+        engineServices->getRenderContext()->getSpriteInstancedRenderer()->clear();
 
         auto spriteView = registry->view<niketica::component::Sprite, niketica::component::Transform, niketica::component::TextureHandle>();
         for (auto entity : spriteView)
@@ -75,17 +80,18 @@ namespace niketica::scene
             auto& sprite = spriteView.get<niketica::component::Sprite>(entity);
             auto& transform = spriteView.get<niketica::component::Transform>(entity);
             auto& textureHandle = spriteView.get<niketica::component::TextureHandle>(entity);
-            renderContext->getSpriteInstancedRenderer()->submit(textureHandle.id, sprite, transform.position, transform.size, 1.0f);
+            engineServices->getRenderContext()->getSpriteInstancedRenderer()->submit(textureHandle.id, sprite, transform.position, transform.size, 1.0f);
         }
 
-        systemRepository->getSoundSystem()->update(deltaTime);
     }
 
     void TestScene::render()
     {
+        systemContext->render();
+
         auto windowView = registry->view<niketica::component::Window>();
         auto &windowComponent = windowView.get<niketica::component::Window>(windowView.front());
-        renderContext->getSpriteInstancedRenderer()->render(windowComponent.projection, windowComponent.view);
+        engineServices->getRenderContext()->getSpriteInstancedRenderer()->render(windowComponent.projection, windowComponent.view);
 
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -95,8 +101,8 @@ namespace niketica::scene
         auto textValue = "Hello, World!";
         auto scale = 5.0f;
 
-        renderContext->getTextRenderer()->begin(windowComponent.projection, niketica::renderer::FontType::OPEN_SANS_REGULAR);
-        renderContext->getTextRenderer()->submitText(
+        engineServices->getRenderContext()->getTextRenderer()->begin(windowComponent.projection, niketica::renderer::FontType::OPEN_SANS_REGULAR);
+        engineServices->getRenderContext()->getTextRenderer()->submitText(
             niketica::renderer::FontType::OPEN_SANS_REGULAR,
             textValue,
             positionTopLeft,
@@ -104,7 +110,8 @@ namespace niketica::scene
             colorRed
         );
 
-        renderContext->getTextRenderer()->flush();
+        engineServices->getRenderContext()->getTextRenderer()->flush();
+
     }
 
 }

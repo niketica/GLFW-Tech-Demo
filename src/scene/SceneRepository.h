@@ -3,8 +3,7 @@
 #include <memory>
 #include <entt/entt.hpp>
 
-#include "engine/core/renderer/IRenderContext.h"
-#include "systems/SystemRepository.h"
+#include "engine/core/EngineServices.h"
 #include "scene/TestScene.h"
 
 namespace niketica::scene
@@ -14,8 +13,7 @@ namespace niketica::scene
     public:
         SceneRepository(
             entt::registry* registry,
-            niketica::systems::SystemRepository* systemRepository,
-            niketica::renderer::IRenderContext* renderContext
+            niketica::engine::EngineServices* engineServices
         );
         ~SceneRepository() = default;
 
@@ -23,8 +21,7 @@ namespace niketica::scene
 
     private:
         entt::registry* registry;
-        niketica::systems::SystemRepository* systemRepository;
-        niketica::renderer::IRenderContext* renderContext;
+        niketica::engine::EngineServices* engineServices;
 
         std::unique_ptr<TestScene> testScene;
 
