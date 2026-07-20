@@ -10,7 +10,7 @@
 #include "engine/adapter/asset/PakReader.h"
 #include "engine/adapter/input/InputBackendGLFW.h"
 #include "engine/adapter/sound/SoundBackendMiniaudio.h"
-#include "scene/SceneContext.h"
+#include "engine/adapter/scene/SceneContext.h"
 
 int main()
 {

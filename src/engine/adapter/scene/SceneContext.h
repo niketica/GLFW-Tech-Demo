@@ -5,7 +5,7 @@
 
 #include "engine/core/EngineServices.h"
 #include "engine/core/scene/ISceneContext.h"
-#include "scene/TestScene.h"
+#include "engine/adapter/scene/TestScene.h"
 
 namespace niketica::scene
 {
