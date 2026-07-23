@@ -117,6 +117,7 @@ add_library(engine
     src/engine/adapter/systems/SystemContext.cpp
     src/engine/adapter/scene/SceneContext.cpp
     src/engine/adapter/scene/TestScene.cpp
+    src/engine/adapter/scene/UserInterfaceDemoScene.cpp    
 )
 
 target_include_directories(engine PUBLIC

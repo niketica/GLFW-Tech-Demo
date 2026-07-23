@@ -1,14 +1,24 @@
 #pragma once
 
+#include <iostream>
+#include <unordered_map>
 #include <memory>
 #include <entt/entt.hpp>
 
 #include "engine/core/EngineServices.h"
 #include "engine/core/scene/ISceneContext.h"
+#include "engine/core/scene/IScene.h"
 #include "engine/adapter/scene/TestScene.h"
+#include "engine/adapter/scene/UserInterfaceDemoScene.h"
 
 namespace niketica::scene
 {
+    enum class SceneType
+    {
+        TEST,
+        USER_INTERFACE_DEMO
+};
+
     class SceneContext : public ISceneContext
     {
     public:
@@ -17,16 +27,29 @@ namespace niketica::scene
         );
         ~SceneContext() = default;
 
-        void input() override { testScene->input(); };
-        void update(float dt) override { testScene->update(dt); };
-        void render() override { testScene->render(); };
+        void input() override { currentScene->input(); };
+        void update(float dt) override { currentScene->update(dt); };
+        void render() override { currentScene->render(); };
 
         void initScenes() override;
 
+        void setCurrentScene(SceneType type)
+        {
+            auto it = sceneMap.find(type);
+            if (it != sceneMap.end())
+            {
+                currentScene = it->second.get();
+            }
+            else
+            {
+                std::cerr << "ERROR::SceneContext::setCurrentScene - Unknown scene type" << std::endl;
+            }
+        }
+
     private:
         niketica::engine::EngineServices* engineServices;
-
-        std::unique_ptr<TestScene> testScene;
+        std::unordered_map<SceneType, std::unique_ptr<IScene>> sceneMap;
+        IScene* currentScene = nullptr;
 
     };
 }

@@ -18,14 +18,14 @@
 
 namespace niketica::scene
 {
-    class TestScene : public IScene
+    class UserInterfaceDemoScene : public IScene
     {
     public:
-        TestScene(
+        UserInterfaceDemoScene(
             entt::registry* registry,
             niketica::engine::EngineServices* engineServices
         );
-        ~TestScene() = default;
+        ~UserInterfaceDemoScene() = default;
 
         void input() override;
         void update(float deltaTime) override;
