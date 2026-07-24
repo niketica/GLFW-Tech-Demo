@@ -31,14 +31,28 @@ namespace niketica::renderer
         ~TextRenderer();
         
         void init();
-        void begin(const glm::mat4& projection, const niketica::component::FontType& font) override;
-        void submitText(const niketica::component::FontType& font, const std::string& text,
+        void begin(const glm::mat4& projection, const niketica::component::FontType& font, uint32_t pixelSize) override;
+        void submitText(const niketica::component::FontType& font, uint32_t pixelSize, const std::string& text,
             glm::vec2 pos, float scale, glm::vec4 color) override;
         void flush() override;
 
         Font* getSampleFont()
         {
             return sampleFont.get();
+        }
+
+        Font* getFont(uint32_t pixelSize)
+        {
+            auto it = fonts.find(pixelSize);            
+            if (it == fonts.end())
+            {
+                fonts[pixelSize] = Font::load("fonts/OpenSans-Regular.ttf", pixelSize);
+                return getFont(pixelSize);
+            }
+            else
+            {
+                return it->second.get();
+            }
         }
 
     private:
@@ -51,5 +65,7 @@ namespace niketica::renderer
         static constexpr size_t MAX_VERTICES = 100000;
 
         std::shared_ptr<Font> sampleFont;
+        std::unordered_map<uint32_t, std::shared_ptr<Font>> fonts;
     };
+
 }

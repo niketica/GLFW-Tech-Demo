@@ -61,9 +61,8 @@ namespace niketica::renderer
         glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(TextVertex), (void*)16);
     }
 
-    void TextRenderer::begin(const glm::mat4& projection, const niketica::component::FontType& font)
+    void TextRenderer::begin(const glm::mat4& projection, const niketica::component::FontType& font, uint32_t pixelSize)
     {
-
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         
@@ -73,7 +72,7 @@ namespace niketica::renderer
         shader->setMat4("uProjection", projection);
 
         glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, getSampleFont()->atlasTexture);
+        glBindTexture(GL_TEXTURE_2D, getFont(pixelSize)->atlasTexture);
         shader->setInt("uFontAtlas", 0);
 
         glBindVertexArray(vao);
@@ -86,6 +85,7 @@ namespace niketica::renderer
 
     void TextRenderer::submitText(
         const niketica::component::FontType& font,
+        uint32_t pixelSize,
         const std::string& text,
         glm::vec2 pos,
         float scale,
@@ -96,7 +96,7 @@ namespace niketica::renderer
 
         for (unsigned char c : text)
         {
-            const Glyph& g = getSampleFont()->glyphs[c];
+            const Glyph& g = getFont(pixelSize)->glyphs[c];
 
             // Pixel-space glyph position
             float xpos = x + g.bearing.x * scale;

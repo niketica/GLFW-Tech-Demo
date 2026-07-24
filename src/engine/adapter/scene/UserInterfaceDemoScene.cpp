@@ -39,9 +39,10 @@ namespace niketica::scene
         auto positionTopLeft = glm::vec2(100.0f, windowComponent.height - 100.0f);
         auto colorRed = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
         auto textValue = "User Interface Demo";
-        auto scale = 5.0f;
+        auto scale = 1.0f;
 
         auto text = niketica::component::Text{};
+        text.fontSize = 48;
         text.value = textValue;
         text.positionTopLeft = positionTopLeft;
         text.color = colorRed;
