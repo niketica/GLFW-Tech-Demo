@@ -2,7 +2,6 @@
 
 #include <memory>
 #include <entt/entt.hpp>
-#include <glad/glad.h>
 
 #include "component/Components.h"
 #include "engine/core/EngineServices.h"

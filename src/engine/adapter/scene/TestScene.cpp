@@ -98,12 +98,9 @@ namespace niketica::scene
         auto &windowComponent = windowView.get<niketica::component::Window>(windowView.front());
         engineServices->getRenderContext()->getSpriteInstancedRenderer()->render(windowComponent.projection, windowComponent.view);
 
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
         auto positionTopLeft = glm::vec2(100.0f, windowComponent.height - 100.0f);
         auto colorRed = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
-        auto textValue = "Hello, World!";
+        auto textValue = "Test Scene";
         auto scale = 5.0f;
 
         engineServices->getRenderContext()->getTextRenderer()->begin(windowComponent.projection, niketica::renderer::FontType::OPEN_SANS_REGULAR);
