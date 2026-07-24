@@ -11,7 +11,7 @@ namespace niketica::renderer
 
     void RenderContext::initWindow()
     {
-        std::cout << "INFO::RenderContext::initWindow -     Initializing Window...";
+        std::cout << "INFO::RenderContext::initWindow - Initializing Window...";
         if (!glfwInit())
         {
             std::cerr << "ERROR::RenderContext::initWindow - Cannot initialize GLFW" << std::endl;
@@ -51,7 +51,7 @@ namespace niketica::renderer
 
     void RenderContext::initRenderers()
     {
-        std::cout << "INFO::RenderContext::initRenderers -     Initializing Renderers...";
+        std::cout << "INFO::RenderContext::initRenderers - Initializing Renderers...";
 
         textureLoader = std::make_unique<TextureLoader>();
         spriteInstancedRenderer = std::make_unique<SpriteInstancedRenderer>(textureLoader.get());
@@ -62,7 +62,7 @@ namespace niketica::renderer
 
     void RenderContext::releaseRenderers()
     {
-        std::cout << "INFO::RenderContext::releaseRenderers -     ReleaseRenderers Renderers...";
+        std::cout << "INFO::RenderContext::releaseRenderers - ReleaseRenderers Renderers...";
 
         textureLoader.release();
         spriteInstancedRenderer.release();

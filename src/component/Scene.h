@@ -9,4 +9,9 @@ namespace niketica::component
         USER_INTERFACE_DEMO
     };
 
+    struct SceneSwitchInstruction
+    {
+        SceneType nextScene;
+    };
+
 }

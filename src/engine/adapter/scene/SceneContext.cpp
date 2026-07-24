@@ -34,4 +34,22 @@ namespace niketica::scene
             std::cerr << "ERROR::SceneContext::setCurrentScene - Unknown scene type" << std::endl;
         }
     }
+
+    void SceneContext::input() { currentScene->input(); };
+
+    void SceneContext::update(float dt) {
+
+        auto viewSceneSwitch = registry->view<niketica::component::SceneSwitchInstruction>();
+        if (!viewSceneSwitch.empty())
+        {
+            auto entity = viewSceneSwitch.front();
+            auto& sceneSwitch = registry->get<niketica::component::SceneSwitchInstruction>(entity);
+            setCurrentScene(sceneSwitch.nextScene);
+        }
+
+        currentScene->update(dt);
+    };
+
+    void SceneContext::render() { currentScene->render(); };
+
 }

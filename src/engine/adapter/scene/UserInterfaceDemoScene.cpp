@@ -65,6 +65,11 @@ namespace niketica::scene
             auto sound = niketica::component::SoundEffect{ "sound/sfx/menu/23910__nightflame__menuui-sounds/422515__nightflame__menu-fx-03-descending.wav" };
             registry->emplace<niketica::component::SoundEffect>(registry->create(), sound);
         }
+        if (input.actions[niketica::component::Action::MINUS].pressed)
+        {
+            auto sceneSwitch = niketica::component::SceneSwitchInstruction{ niketica::component::SceneType::TEST };
+            registry->emplace<niketica::component::SceneSwitchInstruction>(registry->create(), sceneSwitch);
+        }
 
     }
 

@@ -22,10 +22,9 @@ namespace niketica::scene
         );
         ~SceneContext() = default;
 
-        void input() override { currentScene->input(); };
-        void update(float dt) override { currentScene->update(dt); };
-        void render() override { currentScene->render(); };
-
+        void input() override;
+        void update(float dt) override;
+        void render() override;
         void initScenes() override;
 
     private:
