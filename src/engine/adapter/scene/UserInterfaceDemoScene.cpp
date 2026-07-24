@@ -114,4 +114,10 @@ namespace niketica::scene
 
     }
 
+    void UserInterfaceDemoScene::reset()
+    {
+        systemContext.release();
+        init();
+    }
+
 }

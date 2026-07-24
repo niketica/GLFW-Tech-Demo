@@ -33,18 +33,7 @@ namespace niketica::scene
         std::unordered_map<niketica::component::SceneType, std::unique_ptr<IScene>> sceneMap;
         IScene* currentScene = nullptr;
 
-        void setCurrentScene(niketica::component::SceneType type)
-        {
-            auto it = sceneMap.find(type);
-            if (it != sceneMap.end())
-            {
-                currentScene = it->second.get();
-            }
-            else
-            {
-                std::cerr << "ERROR::SceneContext::setCurrentScene - Unknown scene type" << std::endl;
-            }
-        }
+        void setCurrentScene(niketica::component::SceneType type);
 
     };
 }

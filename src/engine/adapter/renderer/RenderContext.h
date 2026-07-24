@@ -33,12 +33,15 @@ namespace niketica::renderer
             return window;
         }
 
+        void reset() override;
+
     private:
         GLFWwindow* window;
         glm::vec3 clearColor = glm::vec3(0.2f, 0.3f, 0.3f);
 
         void initWindow();
         void initRenderers();
+        void releaseRenderers();
 
     };
 

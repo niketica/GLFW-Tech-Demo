@@ -35,6 +35,8 @@ namespace niketica::renderer
         {
             return textRenderer.get();
         }
+
+        virtual void reset() = 0;
         
     protected:
         std::unique_ptr<ITextureLoader> textureLoader;

@@ -40,7 +40,9 @@ namespace niketica::engine
         windowComponent.scale = 1.0f;
         windowComponent.view = glm::mat4(1.0f);
 
-        registry->emplace<niketica::component::Window>(registry->create(), windowComponent);
+        auto windowEntity = registry->create();
+        registry->emplace<niketica::component::Window>(windowEntity, windowComponent);
+        registry->emplace<niketica::component::Persistent>(windowEntity);
         
         sceneContext->setRegistry(registry.get());
         sceneContext->initScenes();

@@ -114,4 +114,10 @@ namespace niketica::scene
 
     }
 
+    void TestScene::reset()
+    {
+        systemContext.release();
+        init();
+    }
+
 }

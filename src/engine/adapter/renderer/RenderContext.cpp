@@ -59,6 +59,17 @@ namespace niketica::renderer
 
         std::cout << "DONE!" << std::endl;     
     }
+
+    void RenderContext::releaseRenderers()
+    {
+        std::cout << "INFO::RenderContext::releaseRenderers -     ReleaseRenderers Renderers...";
+
+        textureLoader.release();
+        spriteInstancedRenderer.release();
+        textRenderer.release();
+
+        std::cout << "DONE!" << std::endl;     
+    }
     
     bool RenderContext::windowShouldClose()
     {
@@ -81,5 +92,11 @@ namespace niketica::renderer
     {
         glfwSetWindowTitle(window, title);
     };
+
+    void RenderContext::reset()
+    {
+        releaseRenderers();
+        initRenderers();
+    }
 
 }
