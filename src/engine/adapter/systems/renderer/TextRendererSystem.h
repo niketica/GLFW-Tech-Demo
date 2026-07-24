@@ -8,15 +8,16 @@
 
 namespace niketica::systems
 {
-    class InputSystem : public ISystem
+
+    class TextRendererSystem : public ISystem
     {
     public:
-        InputSystem(entt::registry* registry, niketica::engine::EngineServices* engineServices)
+        TextRendererSystem(entt::registry* registry, niketica::engine::EngineServices* engineServices)
             : ISystem(registry, engineServices) {}
 
-        void input();
+        void input() override {}
         void update(float dt) override {}
-        void render() override {}
+        void render() override;
 
     private:
         const std::unordered_map<niketica::component::Action, niketica::input::ActionBinding>& mapBindings() const

@@ -8,6 +8,7 @@
 #include "engine/core/systems/ISystemContext.h"
 #include "engine/adapter/systems/sound/SoundSystem.h"
 #include "engine/adapter/systems/input/InputSystem.h"
+#include "engine/adapter/systems/renderer/TextRendererSystem.h"
 
 namespace niketica::systems
 {

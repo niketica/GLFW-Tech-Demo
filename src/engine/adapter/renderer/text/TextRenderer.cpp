@@ -61,7 +61,7 @@ namespace niketica::renderer
         glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(TextVertex), (void*)16);
     }
 
-    void TextRenderer::begin(const glm::mat4& projection, const FontType& font)
+    void TextRenderer::begin(const glm::mat4& projection, const niketica::component::FontType& font)
     {
 
         glEnable(GL_BLEND);
@@ -85,7 +85,7 @@ namespace niketica::renderer
     }
 
     void TextRenderer::submitText(
-        const FontType& font,
+        const niketica::component::FontType& font,
         const std::string& text,
         glm::vec2 pos,
         float scale,

@@ -31,8 +31,8 @@ namespace niketica::renderer
         ~TextRenderer();
         
         void init();
-        void begin(const glm::mat4& projection, const FontType& font) override;
-        void submitText(const FontType& font, const std::string& text,
+        void begin(const glm::mat4& projection, const niketica::component::FontType& font) override;
+        void submitText(const niketica::component::FontType& font, const std::string& text,
             glm::vec2 pos, float scale, glm::vec4 color) override;
         void flush() override;
 

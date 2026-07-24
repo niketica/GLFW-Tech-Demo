@@ -32,6 +32,21 @@ namespace niketica::scene
         registry->emplace<component::Color>(entity, color);
         registry->emplace<component::TextureHandle>(entity, texture);
         registry->emplace<component::RenderSprite>(entity);
+
+        auto windowView = registry->view<niketica::component::Window>();
+        auto &windowComponent = windowView.get<niketica::component::Window>(windowView.front());
+
+        auto positionTopLeft = glm::vec2(100.0f, windowComponent.height - 100.0f);
+        auto colorRed = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
+        auto textValue = "Test Scene";
+        auto scale = 5.0f;
+
+        auto text = niketica::component::Text{};
+        text.value = textValue;
+        text.positionTopLeft = positionTopLeft;
+        text.color = colorRed;
+        text.scale = scale;
+        registry->emplace<niketica::component::Text>(registry->create(), text);
     }
 
     void TestScene::input()
@@ -92,28 +107,11 @@ namespace niketica::scene
 
     void TestScene::render()
     {
-        systemContext->render();
-
         auto windowView = registry->view<niketica::component::Window>();
         auto &windowComponent = windowView.get<niketica::component::Window>(windowView.front());
         engineServices->getRenderContext()->getSpriteInstancedRenderer()->render(windowComponent.projection, windowComponent.view);
 
-        auto positionTopLeft = glm::vec2(100.0f, windowComponent.height - 100.0f);
-        auto colorRed = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
-        auto textValue = "Test Scene";
-        auto scale = 5.0f;
-
-        engineServices->getRenderContext()->getTextRenderer()->begin(windowComponent.projection, niketica::renderer::FontType::OPEN_SANS_REGULAR);
-        engineServices->getRenderContext()->getTextRenderer()->submitText(
-            niketica::renderer::FontType::OPEN_SANS_REGULAR,
-            textValue,
-            positionTopLeft,
-            scale,
-            colorRed
-        );
-
-        engineServices->getRenderContext()->getTextRenderer()->flush();
-
+        systemContext->render();
     }
 
     void TestScene::reset()

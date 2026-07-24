@@ -115,6 +115,7 @@ add_library(engine
     src/engine/adapter/sound/SoundBackendMiniaudio.cpp
     src/engine/adapter/systems/input/InputSystem.cpp
     src/engine/adapter/systems/sound/SoundSystem.cpp
+    src/engine/adapter/systems/renderer/TextRendererSystem.cpp
     src/engine/adapter/systems/SystemContext.cpp
     src/engine/adapter/scene/SceneContext.cpp
     src/engine/adapter/scene/TestScene.cpp
