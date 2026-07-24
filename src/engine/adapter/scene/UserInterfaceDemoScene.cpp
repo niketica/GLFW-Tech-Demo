@@ -16,7 +16,7 @@ namespace niketica::scene
         systemContext = std::make_unique<niketica::systems::SystemContext>(registry, engineServices);
         systemContext->init();
         
-        auto texture = engineServices->getRenderContext()->getTextureLoader()->acquire("textures/background/main_menu_background.dds");
+        auto texture = engineServices->getRenderContext()->getTextureLoader()->acquire("textures/background/forest_001.dds");
         component::Sprite sprite;
 
         component::Transform transform;

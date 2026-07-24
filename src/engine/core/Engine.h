@@ -10,9 +10,7 @@
 #include <GLFW/glfw3.h>
 #include <entt/entt.hpp>
 
-#include "component/Common.h"
-#include "component/Input.h"
-#include "component/Window.h"
+#include "component/Components.h"
 #include "engine/core/EngineServices.h"
 #include "engine/core/scene/ISceneContext.h"
 

@@ -5,6 +5,7 @@
 #include <memory>
 #include <entt/entt.hpp>
 
+#include "component/Components.h"
 #include "engine/core/EngineServices.h"
 #include "engine/core/scene/ISceneContext.h"
 #include "engine/core/scene/IScene.h"
@@ -13,12 +14,6 @@
 
 namespace niketica::scene
 {
-    enum class SceneType
-    {
-        TEST,
-        USER_INTERFACE_DEMO
-};
-
     class SceneContext : public ISceneContext
     {
     public:
@@ -33,7 +28,12 @@ namespace niketica::scene
 
         void initScenes() override;
 
-        void setCurrentScene(SceneType type)
+    private:
+        niketica::engine::EngineServices* engineServices;
+        std::unordered_map<niketica::component::SceneType, std::unique_ptr<IScene>> sceneMap;
+        IScene* currentScene = nullptr;
+
+        void setCurrentScene(niketica::component::SceneType type)
         {
             auto it = sceneMap.find(type);
             if (it != sceneMap.end())
@@ -45,11 +45,6 @@ namespace niketica::scene
                 std::cerr << "ERROR::SceneContext::setCurrentScene - Unknown scene type" << std::endl;
             }
         }
-
-    private:
-        niketica::engine::EngineServices* engineServices;
-        std::unordered_map<SceneType, std::unique_ptr<IScene>> sceneMap;
-        IScene* currentScene = nullptr;
 
     };
 }

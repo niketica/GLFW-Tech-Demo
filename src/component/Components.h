@@ -1,0 +1,15 @@
+#pragma once
+
+#include "component/Color.h"
+#include "component/Common.h"
+#include "component/Input.h"
+#include "component/Scene.h"
+#include "component/Sound.h"
+#include "component/Sprite.h"
+#include "component/SpriteAnimation.h"
+#include "component/Text.h"
+#include "component/TextureArray.h"
+#include "component/TextureHandle.h"
+#include "component/Transform.h"
+#include "component/UserInterface.h"
+#include "component/Window.h"

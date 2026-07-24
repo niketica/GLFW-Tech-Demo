@@ -9,9 +9,8 @@ namespace niketica::scene
 
     void SceneContext::initScenes()
     {
-        sceneMap.emplace(SceneType::TEST, std::make_unique<TestScene>(registry, engineServices));
-        sceneMap.emplace(SceneType::USER_INTERFACE_DEMO, std::make_unique<UserInterfaceDemoScene>(registry, engineServices));
-
-        currentScene = sceneMap.at(SceneType::TEST).get();
+        sceneMap.emplace(niketica::component::SceneType::TEST, std::make_unique<TestScene>(registry, engineServices));
+        sceneMap.emplace(niketica::component::SceneType::USER_INTERFACE_DEMO, std::make_unique<UserInterfaceDemoScene>(registry, engineServices));
+        setCurrentScene(niketica::component::SceneType::TEST);
     }
 }
