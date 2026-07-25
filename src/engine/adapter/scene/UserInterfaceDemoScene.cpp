@@ -36,18 +36,18 @@ namespace niketica::scene
         auto windowView = registry->view<niketica::component::Window>();
         const auto &windowComponent = windowView.get<niketica::component::Window>(windowView.front());
 
-        auto positionTopLeft = glm::vec2(100.0f, windowComponent.height - 100.0f);
-        auto colorRed = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
-        auto textValue = "User Interface Demo";
-        auto scale = 1.0f;
-
-        auto text = niketica::component::Text{};
+        niketica::component::Text text;
         text.fontSize = 48;
-        text.value = textValue;
-        text.positionTopLeft = positionTopLeft;
-        text.color = colorRed;
-        text.scale = scale;
-        registry->emplace<niketica::component::Text>(registry->create(), text);
+        text.value = "User Interface Demo";
+        text.color = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
+        text.scale = 1.0f;
+
+        niketica::component::Transform textTransform;
+        textTransform.position = { 100.0f, windowComponent.height - 100.0f, 0.0f };
+
+        auto textEntity = registry->create();
+        registry->emplace<niketica::component::Text>(textEntity, text);
+        registry->emplace<niketica::component::Transform>(textEntity, textTransform);
 
         niketica::component::UINineSlice uiNineSlice;
         uiNineSlice.texture = engineServices->getRenderContext()->getTextureLoader()->acquire("textures/ui/ui_sheet.dds");
@@ -65,6 +65,13 @@ namespace niketica::scene
         auto entityUI = registry->create();
         registry->emplace<niketica::component::UINineSlice>(entityUI, uiNineSlice);
         registry->emplace<niketica::component::Transform>(entityUI, transformUI);
+
+        auto textUI = niketica::component::Text{};
+        textUI.fontSize = 48;
+        textUI.value = "This is a text box.";
+        textUI.color = glm::vec4(1.0f, 1.0f, 0.0f, 1.0f);
+        textUI.scale = 1.0f;
+        registry->emplace<niketica::component::Text>(entityUI, textUI);
     }
 
     void UserInterfaceDemoScene::input()

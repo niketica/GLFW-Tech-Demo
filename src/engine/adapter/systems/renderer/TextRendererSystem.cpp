@@ -6,27 +6,26 @@ namespace niketica::systems
     void TextRendererSystem::render()
     {
         auto windowView = registry->view<niketica::component::Window>();
-        auto &windowComponent = windowView.get<niketica::component::Window>(windowView.front());
+        const auto &windowComponent = windowView.get<niketica::component::Window>(windowView.front());
 
-        auto viewText = registry->view<niketica::component::Text>();
-        if (viewText.empty())
-        {
-            return;
-        }
-
-        // TODO handle multiple different font types and font sizes
-        
-        auto& firstText = registry->get<niketica::component::Text>(viewText.front());
-        engineServices->getRenderContext()->getTextRenderer()->begin(windowComponent.projection, niketica::component::FontType::OPEN_SANS_REGULAR, firstText.fontSize);
+        auto viewText = registry->view<niketica::component::Text, niketica::component::Transform>();
+        bool first = true;
 
         for (auto entity : viewText)
         {
-            auto& text = registry->get<niketica::component::Text>(entity);            
+            const auto& text = registry->get<niketica::component::Text>(entity);    
+            if (first)
+            {
+                engineServices->getRenderContext()->getTextRenderer()->begin(windowComponent.projection, niketica::component::FontType::OPEN_SANS_REGULAR, text.fontSize);
+                first = false;
+            }
+                 
+            const auto& transform = registry->get<niketica::component::Transform>(entity);           
             engineServices->getRenderContext()->getTextRenderer()->submitText(
                 niketica::component::FontType::OPEN_SANS_REGULAR,
                 text.fontSize,
                 text.value,
-                text.positionTopLeft,
+                glm::vec2{ transform.position.x, transform.position.y },
                 text.scale,
                 text.color
             );

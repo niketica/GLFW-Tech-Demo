@@ -34,20 +34,20 @@ namespace niketica::scene
         registry->emplace<component::RenderSprite>(entity);
 
         auto windowView = registry->view<niketica::component::Window>();
-        auto &windowComponent = windowView.get<niketica::component::Window>(windowView.front());
+        const auto &windowComponent = windowView.get<niketica::component::Window>(windowView.front());
 
-        auto positionTopLeft = glm::vec2(100.0f, windowComponent.height - 100.0f);
-        auto colorRed = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
-        auto textValue = "Test Scene";
-        auto scale = 1.0f;
+        niketica::component::Text text;
+        text.fontSize = 48;
+        text.value = "Test Scene";
+        text.color = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
+        text.scale = 1.0f;
 
-        auto text = niketica::component::Text{};
-        text.fontSize = 20;
-        text.value = textValue;
-        text.positionTopLeft = positionTopLeft;
-        text.color = colorRed;
-        text.scale = scale;
-        registry->emplace<niketica::component::Text>(registry->create(), text);
+        niketica::component::Transform textTransform;
+        textTransform.position = { 100.0f, windowComponent.height - 100.0f, 0.0f };
+
+        auto textEntity = registry->create();
+        registry->emplace<niketica::component::Text>(textEntity, text);
+        registry->emplace<niketica::component::Transform>(textEntity, textTransform);
     }
 
     void TestScene::input()
