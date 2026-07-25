@@ -22,6 +22,14 @@ namespace niketica::renderer
 
     class Font {
     public:
+        ~Font()
+        {
+            if(atlasTexture)
+            {
+                glDeleteTextures(1, &atlasTexture);
+            }
+        }
+
         GLuint atlasTexture = 0;
         uint32_t atlasWidth = 0;
         uint32_t atlasHeight = 0;

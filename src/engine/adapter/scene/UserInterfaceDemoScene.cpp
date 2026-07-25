@@ -67,7 +67,7 @@ namespace niketica::scene
         registry->emplace<niketica::component::Transform>(entityUI, transformUI);
 
         niketica::component::Text textUI;
-        textUI.fontSize = 48;
+        textUI.fontSize = 20;
         textUI.value = "This is a text box.";
         textUI.color = glm::vec4(1.0f, 1.0f, 0.0f, 1.0f);
         textUI.scale = 1.0f;

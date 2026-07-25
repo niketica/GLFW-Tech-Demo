@@ -52,6 +52,7 @@ namespace niketica::renderer
         ~TextRenderer();
         
         void init();
+        void startFrame() override;
         void begin(const glm::mat4& projection, const niketica::component::FontType& font, uint32_t pixelSize) override;
         void submitText(const niketica::component::FontType& font, uint32_t pixelSize, const std::string& text,
             glm::vec2 pos, float scale, glm::vec4 color) override;
@@ -64,6 +65,7 @@ namespace niketica::renderer
 
         TextVertex* mappedBuffer = nullptr;
         size_t vertexCount = 0;
+        size_t vertexOffset = 0;
         static constexpr size_t MAX_VERTICES = 100000;
 
         std::unordered_map<FontKey, std::shared_ptr<Font>, FontKeyHash> fonts;

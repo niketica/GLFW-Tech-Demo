@@ -59,6 +59,11 @@ namespace niketica::renderer
         glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(TextVertex), (void*)16);
     }
 
+    void TextRenderer::startFrame()
+    {
+        vertexOffset = 0;
+    }
+
     void TextRenderer::begin(const glm::mat4& projection, const niketica::component::FontType& font, uint32_t pixelSize)
     {
         glEnable(GL_BLEND);
@@ -116,7 +121,7 @@ namespace niketica::renderer
                 {{xpos + w, ypos + h}, {g.uvMax.x, g.uvMin.y},          color},
             };
 
-            memcpy(mappedBuffer + vertexCount, vertices, sizeof(vertices));
+            memcpy(mappedBuffer + vertexOffset + vertexCount, vertices, sizeof(vertices));
             vertexCount += 6;
 
             // Advance cursor (FreeType advance is in 1/64 pixels)
@@ -129,7 +134,8 @@ namespace niketica::renderer
         if (vertexCount == 0) return;
 
         glBindVertexArray(vao);
-        glDrawArrays(GL_TRIANGLES, 0, vertexCount);
+        glDrawArrays(GL_TRIANGLES,  vertexOffset, vertexCount);
+        vertexOffset += vertexCount;
         vertexCount = 0;
     }
 

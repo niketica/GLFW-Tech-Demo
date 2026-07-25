@@ -8,6 +8,26 @@
 
 namespace niketica::systems
 {
+    struct TextBatchKey
+    {
+        niketica::component::FontType font;
+        uint32_t size;
+
+        bool operator==(const TextBatchKey& other) const
+        {
+            return font == other.font &&
+                size == other.size;
+        }
+    };
+
+    struct TextBatchHash
+    {
+        size_t operator()(const TextBatchKey& k) const
+        {
+            return std::hash<int>()((int)k.font) ^
+                (std::hash<uint32_t>()(k.size) << 1);
+        }
+    };
 
     class TextRendererSystem : public ISystem
     {

@@ -9,28 +9,53 @@ namespace niketica::systems
         const auto &windowComponent = windowView.get<niketica::component::Window>(windowView.front());
 
         auto viewText = registry->view<niketica::component::Text, niketica::component::Transform>();
-        bool first = true;
 
+        // Collect all text components and batch by font type and font size.
+        using BatchMap =
+            std::unordered_map<
+                TextBatchKey,
+                std::vector<entt::entity>,
+                TextBatchHash>;
+        BatchMap batches;
         for (auto entity : viewText)
         {
-            const auto& text = registry->get<niketica::component::Text>(entity);    
-            if (first)
+            const auto& text = viewText.get<niketica::component::Text>(entity);
+
+            TextBatchKey key
             {
-                engineServices->getRenderContext()->getTextRenderer()->begin(windowComponent.projection, niketica::component::FontType::OPEN_SANS_REGULAR, text.fontSize);
-                first = false;
-            }
-                 
-            const auto& transform = registry->get<niketica::component::Transform>(entity);           
-            engineServices->getRenderContext()->getTextRenderer()->submitText(
-                niketica::component::FontType::OPEN_SANS_REGULAR,
-                text.fontSize,
-                text.value,
-                glm::vec2{ transform.position.x, transform.position.y },
-                text.scale,
-                text.color
-            );
+                text.fontType,
+                (uint32_t)text.fontSize
+            };
+
+            batches[key].push_back(entity);
         }
-        engineServices->getRenderContext()->getTextRenderer()->flush();
+
+        auto* renderer = engineServices->getRenderContext()->getTextRenderer();
+        renderer->startFrame();
+        for (const auto& [key, entities] : batches)
+        {
+            renderer->begin(windowComponent.projection, key.font, key.size);
+
+            for (auto entity : entities)
+            {
+                const auto& text = viewText.get<niketica::component::Text>(entity);
+                const auto& transform = viewText.get<niketica::component::Transform>(entity);
+
+                renderer->submitText(
+                    text.fontType,
+                    text.fontSize,
+                    text.value,
+                    {
+                        transform.position.x,
+                        transform.position.y
+                    },
+                    text.scale,
+                    text.color
+                );
+            }
+
+            renderer->flush();
+        }
     }
 
 }
