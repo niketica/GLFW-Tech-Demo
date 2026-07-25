@@ -34,7 +34,7 @@ namespace niketica::scene
         registry->emplace<component::RenderSprite>(entity);
 
         auto windowView = registry->view<niketica::component::Window>();
-        auto &windowComponent = windowView.get<niketica::component::Window>(windowView.front());
+        const auto &windowComponent = windowView.get<niketica::component::Window>(windowView.front());
 
         auto positionTopLeft = glm::vec2(100.0f, windowComponent.height - 100.0f);
         auto colorRed = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
@@ -48,6 +48,23 @@ namespace niketica::scene
         text.color = colorRed;
         text.scale = scale;
         registry->emplace<niketica::component::Text>(registry->create(), text);
+
+        niketica::component::UINineSlice uiNineSlice;
+        uiNineSlice.texture = engineServices->getRenderContext()->getTextureLoader()->acquire("textures/ui/ui_sheet.dds");
+        uiNineSlice.spriteOffset = { 814.0f, 0.0f };
+        uiNineSlice.spriteSize = { 206.0f, 209.0f };
+        uiNineSlice.left = 25.0f;
+        uiNineSlice.right = 25.0f;
+        uiNineSlice.top = 28.0f;
+        uiNineSlice.bottom = 25.0f;
+
+        niketica::component::Transform transformUI;
+        transformUI.position = { 100.0f, 100.0f, 1.0f };
+        transformUI.size = { 200.0f, 400.0f, 1.0f };
+
+        auto entityUI = registry->create();
+        registry->emplace<niketica::component::UINineSlice>(entityUI, uiNineSlice);
+        registry->emplace<niketica::component::Transform>(entityUI, transformUI);
     }
 
     void UserInterfaceDemoScene::input()
@@ -94,6 +111,7 @@ namespace niketica::scene
         systemContext->update(deltaTime);
 
         engineServices->getRenderContext()->getSpriteInstancedRenderer()->clear();
+        engineServices->getRenderContext()->getSpriteInstancedRenderer()->clearUI();
 
         auto spriteView = registry->view<niketica::component::Sprite, niketica::component::Transform, niketica::component::TextureHandle>();
         for (auto entity : spriteView)
@@ -103,14 +121,31 @@ namespace niketica::scene
             auto& textureHandle = spriteView.get<niketica::component::TextureHandle>(entity);
             engineServices->getRenderContext()->getSpriteInstancedRenderer()->submit(textureHandle.id, sprite, transform.position, transform.size, 1.0f);
         }
+        
+        auto nineSliceView = registry->view<niketica::component::UINineSlice, niketica::component::Transform>();
+        for (auto entity : nineSliceView)
+        {
+            const auto& uiNineSlice = registry->get<niketica::component::UINineSlice>(entity);
+            const auto& transform = registry->get<niketica::component::Transform>(entity);
+
+            niketica::component::NineSliceTexture nineSliceTex =
+            {
+                uiNineSlice.texture,
+                2048.0f,
+                2048.0f
+            };
+            engineServices->getRenderContext()->getSpriteInstancedRenderer()->submitNineSlice(transform, uiNineSlice, nineSliceTex, 1.0f);
+        }
 
     }
 
     void UserInterfaceDemoScene::render()
     {
         auto windowView = registry->view<niketica::component::Window>();
-        auto &windowComponent = windowView.get<niketica::component::Window>(windowView.front());
+        const auto &windowComponent = windowView.get<niketica::component::Window>(windowView.front());
+
         engineServices->getRenderContext()->getSpriteInstancedRenderer()->render(windowComponent.projection, windowComponent.view);
+        engineServices->getRenderContext()->getSpriteInstancedRenderer()->renderUI(windowComponent.projection, windowComponent.view);
 
         systemContext->render();
     }

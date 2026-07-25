@@ -16,13 +16,6 @@
 
 namespace niketica::renderer {
 
-    struct NineSliceTexture
-    {
-        niketica::component::TextureHandle texture;
-        float width;   // full texture width
-        float height;  // full texture height
-    };
-
     class SpriteInstancedRenderer : public ISpriteInstancedRenderer
     {
     public:
@@ -36,14 +29,14 @@ namespace niketica::renderer {
         void submitNineSlice(
             const niketica::component::Transform& tr,
             const niketica::component::UINineSlice& ns,
-            const NineSliceTexture& tex,
-            const float scale);
+            const niketica::component::NineSliceTexture& tex,
+            const float scale) override;
 
         void clear() override;
-        void clearUI();
+        void clearUI() override;
 
         void render(const glm::mat4& projection, const glm::mat4& view) override;
-        void renderUI(const glm::mat4& projection, const glm::mat4& view);
+        void renderUI(const glm::mat4& projection, const glm::mat4& view) override;
 
     private:
 
@@ -76,7 +69,7 @@ namespace niketica::renderer {
             float y,
             float w,
             float h,
-            const NineSliceTexture& tex,
+            const niketica::component::NineSliceTexture& tex,
             const glm::vec2& uvOffset,
             const glm::vec2& uvScale,
             float z);

@@ -306,7 +306,7 @@ namespace niketica::renderer {
     void SpriteInstancedRenderer::submitNineSlice(
         const component::Transform& tr,
         const component::UINineSlice& ns,
-        const NineSliceTexture& tex,
+        const niketica::component::NineSliceTexture& tex,
         const float scale)
     {
         const float x = tr.position.x * scale;
@@ -442,7 +442,7 @@ namespace niketica::renderer {
         float y,
         float w,
         float h,
-        const NineSliceTexture& tex,
+        const niketica::component::NineSliceTexture& tex,
         const glm::vec2& uvOffset,
         const glm::vec2& uvScale,
         float z)
