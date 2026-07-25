@@ -66,12 +66,19 @@ namespace niketica::scene
         registry->emplace<niketica::component::UINineSlice>(entityUI, uiNineSlice);
         registry->emplace<niketica::component::Transform>(entityUI, transformUI);
 
-        auto textUI = niketica::component::Text{};
+        niketica::component::Text textUI;
         textUI.fontSize = 48;
         textUI.value = "This is a text box.";
         textUI.color = glm::vec4(1.0f, 1.0f, 0.0f, 1.0f);
         textUI.scale = 1.0f;
-        registry->emplace<niketica::component::Text>(entityUI, textUI);
+
+        niketica::component::ParentTransform textUIParent = { entityUI };
+
+        auto entityTextUI = registry->create();
+        registry->emplace<niketica::component::Text>(entityTextUI, textUI);
+        registry->emplace<niketica::component::Transform>(entityTextUI);
+        registry->emplace<niketica::component::LocalTransform>(entityTextUI);
+        registry->emplace<niketica::component::ParentTransform>(entityTextUI, textUIParent);
     }
 
     void UserInterfaceDemoScene::input()

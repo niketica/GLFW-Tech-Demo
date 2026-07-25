@@ -114,6 +114,7 @@ add_library(engine
     src/engine/adapter/renderer/text/Font.cpp
     src/engine/adapter/renderer/text/TextRenderer.cpp
     src/engine/adapter/sound/SoundBackendMiniaudio.cpp
+    src/engine/adapter/systems/common/WorldTransformSystem.cpp
     src/engine/adapter/systems/input/InputSystem.cpp
     src/engine/adapter/systems/sound/SoundSystem.cpp
     src/engine/adapter/systems/renderer/SpriteRendererSystem.cpp

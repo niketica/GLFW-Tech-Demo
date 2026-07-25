@@ -6,6 +6,7 @@
 #include "engine/core/EngineServices.h"
 #include "engine/core/systems/ISystem.h"
 #include "engine/core/systems/ISystemContext.h"
+#include "engine/adapter/systems/common/WorldTransformSystem.h"
 #include "engine/adapter/systems/sound/SoundSystem.h"
 #include "engine/adapter/systems/input/InputSystem.h"
 #include "engine/adapter/systems/renderer/SpriteRendererSystem.h"
