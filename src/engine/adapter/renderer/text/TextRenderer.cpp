@@ -9,8 +9,6 @@ namespace niketica::renderer
             "shaders/text.frag"
         );
 
-        sampleFont = Font::load("fonts/OpenSans-Regular.ttf", 14);
-
         init();
     }
 
@@ -72,7 +70,7 @@ namespace niketica::renderer
         shader->setMat4("uProjection", projection);
 
         glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, getFont(pixelSize)->atlasTexture);
+        glBindTexture(GL_TEXTURE_2D, getFont(font, pixelSize)->atlasTexture);
         shader->setInt("uFontAtlas", 0);
 
         glBindVertexArray(vao);
@@ -96,7 +94,7 @@ namespace niketica::renderer
 
         for (unsigned char c : text)
         {
-            const Glyph& g = getFont(pixelSize)->glyphs[c];
+            const Glyph& g = getFont(font, pixelSize)->glyphs[c];
 
             // Pixel-space glyph position
             float xpos = x + g.bearing.x * scale;
@@ -131,6 +129,28 @@ namespace niketica::renderer
         glBindVertexArray(vao);
         glDrawArrays(GL_TRIANGLES, 0, vertexCount);
         vertexCount = 0;
+    }
+
+    Font* TextRenderer::getFont(niketica::component::FontType type, uint32_t pixelSize)
+    {
+        FontKey key{type, pixelSize};
+
+        auto it = fonts.find(key);
+
+        if (it != fonts.end())
+            return it->second.get();
+
+        auto pathIt = fontPaths.find(type);
+
+        if (pathIt == fontPaths.end())
+        {
+            std::cerr << "TextRenderer::getFont - Unknown font type" << std::endl;
+            throw std::runtime_error("TextRenderer::getFont - Unknown font type");
+        }
+
+        fonts[key] = Font::load(pathIt->second, pixelSize);
+
+        return fonts[key].get();
     }
 
 }

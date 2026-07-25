@@ -18,6 +18,27 @@
 
 namespace niketica::renderer
 {
+    struct FontKey
+    {
+        niketica::component::FontType type;
+        uint32_t pixelSize;
+
+        bool operator==(const FontKey& other) const
+        {
+            return type == other.type &&
+                    pixelSize == other.pixelSize;
+        }
+    };
+
+    struct FontKeyHash
+    {
+        size_t operator()(const FontKey& k) const
+        {
+            return std::hash<int>()((int)k.type) ^
+                    (std::hash<uint32_t>()(k.pixelSize) << 1);
+        }
+    };
+
     struct TextVertex {
         glm::vec2 pos;
         glm::vec2 uv;
@@ -36,25 +57,6 @@ namespace niketica::renderer
             glm::vec2 pos, float scale, glm::vec4 color) override;
         void flush() override;
 
-        Font* getSampleFont()
-        {
-            return sampleFont.get();
-        }
-
-        Font* getFont(uint32_t pixelSize)
-        {
-            auto it = fonts.find(pixelSize);            
-            if (it == fonts.end())
-            {
-                fonts[pixelSize] = Font::load("fonts/OpenSans-Regular.ttf", pixelSize);
-                return getFont(pixelSize);
-            }
-            else
-            {
-                return it->second.get();
-            }
-        }
-
     private:
         GLuint vao = 0;
         GLuint vbo = 0;
@@ -64,8 +66,16 @@ namespace niketica::renderer
         size_t vertexCount = 0;
         static constexpr size_t MAX_VERTICES = 100000;
 
-        std::shared_ptr<Font> sampleFont;
-        std::unordered_map<uint32_t, std::shared_ptr<Font>> fonts;
+        std::unordered_map<FontKey, std::shared_ptr<Font>, FontKeyHash> fonts;
+        std::unordered_map<niketica::component::FontType, std::string> fontPaths =
+        {
+            { niketica::component::FontType::OPEN_SANS_REGULAR, "fonts/OpenSans-Regular.ttf" },
+            // {niketica::component::FontType::OPEN_SANS_BOLD,    "fonts/OpenSans-Bold.ttf"},
+            // {niketica::component::FontType::ROBOTO,            "fonts/Roboto-Regular.ttf"},
+        };
+
+        Font* getFont(niketica::component::FontType type, uint32_t pixelSize);
+
     };
 
 }
