@@ -8,3 +8,5 @@ assets/fonts/
 data.pak
 libzlib.dll
 compressor.exe
+
+settings.json
