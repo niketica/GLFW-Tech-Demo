@@ -10,19 +10,22 @@
 #include "component/Transform.h"
 #include "component/Color.h"
 #include "component/UserInterface.h"
-#include "engine/core/renderer/ISpriteInstancedRenderer.h"
+#include "engine/core/renderer/INineSliceInstancedRenderer.h"
 #include "engine/core/renderer/ITextureLoader.h"
 #include "engine/adapter/renderer/Shader.h"
 
 namespace niketica::renderer {
 
-    class SpriteInstancedRenderer : public ISpriteInstancedRenderer
+    class NineSliceInstancedRenderer : public INineSliceInstancedRenderer
     {
     public:
-        SpriteInstancedRenderer(ITextureLoader* textureLoader);
-        ~SpriteInstancedRenderer();
+        NineSliceInstancedRenderer(ITextureLoader* textureLoader);
+        ~NineSliceInstancedRenderer();
 
-        void submit(const unsigned int textureID, const niketica::component::Sprite& sprite, const glm::vec3& position, const glm::vec2& size,
+        void submit(
+            const niketica::component::Transform& tr,
+            const niketica::component::UINineSlice& ns,
+            const niketica::component::NineSliceTexture& tex,
             const float scale) override;
         void clear() override;
         void render(const glm::mat4& projection, const glm::mat4& view) override;
@@ -53,6 +56,17 @@ namespace niketica::renderer {
         std::vector<InstanceData> instanceBuffer;
 
         void initQuad();
+        void submitQuad(
+            float x,
+            float y,
+            float w,
+            float h,
+            const niketica::component::NineSliceTexture& tex,
+            const glm::vec2& uvOffset,
+            const glm::vec2& uvScale,
+            float z);
+        void submitUI(const unsigned int textureID, const niketica::component::Sprite& sprite, const glm::vec3& position, const glm::vec2& size,
+            const float scale);
     };
 
 }

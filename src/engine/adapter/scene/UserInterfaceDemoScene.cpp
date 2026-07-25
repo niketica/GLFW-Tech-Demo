@@ -111,8 +111,6 @@ namespace niketica::scene
         systemContext->update(deltaTime);
 
         engineServices->getRenderContext()->getSpriteInstancedRenderer()->clear();
-        engineServices->getRenderContext()->getSpriteInstancedRenderer()->clearUI();
-
         auto spriteView = registry->view<niketica::component::Sprite, niketica::component::Transform, niketica::component::TextureHandle>();
         for (auto entity : spriteView)
         {
@@ -122,6 +120,7 @@ namespace niketica::scene
             engineServices->getRenderContext()->getSpriteInstancedRenderer()->submit(textureHandle.id, sprite, transform.position, transform.size, 1.0f);
         }
         
+        engineServices->getRenderContext()->getNineSliceInstancedRenderer()->clear();
         auto nineSliceView = registry->view<niketica::component::UINineSlice, niketica::component::Transform>();
         for (auto entity : nineSliceView)
         {
@@ -134,7 +133,7 @@ namespace niketica::scene
                 2048.0f,
                 2048.0f
             };
-            engineServices->getRenderContext()->getSpriteInstancedRenderer()->submitNineSlice(transform, uiNineSlice, nineSliceTex, 1.0f);
+            engineServices->getRenderContext()->getNineSliceInstancedRenderer()->submit(transform, uiNineSlice, nineSliceTex, 1.0f);
         }
 
     }
@@ -145,7 +144,7 @@ namespace niketica::scene
         const auto &windowComponent = windowView.get<niketica::component::Window>(windowView.front());
 
         engineServices->getRenderContext()->getSpriteInstancedRenderer()->render(windowComponent.projection, windowComponent.view);
-        engineServices->getRenderContext()->getSpriteInstancedRenderer()->renderUI(windowComponent.projection, windowComponent.view);
+        engineServices->getRenderContext()->getNineSliceInstancedRenderer()->render(windowComponent.projection, windowComponent.view);
 
         systemContext->render();
     }

@@ -55,6 +55,7 @@ namespace niketica::renderer
 
         textureLoader = std::make_unique<TextureLoader>();
         spriteInstancedRenderer = std::make_unique<SpriteInstancedRenderer>(textureLoader.get());
+        nineSliceInstancedRenderer = std::make_unique<NineSliceInstancedRenderer>(textureLoader.get());
         textRenderer = std::make_unique<TextRenderer>(1920.0f, 1080.0f); // Just give the dimensions hard coded for now
 
         std::cout << "DONE!" << std::endl;     
@@ -66,6 +67,7 @@ namespace niketica::renderer
 
         textureLoader.release();
         spriteInstancedRenderer.release();
+        nineSliceInstancedRenderer.release();
         textRenderer.release();
 
         std::cout << "DONE!" << std::endl;     

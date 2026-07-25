@@ -109,6 +109,7 @@ add_library(engine
     src/engine/adapter/renderer/TextureLoader.cpp
     src/engine/adapter/renderer/SimpleRenderer.cpp
     src/engine/adapter/renderer/SpriteInstancedRenderer.cpp
+    src/engine/adapter/renderer/NineSliceInstancedRenderer.cpp
     src/engine/adapter/renderer/RenderContext.cpp
     src/engine/adapter/renderer/text/Font.cpp
     src/engine/adapter/renderer/text/TextRenderer.cpp

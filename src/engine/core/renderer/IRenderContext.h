@@ -4,6 +4,7 @@
 
 #include "engine/core/renderer/ITextureLoader.h"
 #include "engine/core/renderer/ISpriteInstancedRenderer.h"
+#include "engine/core/renderer/INineSliceInstancedRenderer.h"
 #include "engine/core/renderer/ITextRenderer.h"
 
 namespace niketica::renderer
@@ -31,6 +32,11 @@ namespace niketica::renderer
             return spriteInstancedRenderer.get();
         }
 
+        INineSliceInstancedRenderer* getNineSliceInstancedRenderer() const
+        {
+            return nineSliceInstancedRenderer.get();
+        }
+
         ITextRenderer* getTextRenderer() const
         {
             return textRenderer.get();
@@ -41,6 +47,7 @@ namespace niketica::renderer
     protected:
         std::unique_ptr<ITextureLoader> textureLoader;
         std::unique_ptr<ISpriteInstancedRenderer> spriteInstancedRenderer;
+        std::unique_ptr<INineSliceInstancedRenderer> nineSliceInstancedRenderer;
         std::unique_ptr<ITextRenderer> textRenderer;
 
     };
