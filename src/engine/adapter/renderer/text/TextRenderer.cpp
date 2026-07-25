@@ -92,9 +92,11 @@ namespace niketica::renderer
         float x = pos.x;
         float y = pos.y;
 
+        Font* fontObj = getFont(font, pixelSize);
+
         for (unsigned char c : text)
         {
-            const Glyph& g = getFont(font, pixelSize)->glyphs[c];
+            const Glyph& g = fontObj->glyphs[c];
 
             // Pixel-space glyph position
             float xpos = x + g.bearing.x * scale;
