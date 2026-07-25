@@ -71,6 +71,7 @@ namespace niketica::scene
         textUI.value = "This is a text box.";
         textUI.color = glm::vec4(1.0f, 1.0f, 0.0f, 1.0f);
         textUI.scale = 1.0f;
+        textUI.fontType = niketica::component::FontType::COURIER_PRIME_CODE;
 
         niketica::component::ParentTransform textUIParent = { entityUI };
 

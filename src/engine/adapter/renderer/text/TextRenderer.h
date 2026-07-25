@@ -71,9 +71,8 @@ namespace niketica::renderer
         std::unordered_map<FontKey, std::shared_ptr<Font>, FontKeyHash> fonts;
         std::unordered_map<niketica::component::FontType, std::string> fontPaths =
         {
-            { niketica::component::FontType::OPEN_SANS_REGULAR, "fonts/OpenSans-Regular.ttf" },
-            // {niketica::component::FontType::OPEN_SANS_BOLD,    "fonts/OpenSans-Bold.ttf"},
-            // {niketica::component::FontType::ROBOTO,            "fonts/Roboto-Regular.ttf"},
+            { niketica::component::FontType::OPEN_SANS_REGULAR, "fonts/open_sans/OpenSans-Regular.ttf" },
+            { niketica::component::FontType::COURIER_PRIME_CODE, "fonts/courier_prime_code/Courier_Prime_Code.ttf" },
         };
 
         Font* getFont(niketica::component::FontType type, uint32_t pixelSize);

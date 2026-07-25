@@ -8,7 +8,8 @@ namespace niketica::component
 
     enum class FontType
     {
-        OPEN_SANS_REGULAR
+        OPEN_SANS_REGULAR,
+        COURIER_PRIME_CODE
     };
     
     struct Text
