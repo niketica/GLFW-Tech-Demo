@@ -184,7 +184,7 @@ namespace niketica::renderer {
 
     void NineSliceInstancedRenderer::submit(
         const component::Transform& tr,
-        const component::UINineSlice& ns,
+        const component::NineSlice& ns,
         const niketica::component::NineSliceTexture& tex,
         const float scale)
     {

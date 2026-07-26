@@ -15,7 +15,7 @@ namespace niketica::renderer
         virtual void clear() = 0;
         virtual void submit(
             const niketica::component::Transform& tr,
-            const niketica::component::UINineSlice& ns,
+            const niketica::component::NineSlice& ns,
             const niketica::component::NineSliceTexture& tex,
             const float scale) = 0;
         virtual void render(const glm::mat4& projection, const glm::mat4& view) = 0;

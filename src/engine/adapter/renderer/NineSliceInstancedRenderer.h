@@ -24,7 +24,7 @@ namespace niketica::renderer {
 
         void submit(
             const niketica::component::Transform& tr,
-            const niketica::component::UINineSlice& ns,
+            const niketica::component::NineSlice& ns,
             const niketica::component::NineSliceTexture& tex,
             const float scale) override;
         void clear() override;

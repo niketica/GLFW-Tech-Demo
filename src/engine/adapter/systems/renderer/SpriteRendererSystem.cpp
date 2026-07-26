@@ -15,10 +15,10 @@ namespace niketica::systems
         }
         
         engineServices->getRenderContext()->getNineSliceInstancedRenderer()->clear();
-        auto nineSliceView = registry->view<niketica::component::UINineSlice, niketica::component::Transform>();
+        auto nineSliceView = registry->view<niketica::component::NineSlice, niketica::component::Transform>();
         for (auto entity : nineSliceView)
         {
-            const auto& uiNineSlice = registry->get<niketica::component::UINineSlice>(entity);
+            const auto& uiNineSlice = registry->get<niketica::component::NineSlice>(entity);
             const auto& transform = registry->get<niketica::component::Transform>(entity);
 
             niketica::component::NineSliceTexture nineSliceTex =
