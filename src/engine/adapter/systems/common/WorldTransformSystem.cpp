@@ -11,22 +11,17 @@ namespace niketica::systems
             const auto& local = registry->get<niketica::component::LocalTransform>(entity);
             auto& world = registry->get<niketica::component::Transform>(entity);
 
+            world.position = local.position;
+            world.size = local.size;
+            world.rotation = local.rotation;
+            world.scale = local.scale;
+
             if (registry->any_of<niketica::component::ParentTransform>(entity))
             {
                 const auto& parent = registry->get<niketica::component::ParentTransform>(entity); 
                 const auto& parentWorld = registry->get<niketica::component::Transform>(parent.parent); 
 
                 world.position = parentWorld.position + local.position;
-                world.size = parentWorld.size + local.size;
-                world.rotation = parentWorld.rotation + local.rotation;
-                world.scale = parentWorld.scale + local.scale;
-            }
-            else
-            {
-                world.position = local.position;
-                world.size = local.size;
-                world.rotation = local.rotation;
-                world.scale = local.scale;
             }
         }
     }

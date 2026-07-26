@@ -49,37 +49,18 @@ namespace niketica::scene
         registry->emplace<niketica::component::Text>(textEntity, text);
         registry->emplace<niketica::component::Transform>(textEntity, textTransform);
 
-        niketica::component::NineSlice uiNineSlice;
-        uiNineSlice.texture = engineServices->getRenderContext()->getTextureLoader()->acquire("textures/ui/ui_sheet.dds");
-        uiNineSlice.spriteOffset = { 814.0f, 0.0f };
-        uiNineSlice.spriteSize = { 206.0f, 209.0f };
-        uiNineSlice.left = 25.0f;
-        uiNineSlice.right = 25.0f;
-        uiNineSlice.top = 28.0f;
-        uiNineSlice.bottom = 25.0f;
-
-        niketica::component::Transform transformUI;
-        transformUI.position = { 100.0f, 100.0f, 1.0f };
-        transformUI.size = { 200.0f, 400.0f, 1.0f };
-
-        auto entityUI = registry->create();
-        registry->emplace<niketica::component::NineSlice>(entityUI, uiNineSlice);
-        registry->emplace<niketica::component::Transform>(entityUI, transformUI);
-
-        niketica::component::Text textUI;
-        textUI.fontSize = 20;
-        textUI.value = "This is a text box.";
-        textUI.color = glm::vec4(1.0f, 1.0f, 0.0f, 1.0f);
-        textUI.scale = 1.0f;
-        textUI.fontType = niketica::component::FontType::COURIER_PRIME_CODE;
-
-        niketica::component::ParentTransform textUIParent = { entityUI };
-
-        auto entityTextUI = registry->create();
-        registry->emplace<niketica::component::Text>(entityTextUI, textUI);
-        registry->emplace<niketica::component::Transform>(entityTextUI);
-        registry->emplace<niketica::component::LocalTransform>(entityTextUI);
-        registry->emplace<niketica::component::ParentTransform>(entityTextUI, textUIParent);
+        niketica::builder::UIPanelBuilder panelBuilder = { registry, engineServices };
+        panelBuilder
+            .withPosition({600,100})
+            .withSize({300,400})
+            .withPadding(20.0f)
+            .withLayout(niketica::component::UILayoutType::Vertical)
+            .addTextLabel("First line")
+            .addTextLabel("Second line")
+            .addButton("Start", { 300.0f, 100.0f})
+            .addButton("Options", { 300.0f, 100.0f})
+            .addButton("Quit", { 300.0f, 100.0f})
+            .build();
     }
 
     void UserInterfaceDemoScene::input()

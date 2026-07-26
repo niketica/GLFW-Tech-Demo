@@ -101,6 +101,7 @@ add_library(engine
     
     # src/engine
     src/engine/core/Engine.cpp
+    src/engine/builder/userinterface/UIPanelBuilder.cpp
     src/engine/adapter/asset/FileLoader.cpp
     src/engine/adapter/asset/IAssetLoader.cpp
     src/engine/adapter/asset/PakReader.cpp
