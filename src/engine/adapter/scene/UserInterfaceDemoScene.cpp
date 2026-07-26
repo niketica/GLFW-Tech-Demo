@@ -51,15 +51,15 @@ namespace niketica::scene
 
         niketica::builder::UIPanelBuilder panelBuilder = { registry, engineServices };
         panelBuilder
-            .withPosition({600,100})
-            .withSize({300,400})
+            .withPosition({600.0f,100.0f})
+            .withSize({400.0f,600.0f})
             .withPadding(20.0f)
             .withLayout(niketica::component::UILayoutType::Vertical)
             .addTextLabel("First line")
             .addTextLabel("Second line")
-            .addButton("Start", { 300.0f, 100.0f})
-            .addButton("Options", { 300.0f, 100.0f})
-            .addButton("Quit", { 300.0f, 100.0f})
+            .addButton("Start", { 300.0f, 74.0f})
+            .addButton("Options", { 300.0f, 74.0f})
+            .addButton("Quit", { 300.0f, 74.0f})
             .build();
     }
 

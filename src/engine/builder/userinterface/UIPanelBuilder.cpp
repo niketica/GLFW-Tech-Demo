@@ -49,7 +49,7 @@ namespace niketica::builder
         registry->emplace<niketica::component::NineSlice>(panelEntity, nineSlicePanel);
         registry->emplace<niketica::component::Transform>(panelEntity, transformUI);
 
-        float cursorY = padding;
+        float cursorY = size.y - padding;
 
         for (const auto& child : childElements)
         {
@@ -57,15 +57,17 @@ namespace niketica::builder
             {
                 case UIChildType::TEXT_LABEL:
                 {
+                    cursorY -= textHeight;
                     createTextLabel(panelEntity, child.text, cursorY);
-                    cursorY += 24.0f + 8.0f;
+                    cursorY -= spacing;
                     break;
                 }
 
                 case UIChildType::BUTTON:
                 {
+                    cursorY -= child.size.y;
                     createButton(panelEntity, child.text, child.size, cursorY);
-                    cursorY += child.size.y + 8.0f;
+                    cursorY -= spacing;
                     break;
                 }
             }
