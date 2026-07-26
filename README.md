@@ -11,6 +11,10 @@ Have the CMake extension installed.
 To change between debug and release configuration, go to the CMake extension tool (most likely on the left side of the window).
 Navigate to "Configure". Here you should be able to select either "debug" or "release".
 
+## Quick start
+Rename the sample_data.pak file to data.pak.
+Build a debug or release build, then move the data.pak to the directory where the progam exe file is.
+
 ## Asset compression
 Individual asset files are not read directly from the path.
 Instead, the engine expects to retrieve them from a compressed file called data.pak.
