@@ -34,6 +34,10 @@ namespace niketica::builder
         UIPanelBuilder& withPosition(const glm::vec2& value);
         UIPanelBuilder& withSize(const glm::vec2& value);
         UIPanelBuilder& withPadding(const float value);
+        UIPanelBuilder& withPaddingTop(const float value);
+        UIPanelBuilder& withPaddingBottom(const float value);
+        UIPanelBuilder& withPaddingLeft(const float value);
+        UIPanelBuilder& withPaddingRight(const float value);
 
         UIPanelBuilder& withAlignmentHorizontal(const niketica::component::AlignmentHorizontal value);
         UIPanelBuilder& withAlignmentVertical(const niketica::component::AlignmentVertical value);
@@ -50,7 +54,10 @@ namespace niketica::builder
 
         glm::vec2 position;
         glm::vec2 size;
-        float padding;
+        float paddingTop = 0.0f;
+        float paddingBottom = 0.0f;
+        float paddingLeft = 0.0f;
+        float paddingRight = 0.0f;
 
         niketica::component::FontType fontType = niketica::component::FontType::OPEN_SANS_REGULAR;
         float fontSize = 14;
@@ -65,8 +72,8 @@ namespace niketica::builder
         float buttonHeight = 40.0f;
         float spacing = 8.0f;
 
-        void createTextLabel(entt::entity parent, const std::string& text, float y);
-        void createButton(entt::entity panel, const std::string& text, const glm::vec2& size, float y);
+        entt::entity createTextLabel(entt::entity parent, const std::string& text, float y);
+        entt::entity createButton(entt::entity panel, const std::string& text, const glm::vec2& size, float y);
 
     };
 

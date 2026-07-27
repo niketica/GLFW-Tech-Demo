@@ -66,19 +66,24 @@ namespace niketica::component
     // Padding is the space between an element's content and its border, creating inner space that keeps the content away from the edges.
     struct UIPadding
     {
-        float left = 0;
-        float right = 0;
-        float top = 0;
-        float bottom = 0;
+        float left = 0.0f;
+        float right = 0.0f;
+        float top = 0.0f;
+        float bottom = 0.0f;
     };
 
     // Margin is the space outside an element’s border that separates it from surrounding elements, ensuring proper spacing within the layout.
     struct UIMargin
     {
-        float left = 0;
-        float right = 0;
-        float top = 0;
-        float bottom = 0;
+        float left = 0.0f;
+        float right = 0.0f;
+        float top = 0.0f;
+        float bottom = 0.0f;
+    };
+
+    struct UISpacing
+    {
+        float spacing = 0.0f;
     };
 
     struct UIPreferredSize
@@ -117,6 +122,11 @@ namespace niketica::component
     {
         AlignmentHorizontal horizontal;
         AlignmentVertical vertical;
+    };
+
+    struct UIChildren
+    {
+        std::vector<entt::entity> children;
     };
 
 }
