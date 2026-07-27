@@ -19,8 +19,6 @@ namespace niketica::builder
         UITextLabelBuilder& withFontSize(const float value);
         UITextLabelBuilder& withColor(const glm::vec4& value);
         UITextLabelBuilder& withScale(const float value);
-        UITextLabelBuilder& withAlignmentHorizontal(const niketica::component::TextAlignmentHorizontal value);
-        UITextLabelBuilder& withAlignmentVertical(const niketica::component::TextAlignmentVertical value);
         entt::entity build();
         
     private:
@@ -33,9 +31,6 @@ namespace niketica::builder
         float fontSize = 14;
         glm::vec4 color = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
         float scale = 1.0f;
-
-        niketica::component::TextAlignmentHorizontal alignmentHorizontal;
-        niketica::component::TextAlignmentVertical alignmentVertical;
         
     };
 

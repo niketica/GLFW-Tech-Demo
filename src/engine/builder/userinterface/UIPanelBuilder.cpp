@@ -20,16 +20,38 @@ namespace niketica::builder
         this->padding = value;
         return *this;
     }
-
-    UIPanelBuilder& UIPanelBuilder::withLayout(const niketica::component::UILayoutType value)
+    
+    UIPanelBuilder& UIPanelBuilder::withAlignmentHorizontal(const niketica::component::AlignmentHorizontal value)
     {
-        this->layout = value;
+        this->alignmentHorizontal = value;
+        return *this;
+    }
+    
+    UIPanelBuilder& UIPanelBuilder::withAlignmentVertical(const niketica::component::AlignmentVertical value)
+    {
+        this->alignmentVertical = value;
+        return *this;
+    }
+
+    UIPanelBuilder& UIPanelBuilder::withFontSize(const float value)
+    {
+        this->fontSize = value;
+        return *this;
+    }
+
+    UIPanelBuilder& UIPanelBuilder::withFontColor(const glm::vec4& value)
+    {
+        this->fontColor = value;
         return *this;
     }
     
     UIPanelBuilder& UIPanelBuilder::addTextLabel(const std::string& value)
     {
-        childElements.emplace_back(UIChild{ UIChildType::TEXT_LABEL, value });
+        UIChild child;
+        child.type = UIChildType::TEXT_LABEL;
+        child.text = value;
+        childElements.emplace_back(child);
+
         return *this;
     }
     
@@ -78,15 +100,15 @@ namespace niketica::builder
     
     void UIPanelBuilder::createTextLabel(entt::entity parent, const std::string& text, float y)
     {
-        niketica::component::Text textComponent;
-        textComponent.fontSize = 20;
-        textComponent.value = text;
-        textComponent.color = glm::vec4(1.0f, 1.0f, 0.0f, 1.0f);
-        textComponent.scale = 1.0f;
-        textComponent.fontType = niketica::component::FontType::COURIER_PRIME_CODE;
+        niketica::builder::UITextLabelBuilder textLabelBuilder = { registry, engineServices };
+        auto textEntity = textLabelBuilder
+            .withText(text)
+            .withColor(fontColor)
+            .withFontSize(fontSize)
+            .withFontType(niketica::component::FontType::COURIER_PRIME_CODE)
+            .build();
 
-        niketica::component::ParentTransform parentTransform = { parent };
-        niketica::component::LocalTransform local;
+        niketica::component::LocalTransform& local = registry->get<niketica::component::LocalTransform>(textEntity);
         local.position =
         {
             padding,
@@ -94,11 +116,8 @@ namespace niketica::builder
             0.0f
         };
 
-        auto entity = registry->create();
-        registry->emplace<niketica::component::Text>(entity, textComponent);
-        registry->emplace<niketica::component::Transform>(entity);
-        registry->emplace<niketica::component::LocalTransform>(entity, local);
-        registry->emplace<niketica::component::ParentTransform>(entity, parentTransform);
+        niketica::component::ParentTransform parentTransform = { parent };
+        registry->emplace<niketica::component::ParentTransform>(textEntity, parentTransform);
     }
 
     void UIPanelBuilder::createButton(entt::entity parent, const std::string& text, const glm::vec2& buttonSize, float y)

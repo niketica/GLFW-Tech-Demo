@@ -39,22 +39,8 @@ namespace niketica::builder
         return *this;
     }
     
-    UITextLabelBuilder& UITextLabelBuilder::withAlignmentHorizontal(const niketica::component::TextAlignmentHorizontal value)
-    {
-        this->alignmentHorizontal = value;
-        return *this;
-    }
-    
-    UITextLabelBuilder& UITextLabelBuilder::withAlignmentVertical(const niketica::component::TextAlignmentVertical value)
-    {
-        this->alignmentVertical = value;
-        return *this;
-    }
-    
     entt::entity UITextLabelBuilder::build()
     {
-        auto entity = registry->create();
-
         niketica::component::Text textComponent;
         textComponent.value = text;
         textComponent.fontSize = (int)fontSize;
@@ -65,10 +51,10 @@ namespace niketica::builder
         niketica::component::LocalTransform local;
         local.position = { position.x, position.y, 0.0f };
 
-        auto textEntity = registry->create();
-        registry->emplace<niketica::component::Text>(textEntity, textComponent);
-        registry->emplace<niketica::component::LocalTransform>(textEntity, local);
-        registry->emplace<niketica::component::Transform>(textEntity);
+        auto entity = registry->create();
+        registry->emplace<niketica::component::Text>(entity, textComponent);
+        registry->emplace<niketica::component::LocalTransform>(entity, local);
+        registry->emplace<niketica::component::Transform>(entity);
 
         return entity;
     }

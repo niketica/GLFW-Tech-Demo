@@ -43,14 +43,14 @@ namespace niketica::component
     /* ##############################
        ### LAYOUT AND POSITIONING ###
        ############################## */
-    enum class TextAlignmentHorizontal
+    enum class AlignmentHorizontal
     {
         LEFT,
         RIGHT,
         CENTER
     };
 
-    enum class TextAlignmentVertical
+    enum class AlignmentVertical
     {
         TOP,
         BOTTOM,
@@ -59,8 +59,8 @@ namespace niketica::component
 
     struct UIAnchor
     {
-        TextAlignmentHorizontal horizontal = TextAlignmentHorizontal::LEFT;
-        TextAlignmentVertical vertical = TextAlignmentVertical::TOP;
+        AlignmentHorizontal horizontal = AlignmentHorizontal::LEFT;
+        AlignmentVertical vertical = AlignmentVertical::TOP;
     };
 
     // Padding is the space between an element's content and its border, creating inner space that keeps the content away from the edges.
@@ -101,8 +101,8 @@ namespace niketica::component
 
     struct UIAlignment
     {
-        TextAlignmentHorizontal horizontal = TextAlignmentHorizontal::LEFT;
-        TextAlignmentVertical vertical = TextAlignmentVertical::TOP;
+        AlignmentHorizontal horizontal = AlignmentHorizontal::LEFT;
+        AlignmentVertical vertical = AlignmentVertical::TOP;
     };
 
     struct UIContentPadding
@@ -115,8 +115,8 @@ namespace niketica::component
 
     struct UIText
     {
-        TextAlignmentHorizontal horizontal;
-        TextAlignmentVertical vertical;
+        AlignmentHorizontal horizontal;
+        AlignmentVertical vertical;
     };
 
 }
