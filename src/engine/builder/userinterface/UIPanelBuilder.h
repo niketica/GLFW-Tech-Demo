@@ -22,6 +22,8 @@ namespace niketica::builder
         UIChildType type;
         std::string text;
         glm::vec2 size;
+        niketica::component::TextAlignmentVertical textAligmentVertical = niketica::component::TextAlignmentVertical::CENTER;
+        niketica::component::TextAlignmentHorizontal textAligmentHorizontal = niketica::component::TextAlignmentHorizontal::CENTER;
     };
 
     class UIPanelBuilder

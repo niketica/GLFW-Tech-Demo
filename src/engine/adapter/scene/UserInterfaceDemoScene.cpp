@@ -36,18 +36,14 @@ namespace niketica::scene
         auto windowView = registry->view<niketica::component::Window>();
         const auto &windowComponent = windowView.get<niketica::component::Window>(windowView.front());
 
-        niketica::component::Text text;
-        text.fontSize = 48;
-        text.value = "User Interface Demo";
-        text.color = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
-        text.scale = 1.0f;
-
-        niketica::component::Transform textTransform;
-        textTransform.position = { 100.0f, windowComponent.height - 100.0f, 0.0f };
-
-        auto textEntity = registry->create();
-        registry->emplace<niketica::component::Text>(textEntity, text);
-        registry->emplace<niketica::component::Transform>(textEntity, textTransform);
+        niketica::builder::UITextLabelBuilder textLabelBuilder = { registry, engineServices };
+        textLabelBuilder
+            .withText("User Interface Demo")
+            .withFontSize(48.0f)
+            .withFontType(niketica::component::FontType::OPEN_SANS_REGULAR)
+            .withColor(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f))
+            .withPosition(glm::vec2{ 100.0f, (float)windowComponent.height - 100.0f })
+            .build();
 
         niketica::builder::UIPanelBuilder panelBuilder = { registry, engineServices };
         panelBuilder
