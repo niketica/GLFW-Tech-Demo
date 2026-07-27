@@ -121,6 +121,7 @@ add_library(engine
     src/engine/adapter/systems/sound/SoundSystem.cpp
     src/engine/adapter/systems/renderer/SpriteRendererSystem.cpp
     src/engine/adapter/systems/renderer/TextRendererSystem.cpp
+    src/engine/adapter/systems/userinterface/UILayoutSystem.cpp
     src/engine/adapter/systems/SystemContext.cpp
     src/engine/adapter/scene/SceneContext.cpp
     src/engine/adapter/scene/TestScene.cpp

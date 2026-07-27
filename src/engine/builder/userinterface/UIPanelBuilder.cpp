@@ -135,6 +135,7 @@ namespace niketica::builder
             }
         }
 
+        registry->emplace<niketica::component::UIPanel>(panelEntity);
         registry->emplace<niketica::component::NineSlice>(panelEntity, niketica::config::NINE_SLICE_PANEL);
         registry->emplace<niketica::component::Transform>(panelEntity, transformUI);
         registry->emplace<niketica::component::UIChildren>(panelEntity, children);

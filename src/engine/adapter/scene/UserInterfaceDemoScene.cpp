@@ -52,6 +52,7 @@ namespace niketica::scene
             .withPadding(20.0f)
             .withFontColor({ 1.0f, 1.0f, 0.0f, 1.0f })
             .withFontSize(20.0f)
+            .withAlignmentHorizontal(niketica::component::AlignmentHorizontal::CENTER)
             .addTextLabel("First line")
             .addTextLabel("Second line")
             .addButton("Start", { 300.0f, 74.0f})

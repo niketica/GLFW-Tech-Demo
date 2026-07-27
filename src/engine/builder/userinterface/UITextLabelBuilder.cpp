@@ -50,6 +50,7 @@ namespace niketica::builder
 
         niketica::component::LocalTransform local;
         local.position = { position.x, position.y, 0.0f };
+        local.size = { ((float)text.length() * (fontSize * 0.6)), fontSize, 1.0f };
 
         auto entity = registry->create();
         registry->emplace<niketica::component::Text>(entity, textComponent);
