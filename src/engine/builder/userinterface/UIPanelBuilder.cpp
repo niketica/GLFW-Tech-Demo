@@ -46,7 +46,7 @@ namespace niketica::builder
         transformUI.size = { size.x, size.y, 1.0f };
 
         auto panelEntity = registry->create();
-        registry->emplace<niketica::component::NineSlice>(panelEntity, nineSlicePanel);
+        registry->emplace<niketica::component::NineSlice>(panelEntity, niketica::config::NINE_SLICE_PANEL);
         registry->emplace<niketica::component::Transform>(panelEntity, transformUI);
 
         float cursorY = size.y - padding;
@@ -120,7 +120,7 @@ namespace niketica::builder
 
         auto button = registry->create();
         registry->emplace<niketica::component::UIButton>(button);
-        registry->emplace<niketica::component::NineSlice>(button, nineSliceButtonNormal);
+        registry->emplace<niketica::component::NineSlice>(button, niketica::config::NINE_SLICE_BUTTON_NORMAL);
         registry->emplace<niketica::component::Transform>(button);
         registry->emplace<niketica::component::LocalTransform>(button, local);
         registry->emplace<niketica::component::ParentTransform>(button, parentTransform);

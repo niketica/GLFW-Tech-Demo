@@ -7,6 +7,7 @@
 
 #include "component/Components.h"
 #include "engine/core/EngineServices.h"
+#include "engine/config/Config.h"
 
 namespace niketica::builder
 {
@@ -48,27 +49,6 @@ namespace niketica::builder
         niketica::component::UILayoutType layout;
 
         std::vector<UIChild> childElements;
-
-        niketica::component::NineSlice nineSlicePanel = {
-            engineServices->getRenderContext()->getTextureLoader()->acquire("textures/ui/ui_sheet.dds"),
-            { 814.0f, 0.0f },   // offset
-            { 206.0f, 209.0f },    // size
-            25, 25, 28, 25 };
-        niketica::component::NineSlice nineSliceButtonNormal = {
-            engineServices->getRenderContext()->getTextureLoader()->acquire("textures/ui/ui_sheet.dds"),
-            { 602.0f, 0.0f },   // offset
-            { 212.0f, 74.0f },    // size
-            24, 24, 24, 24 };
-        niketica::component::NineSlice nineSliceButtonFocused = {
-            engineServices->getRenderContext()->getTextureLoader()->acquire("textures/ui/ui_sheet.dds"),
-            { 602.0f, 74.0f },   // offset
-            { 212.0f, 74.0f },    // size
-            24, 24, 24, 24 };
-        niketica::component::NineSlice nineSliceButtonPressed = {
-            engineServices->getRenderContext()->getTextureLoader()->acquire("textures/ui/ui_sheet.dds"),
-            { 602.0f, 148.0f },   // offset
-            { 212.0f, 74.0f },    // size
-            24, 24, 24, 24 };
 
         // Use hard coded values until there is a proper text measuring system
         float textHeight = 24.0f;

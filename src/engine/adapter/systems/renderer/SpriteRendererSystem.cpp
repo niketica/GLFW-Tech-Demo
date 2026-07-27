@@ -8,9 +8,9 @@ namespace niketica::systems
         auto spriteView = registry->view<niketica::component::Sprite, niketica::component::Transform, niketica::component::TextureHandle>();
         for (auto entity : spriteView)
         {
-            auto& sprite = spriteView.get<niketica::component::Sprite>(entity);
-            auto& transform = spriteView.get<niketica::component::Transform>(entity);
-            auto& textureHandle = spriteView.get<niketica::component::TextureHandle>(entity);
+            const auto& sprite = spriteView.get<niketica::component::Sprite>(entity);
+            const auto& transform = spriteView.get<niketica::component::Transform>(entity);
+            const auto& textureHandle = spriteView.get<niketica::component::TextureHandle>(entity);
             engineServices->getRenderContext()->getSpriteInstancedRenderer()->submit(textureHandle.id, sprite, transform.position, transform.size, 1.0f);
         }
         
@@ -20,10 +20,11 @@ namespace niketica::systems
         {
             const auto& uiNineSlice = registry->get<niketica::component::NineSlice>(entity);
             const auto& transform = registry->get<niketica::component::Transform>(entity);
+            const auto& ui_sheet = engineServices->getRenderContext()->getTextureLoader()->acquire(uiNineSlice.texture);
 
             niketica::component::NineSliceTexture nineSliceTex =
             {
-                uiNineSlice.texture,
+                ui_sheet,
                 2048.0f,
                 2048.0f
             };

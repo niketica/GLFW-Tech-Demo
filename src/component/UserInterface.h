@@ -16,7 +16,7 @@ namespace niketica::component
     // (maybe move this to Sprite.h or a new Rendering header)
     struct NineSlice
     {
-        TextureHandle texture;
+        const char* texture;
 
         glm::vec2 spriteOffset; // top-left in pixels
         glm::vec2 spriteSize;   // width / height in pixels
