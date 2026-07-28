@@ -104,12 +104,6 @@ namespace niketica::component
         float spacing = 8.0f;
     };
 
-    struct UIAlignment
-    {
-        AlignmentHorizontal horizontal = AlignmentHorizontal::LEFT;
-        AlignmentVertical vertical = AlignmentVertical::TOP;
-    };
-
     struct UIContentPadding
     {
         float left;

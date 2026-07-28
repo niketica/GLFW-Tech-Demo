@@ -5,20 +5,28 @@ namespace niketica::systems
 
     void UILayoutSystem::update(float dt)
     {
-        auto viewPanel = registry->view<niketica::component::UIPanel>();
+        auto viewPanel = registry->view<niketica::component::UIChildren>();
         for (auto panel : viewPanel)
         {
-            const auto& transform = registry->get<niketica::component::Transform>(panel);
+            const auto& children = registry->get<niketica::component::UIChildren>(panel);
+            const auto& transform = registry->get<niketica::component::LocalTransform>(panel);
             const auto& size = transform.size;
 
             const auto& padding = registry->get<niketica::component::UIContentPadding>(panel);
             const auto& spacing = registry->get<niketica::component::UISpacing>(panel);
-            const auto& alignment = registry->get<niketica::component::UIAlignment>(panel);
-            const auto& children = registry->get<niketica::component::UIChildren>(panel);
+
+            float cursorY = size.y - padding.top;
 
             for (auto child : children.children)
             {
                 auto& childLocal = registry->get<niketica::component::LocalTransform>(child);
+                const auto& alignment = registry->get<niketica::component::UIAnchor>(child);
+
+                cursorY -= childLocal.size.y;
+                childLocal.position.y = cursorY;
+                cursorY -= spacing.spacing;
+
+                childLocal.position.z = transform.position.z + 0.01f;
                 
                 switch (alignment.horizontal)
                 {

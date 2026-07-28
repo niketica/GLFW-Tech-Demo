@@ -45,10 +45,13 @@ namespace niketica::scene
             .withPosition(glm::vec2{ 100.0f, (float)windowComponent.height - 100.0f })
             .build();
 
+        float panelWidth = 400.0f;
+        float panelHeight = 600.0f;
+
         niketica::builder::UIPanelBuilder panelBuilder = { registry, engineServices };
         panelBuilder
             .withPosition({600.0f,100.0f})
-            .withSize({400.0f,600.0f})
+            .withSize({panelWidth,panelHeight})
             .withPadding(20.0f)
             .withFontColor({ 1.0f, 1.0f, 0.0f, 1.0f })
             .withFontSize(20.0f)

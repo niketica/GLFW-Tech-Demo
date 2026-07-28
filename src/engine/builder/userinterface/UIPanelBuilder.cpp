@@ -92,7 +92,7 @@ namespace niketica::builder
     {
         auto panelEntity = registry->create();
 
-        niketica::component::Transform transformUI;
+        niketica::component::LocalTransform transformUI;
         transformUI.position = { position.x, position.y, 1.0f };
         transformUI.size = { size.x, size.y, 1.0f };
 
@@ -104,11 +104,9 @@ namespace niketica::builder
 
         niketica::component::UISpacing spacingComponent = { spacing };
 
-        niketica::component::UIAlignment aligment;
+        niketica::component::UIAnchor aligment;
         aligment.horizontal = alignmentHorizontal;
         aligment.vertical = alignmentVertical;
-
-        float cursorY = size.y - paddingTop;
 
         niketica::component::UIChildren children;
         for (const auto& child : childElements)
@@ -117,19 +115,15 @@ namespace niketica::builder
             {
                 case UIChildType::TEXT_LABEL:
                 {
-                    cursorY -= textHeight;
-                    auto childEntity = createTextLabel(panelEntity, child.text, cursorY);
+                    auto childEntity = createTextLabel(panelEntity, child.text);
                     children.children.emplace_back(childEntity);
-                    cursorY -= spacing;
                     break;
                 }
 
                 case UIChildType::BUTTON:
                 {
-                    cursorY -= child.size.y;
-                    auto childEntity = createButton(panelEntity, child.text, child.size, cursorY);
+                    auto childEntity = createButton(panelEntity, child.text, child.size);
                     children.children.emplace_back(childEntity);
-                    cursorY -= spacing;
                     break;
                 }
             }
@@ -137,16 +131,17 @@ namespace niketica::builder
 
         registry->emplace<niketica::component::UIPanel>(panelEntity);
         registry->emplace<niketica::component::NineSlice>(panelEntity, niketica::config::NINE_SLICE_PANEL);
-        registry->emplace<niketica::component::Transform>(panelEntity, transformUI);
+        registry->emplace<niketica::component::Transform>(panelEntity);
+        registry->emplace<niketica::component::LocalTransform>(panelEntity, transformUI);
         registry->emplace<niketica::component::UIChildren>(panelEntity, children);
         registry->emplace<niketica::component::UIContentPadding>(panelEntity, paddingComponent);
         registry->emplace<niketica::component::UISpacing>(panelEntity, spacingComponent);
-        registry->emplace<niketica::component::UIAlignment>(panelEntity, aligment);
+        registry->emplace<niketica::component::UIAnchor>(panelEntity, aligment);
 
         return panelEntity;
     }
     
-    entt::entity UIPanelBuilder::createTextLabel(entt::entity parent, const std::string& text, float y)
+    entt::entity UIPanelBuilder::createTextLabel(entt::entity parent, const std::string& text)
     {
         niketica::builder::UITextLabelBuilder textLabelBuilder = { registry, engineServices };
         auto entity = textLabelBuilder
@@ -156,30 +151,21 @@ namespace niketica::builder
             .withFontType(niketica::component::FontType::COURIER_PRIME_CODE)
             .build();
 
-        niketica::component::LocalTransform& local = registry->get<niketica::component::LocalTransform>(entity);
-        local.position =
-        {
-            paddingLeft,
-            y,
-            0.0f
-        };
+        niketica::component::UIAnchor aligment;
+        aligment.horizontal = alignmentHorizontal;
+        aligment.vertical = alignmentVertical;
 
         niketica::component::ParentTransform parentTransform = { parent };
         registry->emplace<niketica::component::ParentTransform>(entity, parentTransform);
+        registry->emplace<niketica::component::UIAnchor>(entity, aligment);
 
         return entity;
     }
 
-    entt::entity UIPanelBuilder::createButton(entt::entity parent, const std::string& text, const glm::vec2& buttonSize, float y)
+    entt::entity UIPanelBuilder::createButton(entt::entity parent, const std::string& text, const glm::vec2& buttonSize)
     {
         niketica::component::ParentTransform parentTransform = { parent };
         niketica::component::LocalTransform local;
-        local.position =
-        {
-            paddingLeft,
-            y,
-            0.1f
-        };
         local.size =
         {
             buttonSize.x - paddingLeft * 2.0f,
@@ -187,14 +173,25 @@ namespace niketica::builder
             1.0f
         };
 
+        niketica::component::UIAnchor aligment;
+        aligment.horizontal = alignmentHorizontal;
+        aligment.vertical = alignmentVertical;
+
         auto entity = registry->create();
         registry->emplace<niketica::component::UIButton>(entity);
         registry->emplace<niketica::component::NineSlice>(entity, niketica::config::NINE_SLICE_BUTTON_NORMAL);
         registry->emplace<niketica::component::Transform>(entity);
         registry->emplace<niketica::component::LocalTransform>(entity, local);
         registry->emplace<niketica::component::ParentTransform>(entity, parentTransform);
+        registry->emplace<niketica::component::UIAnchor>(entity, aligment);
+        registry->emplace<niketica::component::UIContentPadding>(entity);
+        registry->emplace<niketica::component::UISpacing>(entity);
 
-        createTextLabel(entity, text, paddingTop);
+        auto childEntity = createTextLabel(entity, text);        
+        niketica::component::UIChildren children;
+        children.children.emplace_back(childEntity);
+        registry->emplace<niketica::component::UIChildren>(entity, children);
+
         return entity;
     }
 

@@ -72,8 +72,8 @@ namespace niketica::builder
         float buttonHeight = 40.0f;
         float spacing = 8.0f;
 
-        entt::entity createTextLabel(entt::entity parent, const std::string& text, float y);
-        entt::entity createButton(entt::entity panel, const std::string& text, const glm::vec2& size, float y);
+        entt::entity createTextLabel(entt::entity parent, const std::string& text);
+        entt::entity createButton(entt::entity panel, const std::string& text, const glm::vec2& size);
 
     };
 
