@@ -19,6 +19,11 @@ namespace niketica::systems
         void update(float dt) override;
         void render() override {};
 
+    private:
+        void updatePositionContainer(entt::entity container, const niketica::component::Window& window);
+        void updateLayoutContainer(entt::entity container);
+        void updateLayoutChildElements(entt::entity container);
+
     };
 
 }
