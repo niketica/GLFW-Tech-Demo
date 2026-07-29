@@ -57,6 +57,7 @@ namespace niketica::scene
             .withFontSize(20.0f)
             .withAlignmentHorizontal(niketica::component::AlignmentHorizontal::CENTER)
             .withAlignmentVertical(niketica::component::AlignmentVertical::CENTER)
+            .withLayoutType(niketica::component::UILayoutType::VERTICAL)
             .addTextLabel("First line")
             .addTextLabel("Second line")
             .addButton("Start", { 300.0f, 74.0f})

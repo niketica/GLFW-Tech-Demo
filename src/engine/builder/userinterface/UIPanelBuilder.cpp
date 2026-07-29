@@ -115,7 +115,7 @@ namespace niketica::builder
         aligment.vertical = alignmentVertical;
 
         niketica::component::UILayout layout;
-        layout.type = niketica::component::UILayoutType::VERTICAL;
+        layout.type = layoutType;
         layout.spacing = spacing;
 
         niketica::component::UIChildren children;
@@ -189,7 +189,7 @@ namespace niketica::builder
         aligment.vertical = alignmentVertical;
 
         niketica::component::UILayout layout;
-        layout.type = niketica::component::UILayoutType::VERTICAL;
+        layout.type = layoutType;
         layout.spacing = 0.0f;
 
         auto entity = registry->create();

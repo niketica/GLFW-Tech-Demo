@@ -181,7 +181,7 @@ namespace niketica::systems
         const float totalWidth = measureTotalWidth(children, spacing.spacing);
         float cursorX = computeStartX(size.x, totalWidth, padding, containerAlignment.horizontal);
         placeChildrenHorizontally(children, spacing.spacing, cursorX);
-        alignChildrenVertically(children, transform.position.z, size.x, padding);
+        alignChildrenVertically(children, transform.position.z, size.y, padding);
     }
 
     float UILayoutSystem::measureTotalWidth(const niketica::component::UIChildren& children, const float spacing)
@@ -229,7 +229,7 @@ namespace niketica::systems
         {
             auto& childLocal = registry->get<niketica::component::LocalTransform>(child);
             childLocal.position.x = cursorX;
-            cursorX += childLocal.size.y;
+            cursorX += childLocal.size.x;
             cursorX += spacing;
         }
     }
