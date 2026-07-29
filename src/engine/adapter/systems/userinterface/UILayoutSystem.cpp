@@ -5,6 +5,8 @@ namespace niketica::systems
 
     void UILayoutSystem::update(float dt)
     {
+        // TODO add component UILayoutDirty so that calculations are not done every frame.
+        
         auto viewWindow = registry->view<niketica::component::Window>();
         const auto& window = registry->get<niketica::component::Window>(viewWindow.front());
 
@@ -18,7 +20,7 @@ namespace niketica::systems
 
     void UILayoutSystem::updatePositionContainer(entt::entity container, const niketica::component::Window& window)
     {
-        const auto& alignment = registry->get<niketica::component::UIAnchor>(container);
+        const auto& alignment = registry->get<niketica::component::UIAlignment>(container);
         auto& transform = registry->get<niketica::component::LocalTransform>(container);
         auto& position = transform.position;
         const auto& size = transform.size;
@@ -73,41 +75,68 @@ namespace niketica::systems
         const auto& size = transform.size;
         const auto& padding = registry->get<niketica::component::UIContentPadding>(container);
         const auto& spacing = registry->get<niketica::component::UISpacing>(container);
+        const auto& containerAlignment = registry->get<niketica::component::UIAlignment>(container);
 
-        float cursorY = size.y - padding.top;
+        float totalHeight = 0.0f;
+
+        for (auto child : children.children)
+        {
+            const auto& childLocal = registry->get<niketica::component::LocalTransform>(child);
+            totalHeight += childLocal.size.y;
+        }
+
+        if (!children.children.empty())
+        {
+            totalHeight += spacing.spacing * (children.children.size() - 1);
+        }
+
+        float availableHeight = size.y - padding.top - padding.bottom;
+        float cursorY = 0.0f;
+
+        switch (containerAlignment.vertical)
+        {
+        case niketica::component::AlignmentVertical::TOP:
+            cursorY = size.y - padding.top;
+            break;
+
+        case niketica::component::AlignmentVertical::CENTER:
+            cursorY = padding.bottom +
+                    (availableHeight + totalHeight) * 0.5f;
+            break;
+
+        case niketica::component::AlignmentVertical::BOTTOM:
+            cursorY = padding.bottom + totalHeight;
+            break;
+        }
 
         for (auto child : children.children)
         {
             auto& childLocal = registry->get<niketica::component::LocalTransform>(child);
-            const auto& alignment = registry->get<niketica::component::UIAnchor>(child);
-
             cursorY -= childLocal.size.y;
             childLocal.position.y = cursorY;
             cursorY -= spacing.spacing;
+        }
 
+        for (auto child : children.children)
+        {
+            auto& childLocal = registry->get<niketica::component::LocalTransform>(child);
+            const auto& alignment = registry->get<niketica::component::UIAlignment>(child);
             childLocal.position.z = transform.position.z + 0.01f;
-            
+            float availableWidth = size.x - padding.left - padding.right;
             switch (alignment.horizontal)
             {
-            case niketica::component::AlignmentHorizontal::CENTER:
-            {
-                float centerPanel = size.x * 0.5f;
-                float halfSizeChild = childLocal.size.x * 0.5f;
-                childLocal.position.x = centerPanel - halfSizeChild;
-            }
-            break;
             case niketica::component::AlignmentHorizontal::LEFT:
-            {
                 childLocal.position.x = padding.left;
-            }
-            break;
+                break;
+
+            case niketica::component::AlignmentHorizontal::CENTER:
+                childLocal.position.x = padding.left + (availableWidth - childLocal.size.x) * 0.5f;
+                break;
+
             case niketica::component::AlignmentHorizontal::RIGHT:
-            {
-                childLocal.position.x = size.x - padding.right - childLocal.size.x;                    
+                childLocal.position.x = size.x - padding.right - childLocal.size.x;
+                break;
             }
-            break;
-            }
-            
         }
     }
     

@@ -57,7 +57,7 @@ namespace niketica::component
         CENTER
     };
 
-    struct UIAnchor
+    struct UIAlignment
     {
         AlignmentHorizontal horizontal = AlignmentHorizontal::LEFT;
         AlignmentVertical vertical = AlignmentVertical::TOP;

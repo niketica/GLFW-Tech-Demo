@@ -104,7 +104,7 @@ namespace niketica::builder
 
         niketica::component::UISpacing spacingComponent = { spacing };
 
-        niketica::component::UIAnchor aligment;
+        niketica::component::UIAlignment aligment;
         aligment.horizontal = alignmentHorizontal;
         aligment.vertical = alignmentVertical;
 
@@ -136,7 +136,7 @@ namespace niketica::builder
         registry->emplace<niketica::component::UIChildren>(panelEntity, children);
         registry->emplace<niketica::component::UIContentPadding>(panelEntity, paddingComponent);
         registry->emplace<niketica::component::UISpacing>(panelEntity, spacingComponent);
-        registry->emplace<niketica::component::UIAnchor>(panelEntity, aligment);
+        registry->emplace<niketica::component::UIAlignment>(panelEntity, aligment);
 
         return panelEntity;
     }
@@ -151,13 +151,13 @@ namespace niketica::builder
             .withFontType(niketica::component::FontType::COURIER_PRIME_CODE)
             .build();
 
-        niketica::component::UIAnchor aligment;
+        niketica::component::UIAlignment aligment;
         aligment.horizontal = alignmentHorizontal;
         aligment.vertical = alignmentVertical;
 
         niketica::component::ParentTransform parentTransform = { parent };
         registry->emplace<niketica::component::ParentTransform>(entity, parentTransform);
-        registry->emplace<niketica::component::UIAnchor>(entity, aligment);
+        registry->emplace<niketica::component::UIAlignment>(entity, aligment);
 
         return entity;
     }
@@ -173,7 +173,7 @@ namespace niketica::builder
             1.0f
         };
 
-        niketica::component::UIAnchor aligment;
+        niketica::component::UIAlignment aligment;
         aligment.horizontal = alignmentHorizontal;
         aligment.vertical = alignmentVertical;
 
@@ -183,7 +183,7 @@ namespace niketica::builder
         registry->emplace<niketica::component::Transform>(entity);
         registry->emplace<niketica::component::LocalTransform>(entity, local);
         registry->emplace<niketica::component::ParentTransform>(entity, parentTransform);
-        registry->emplace<niketica::component::UIAnchor>(entity, aligment);
+        registry->emplace<niketica::component::UIAlignment>(entity, aligment);
         registry->emplace<niketica::component::UIContentPadding>(entity);
         registry->emplace<niketica::component::UISpacing>(entity);
 
