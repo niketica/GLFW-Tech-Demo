@@ -123,4 +123,6 @@ namespace niketica::component
         std::vector<entt::entity> children;
     };
 
+    struct UILayoutDirty {}; // Indicates that the layout needs to be updated
+
 }

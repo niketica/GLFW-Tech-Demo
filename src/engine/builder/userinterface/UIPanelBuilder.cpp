@@ -148,6 +148,7 @@ namespace niketica::builder
         registry->emplace<niketica::component::UISpacing>(panelEntity, spacingComponent);
         registry->emplace<niketica::component::UIAlignment>(panelEntity, aligment);
         registry->emplace<niketica::component::UILayout>(panelEntity, layout);
+        registry->emplace<niketica::component::UILayoutDirty>(panelEntity);
 
         return panelEntity;
     }
@@ -188,6 +189,7 @@ namespace niketica::builder
         
         niketica::component::ParentTransform parentTransform = { parent };
         registry->emplace<niketica::component::ParentTransform>(entity, parentTransform);
+        registry->remove<niketica::component::UILayoutDirty>(entity); // Will be updated as child of the parent container
 
         return entity;
     }

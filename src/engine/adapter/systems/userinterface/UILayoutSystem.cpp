@@ -4,15 +4,14 @@ namespace niketica::systems
 {
 
     void UILayoutSystem::update(float dt)
-    {
-        // TODO add component UILayoutDirty so that calculations are not done every frame.
-        
+    {        
         auto viewWindow = registry->view<niketica::component::Window>();
         const auto& window = registry->get<niketica::component::Window>(viewWindow.front());
 
-        auto viewRootContainers = registry->view<niketica::component::UIPanel>();
-        for (auto container : viewRootContainers)
+        auto viewLayoutDirty = registry->view<niketica::component::UILayoutDirty>();
+        for (auto container : viewLayoutDirty)
         {
+            registry->remove<niketica::component::UILayoutDirty>(container);
             updatePositionContainer(container, window);
             updateLayoutContainer(container);
         }
