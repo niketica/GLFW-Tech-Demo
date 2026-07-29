@@ -9,6 +9,7 @@
 #include "engine/core/EngineServices.h"
 #include "engine/config/Config.h"
 #include "engine/builder/userinterface/UITextLabelBuilder.h"
+#include "engine/builder/userinterface/UIButtonBuilder.h"
 
 namespace niketica::builder
 {
