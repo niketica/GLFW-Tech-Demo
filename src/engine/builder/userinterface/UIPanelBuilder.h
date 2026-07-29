@@ -38,6 +38,7 @@ namespace niketica::builder
         UIPanelBuilder& withPaddingBottom(const float value);
         UIPanelBuilder& withPaddingLeft(const float value);
         UIPanelBuilder& withPaddingRight(const float value);
+        UIPanelBuilder& withLayoutType(const niketica::component::UILayoutType value);
 
         UIPanelBuilder& withAlignmentHorizontal(const niketica::component::AlignmentHorizontal value);
         UIPanelBuilder& withAlignmentVertical(const niketica::component::AlignmentVertical value);
@@ -64,6 +65,7 @@ namespace niketica::builder
         glm::vec4 fontColor = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
         niketica::component::AlignmentHorizontal alignmentHorizontal = niketica::component::AlignmentHorizontal::CENTER;
         niketica::component::AlignmentVertical alignmentVertical = niketica::component::AlignmentVertical::CENTER;
+        niketica::component::UILayoutType layoutType = niketica::component::UILayoutType::VERTICAL;
 
         std::vector<UIChild> childElements;
 

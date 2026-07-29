@@ -47,6 +47,12 @@ namespace niketica::builder
         this->paddingRight = value;
         return *this;
     }
+
+    UIPanelBuilder& UIPanelBuilder::withLayoutType(const niketica::component::UILayoutType value)
+    {
+        this->layoutType = value;
+        return *this;
+    }
     
     UIPanelBuilder& UIPanelBuilder::withAlignmentHorizontal(const niketica::component::AlignmentHorizontal value)
     {
@@ -108,6 +114,10 @@ namespace niketica::builder
         aligment.horizontal = alignmentHorizontal;
         aligment.vertical = alignmentVertical;
 
+        niketica::component::UILayout layout;
+        layout.type = niketica::component::UILayoutType::VERTICAL;
+        layout.spacing = spacing;
+
         niketica::component::UIChildren children;
         for (const auto& child : childElements)
         {
@@ -137,6 +147,7 @@ namespace niketica::builder
         registry->emplace<niketica::component::UIContentPadding>(panelEntity, paddingComponent);
         registry->emplace<niketica::component::UISpacing>(panelEntity, spacingComponent);
         registry->emplace<niketica::component::UIAlignment>(panelEntity, aligment);
+        registry->emplace<niketica::component::UILayout>(panelEntity, layout);
 
         return panelEntity;
     }
@@ -177,6 +188,10 @@ namespace niketica::builder
         aligment.horizontal = alignmentHorizontal;
         aligment.vertical = alignmentVertical;
 
+        niketica::component::UILayout layout;
+        layout.type = niketica::component::UILayoutType::VERTICAL;
+        layout.spacing = 0.0f;
+
         auto entity = registry->create();
         registry->emplace<niketica::component::UIButton>(entity);
         registry->emplace<niketica::component::NineSlice>(entity, niketica::config::NINE_SLICE_BUTTON_NORMAL);
@@ -186,6 +201,7 @@ namespace niketica::builder
         registry->emplace<niketica::component::UIAlignment>(entity, aligment);
         registry->emplace<niketica::component::UIContentPadding>(entity);
         registry->emplace<niketica::component::UISpacing>(entity);
+        registry->emplace<niketica::component::UILayout>(entity, layout);
 
         auto childEntity = createTextLabel(entity, text);        
         niketica::component::UIChildren children;

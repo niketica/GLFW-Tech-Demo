@@ -21,8 +21,14 @@ namespace niketica::systems
 
     private:
         void updatePositionContainer(entt::entity container, const niketica::component::Window& window);
-        void updateLayoutContainer(entt::entity container);
-        void updateLayoutChildElements(entt::entity container);
+        void updateLayoutContainer(entt::entity container);        
+        void updateLayoutVertical(entt::entity container);
+        void updateLayoutHorizontal(entt::entity container);
+
+        float measureTotalHeight(const niketica::component::UIChildren& children, const float spacing);
+        float computeStartY(const float containerSizeY, const float totalHeight, const niketica::component::UIContentPadding padding, const niketica::component::AlignmentVertical alignment) const;
+        void placeChildrenVertically(const niketica::component::UIChildren& children, const float spacing, float cursorY);
+        void alignChildrenHorizontally(const niketica::component::UIChildren& children, const float containerPosZ, const float containerSizeX, const niketica::component::UIContentPadding padding);
 
     };
 

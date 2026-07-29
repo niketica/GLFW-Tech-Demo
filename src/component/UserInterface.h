@@ -93,14 +93,14 @@ namespace niketica::component
 
     enum class UILayoutType
     {
-        Absolute,
-        Vertical,
-        Horizontal
+        ABSOLUTE,
+        VERTICAL,
+        HORIZONTAL
     };
 
     struct UILayout
     {
-        UILayoutType type = UILayoutType::Vertical;
+        UILayoutType type = UILayoutType::VERTICAL;
         float spacing = 8.0f;
     };
 

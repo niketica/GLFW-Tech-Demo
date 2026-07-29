@@ -57,7 +57,18 @@ namespace niketica::systems
 
     void UILayoutSystem::updateLayoutContainer(entt::entity container)
     {
-        updateLayoutChildElements(container);
+        const auto& layout = registry->get<niketica::component::UILayout>(container);
+        switch(layout.type)
+        {
+            case niketica::component::UILayoutType::VERTICAL:
+                updateLayoutVertical(container);
+                break;
+
+            case niketica::component::UILayoutType::HORIZONTAL:
+                updateLayoutHorizontal(container);
+                break;
+        }
+
         const auto& children = registry->get<niketica::component::UIChildren>(container);
         for (auto child : children.children)
         {
@@ -67,8 +78,8 @@ namespace niketica::systems
             }
         }
     }
-
-    void UILayoutSystem::updateLayoutChildElements(entt::entity container)
+        
+    void UILayoutSystem::updateLayoutVertical(entt::entity container)
     {
         const auto& children = registry->get<niketica::component::UIChildren>(container);
         const auto& transform = registry->get<niketica::component::LocalTransform>(container);
@@ -77,6 +88,19 @@ namespace niketica::systems
         const auto& spacing = registry->get<niketica::component::UISpacing>(container);
         const auto& containerAlignment = registry->get<niketica::component::UIAlignment>(container);
 
+        const float totalHeight = measureTotalHeight(children, spacing.spacing);
+        float cursorY = computeStartY(size.y, totalHeight, padding, containerAlignment.vertical);
+        placeChildrenVertically(children, spacing.spacing, cursorY);
+        alignChildrenHorizontally(children, transform.position.z, size.x, padding);
+    }
+
+    void UILayoutSystem::updateLayoutHorizontal(entt::entity container)
+    {
+
+    }
+
+    float UILayoutSystem::measureTotalHeight(const niketica::component::UIChildren& children, const float spacing)
+    {
         float totalHeight = 0.0f;
 
         for (auto child : children.children)
@@ -87,42 +111,52 @@ namespace niketica::systems
 
         if (!children.children.empty())
         {
-            totalHeight += spacing.spacing * (children.children.size() - 1);
+            totalHeight += spacing * (children.children.size() - 1);
         }
 
-        float availableHeight = size.y - padding.top - padding.bottom;
-        float cursorY = 0.0f;
+        return totalHeight;
+    }
 
-        switch (containerAlignment.vertical)
+    float UILayoutSystem::computeStartY(const float containerSizeY, const float totalHeight, const niketica::component::UIContentPadding padding, const niketica::component::AlignmentVertical alignment) const
+    {
+        float availableHeight = containerSizeY - padding.top - padding.bottom;
+        float startY = 0.0f;
+
+        switch (alignment)
         {
         case niketica::component::AlignmentVertical::TOP:
-            cursorY = size.y - padding.top;
+            startY = containerSizeY - padding.top;
             break;
-
         case niketica::component::AlignmentVertical::CENTER:
-            cursorY = padding.bottom +
-                    (availableHeight + totalHeight) * 0.5f;
+            startY = padding.bottom + (availableHeight + totalHeight) * 0.5f;
             break;
-
         case niketica::component::AlignmentVertical::BOTTOM:
-            cursorY = padding.bottom + totalHeight;
+            startY = padding.bottom + totalHeight;
             break;
         }
 
+        return startY;
+    }
+
+    void UILayoutSystem::placeChildrenVertically(const niketica::component::UIChildren& children, const float spacing, float cursorY)
+    {
         for (auto child : children.children)
         {
             auto& childLocal = registry->get<niketica::component::LocalTransform>(child);
             cursorY -= childLocal.size.y;
             childLocal.position.y = cursorY;
-            cursorY -= spacing.spacing;
+            cursorY -= spacing;
         }
+    }
 
+    void UILayoutSystem::alignChildrenHorizontally(const niketica::component::UIChildren& children, const float containerPosZ, const float containerSizeX, const niketica::component::UIContentPadding padding)
+    {
         for (auto child : children.children)
         {
             auto& childLocal = registry->get<niketica::component::LocalTransform>(child);
             const auto& alignment = registry->get<niketica::component::UIAlignment>(child);
-            childLocal.position.z = transform.position.z + 0.01f;
-            float availableWidth = size.x - padding.left - padding.right;
+            childLocal.position.z = containerPosZ + 0.01f;
+            float availableWidth = containerSizeX - padding.left - padding.right;
             switch (alignment.horizontal)
             {
             case niketica::component::AlignmentHorizontal::LEFT:
@@ -134,7 +168,7 @@ namespace niketica::systems
                 break;
 
             case niketica::component::AlignmentHorizontal::RIGHT:
-                childLocal.position.x = size.x - padding.right - childLocal.size.x;
+                childLocal.position.x = containerSizeX - padding.right - childLocal.size.x;
                 break;
             }
         }
