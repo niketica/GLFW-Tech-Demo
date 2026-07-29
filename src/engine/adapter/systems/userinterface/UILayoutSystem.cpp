@@ -46,10 +46,10 @@ namespace niketica::systems
             position.y = (windowHeight * 0.5f) - (size.y * 0.5f);
             break;
         case niketica::component::AlignmentVertical::TOP:
-            position.y = 0.0f;
+            position.y = windowHeight - size.y;
             break;
         case niketica::component::AlignmentVertical::BOTTOM:
-            position.y = windowHeight - size.y;
+            position.y = 0.0f;
             break;
         }
     }

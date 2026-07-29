@@ -64,6 +64,23 @@ namespace niketica::scene
             .addButton("Options", { 300.0f, 74.0f})
             .addButton("Quit", { 300.0f, 74.0f})
             .build();
+
+        niketica::builder::UIPanelBuilder panelBuilder2 = { registry, engineServices };
+        panelBuilder2
+            .withPosition({600.0f,100.0f})
+            .withSize({windowComponent.width,200.0f})
+            .withPadding(20.0f)
+            .withFontColor({ 1.0f, 1.0f, 0.0f, 1.0f })
+            .withFontSize(20.0f)
+            .withAlignmentHorizontal(niketica::component::AlignmentHorizontal::CENTER)
+            .withAlignmentVertical(niketica::component::AlignmentVertical::BOTTOM)
+            .withLayoutType(niketica::component::UILayoutType::HORIZONTAL)
+            .addTextLabel("A")
+            .addTextLabel("B")
+            .addButton("", { 74.0f, 74.0f})
+            .addButton("", { 74.0f, 74.0f})
+            .addButton("", { 74.0f, 74.0f})
+            .build();
     }
 
     void UserInterfaceDemoScene::input()
