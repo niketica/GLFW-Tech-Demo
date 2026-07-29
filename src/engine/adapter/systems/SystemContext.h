@@ -12,6 +12,7 @@
 #include "engine/adapter/systems/renderer/SpriteRendererSystem.h"
 #include "engine/adapter/systems/renderer/TextRendererSystem.h"
 #include "engine/adapter/systems/userinterface/UILayoutSystem.h"
+#include "engine/adapter/systems/userinterface/UINavigationSystem.h"
 
 namespace niketica::systems
 {

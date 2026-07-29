@@ -14,6 +14,7 @@ namespace niketica::systems
     public:
         UILayoutSystem(entt::registry* registry, niketica::engine::EngineServices* engineServices)
             : ISystem(registry, engineServices) {}
+        ~UILayoutSystem() = default;
 
         void input() override {}
         void update(float dt) override;
