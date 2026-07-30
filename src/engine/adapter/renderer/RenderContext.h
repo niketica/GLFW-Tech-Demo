@@ -36,6 +36,15 @@ namespace niketica::renderer
 
         void reset() override;
 
+        void setWindowMode
+        (
+            component::Window& windowComponent,
+            component::WindowMode mode,
+            int width,
+            int height,
+            int monitorIndex
+        ) override;
+
     private:
         GLFWwindow* window;
         glm::vec3 clearColor = glm::vec3(0.2f, 0.3f, 0.3f);

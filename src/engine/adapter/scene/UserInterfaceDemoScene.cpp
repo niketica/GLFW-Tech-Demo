@@ -104,10 +104,24 @@ namespace niketica::scene
             }
                 break;
             case ButtonType::OPTIONS_RESOLUTION_800x600:
-                std::cout << "Set resolution 800x600" << std::endl;
+            {
+                auto viewWindow = registry->view<niketica::component::Window>();
+                auto& window = viewWindow.get<niketica::component::Window>(viewWindow.front());
+                engineServices->getRenderContext()->setWindowMode(window, niketica::component::WindowMode::WINDOWED, 800, 600, 0);
+
+                const auto& parentTransform = registry->get<niketica::component::ParentTransform>(entity);
+                registry->emplace<niketica::component::UILayoutDirty>(parentTransform.parent);
+            }
                 break;
             case ButtonType::OPTIONS_RESOLUTION_1920x1080:
-                std::cout << "Set resolution 1920x1080" << std::endl;
+            {
+                auto viewWindow = registry->view<niketica::component::Window>();
+                auto& window = viewWindow.get<niketica::component::Window>(viewWindow.front());
+                engineServices->getRenderContext()->setWindowMode(window, niketica::component::WindowMode::WINDOWED, 1920, 1080, 0);
+
+                const auto& parentTransform = registry->get<niketica::component::ParentTransform>(entity);
+                registry->emplace<niketica::component::UILayoutDirty>(parentTransform.parent);
+            }
                 break;
             }
         }
