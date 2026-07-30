@@ -103,7 +103,9 @@ namespace niketica::engine
                 if (engineServices->getRenderContext()->windowShouldClose())
                 {
                     std::cout << "INFO::Engine::loop - Window close requested, exiting loop." << std::endl;
-                    running = false;
+                    auto viewEngineConfig = registry->view<niketica::component::EngineConfig>();
+                    auto& engineConfig = viewEngineConfig.get<niketica::component::EngineConfig>(viewEngineConfig.front());
+                    engineConfig.running = false;
                     break;
                 }
                 

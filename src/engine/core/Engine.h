@@ -39,8 +39,6 @@ namespace niketica::engine
 
         float row = 2.0f;
         float col = 2.0f;
-        
-        bool running = false;
 
         glm::vec3 clearColor = glm::vec3(0.2f, 0.3f, 0.3f);
 

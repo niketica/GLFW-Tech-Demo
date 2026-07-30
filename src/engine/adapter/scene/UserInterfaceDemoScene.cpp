@@ -45,7 +45,7 @@ namespace niketica::scene
             .withPosition(glm::vec2{ 100.0f, (float)windowComponent.height - 100.0f })
             .build();
 
-        createTestPanel();
+        createMainMenuPanel();
         createTestPanel2();
     }
 
@@ -68,25 +68,47 @@ namespace niketica::scene
     {
         systemContext->update(deltaTime);
 
-        auto viewButtonActivated = registry->view<niketica::component::ButtonActivated>();
+        auto viewButtonActivated = registry->view<niketica::component::ButtonActivated, Button>();
         for (auto entity : viewButtonActivated)
         {
             registry->remove<niketica::component::ButtonActivated>(entity);
+            auto buttonType = registry->get<Button>(entity).type;
 
-            if (registry->any_of<ButtonStart>(entity))
+            switch(buttonType)
             {
+            case ButtonType::START:
                 std::cout << "Start button activated" << std::endl;
-            }
-            else if (registry->any_of<ButtonOptions>(entity))
+                break;
+            case ButtonType::OPTIONS:
             {
                 std::cout << "Options button activated" << std::endl;                
+                const auto& parentTransform = registry->get<niketica::component::ParentTransform>(entity);
+                destroyUIElement(parentTransform.parent);
+                createOptionsMenuPanel();                
             }
-            else if (registry->any_of<ButtonQuit>(entity))
+                break;
+            case ButtonType::QUIT:
             {
                 std::cout << "Quit button activated" << std::endl;
                 auto viewEngineConfig = registry->view<niketica::component::EngineConfig>();
                 auto& engineConfig = viewEngineConfig.get<niketica::component::EngineConfig>(viewEngineConfig.front());
-                engineConfig.running = false;
+                engineConfig.running = false;                
+            }
+                break;
+            case ButtonType::OPTIONS_BACK:
+            {
+                std::cout << "Options back activated" << std::endl;                
+                const auto& parentTransform = registry->get<niketica::component::ParentTransform>(entity);
+                destroyUIElement(parentTransform.parent);
+                createMainMenuPanel();                
+            }
+                break;
+            case ButtonType::OPTIONS_RESOLUTION_800x600:
+                std::cout << "Set resolution 800x600" << std::endl;
+                break;
+            case ButtonType::OPTIONS_RESOLUTION_1920x1080:
+                std::cout << "Set resolution 1920x1080" << std::endl;
+                break;
             }
         }
     }
@@ -102,17 +124,17 @@ namespace niketica::scene
         init();
     }
 
-    void UserInterfaceDemoScene::createTestPanel()
+    void UserInterfaceDemoScene::createMainMenuPanel()
     {
         float panelWidth = 400.0f;
         float panelHeight = 600.0f;
 
         auto buttonStart = createButton("Start");
-        registry->emplace<ButtonStart>(buttonStart);
+        registry->emplace<Button>(buttonStart, Button{ ButtonType::START });
         auto buttonOptions = createButton("Options");
-        registry->emplace<ButtonOptions>(buttonOptions);
+        registry->emplace<Button>(buttonOptions, Button{ ButtonType::OPTIONS });
         auto buttonQuit = createButton("Quit");
-        registry->emplace<ButtonQuit>(buttonQuit);
+        registry->emplace<Button>(buttonQuit, Button{ ButtonType::QUIT });
 
         niketica::builder::UIPanelBuilder panelBuilder = { registry, engineServices };
         auto panel = panelBuilder
@@ -127,6 +149,37 @@ namespace niketica::scene
             .addButton(buttonStart)
             .addButton(buttonOptions)
             .addButton(buttonQuit)
+            .build();
+
+        registry->emplace<niketica::component::UIActive>(panel);
+        registry->emplace<niketica::component::UIFocus>(panel);
+    }
+
+    void UserInterfaceDemoScene::createOptionsMenuPanel()
+    {
+        float panelWidth = 400.0f;
+        float panelHeight = 600.0f;
+
+        auto buttonResolution800x600 = createButton("Set resolution 800x600");
+        registry->emplace<Button>(buttonResolution800x600, Button{ ButtonType::OPTIONS_RESOLUTION_800x600 });
+        auto buttonResolution1920x1080 = createButton("Set resolution 1920x1080");
+        registry->emplace<Button>(buttonResolution1920x1080, Button{ ButtonType::OPTIONS_RESOLUTION_1920x1080 });
+        auto buttonBack = createButton("Back");
+        registry->emplace<Button>(buttonBack, Button{ ButtonType::OPTIONS_BACK });
+
+        niketica::builder::UIPanelBuilder panelBuilder = { registry, engineServices };
+        auto panel = panelBuilder
+            .withPosition({600.0f,100.0f})
+            .withSize({panelWidth,panelHeight})
+            .withPadding(20.0f)
+            .withFontColor({ 1.0f, 1.0f, 0.0f, 1.0f })
+            .withFontSize(20.0f)
+            .withAlignmentHorizontal(niketica::component::AlignmentHorizontal::CENTER)
+            .withAlignmentVertical(niketica::component::AlignmentVertical::CENTER)
+            .withLayoutType(niketica::component::UILayoutType::VERTICAL)
+            .addButton(buttonResolution800x600)
+            .addButton(buttonResolution1920x1080)
+            .addButton(buttonBack)
             .build();
 
         registry->emplace<niketica::component::UIActive>(panel);
@@ -179,6 +232,19 @@ namespace niketica::scene
             .withAlignmentVertical(niketica::component::AlignmentVertical::CENTER)
             .withLayoutType(niketica::component::UILayoutType::VERTICAL)
             .build();
+    }
+
+    void UserInterfaceDemoScene::destroyUIElement(entt::entity entity)
+    {
+        if (registry->any_of<niketica::component::UIChildren>(entity))
+        {
+            const auto& children = registry->get<niketica::component::UIChildren>(entity);
+            for (auto child : children.children)
+            {
+                destroyUIElement(child);
+            }
+        }
+        registry->destroy(entity);
     }
 
 }

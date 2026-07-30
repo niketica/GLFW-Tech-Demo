@@ -14,9 +14,20 @@
 namespace niketica::scene
 {
 
-    struct ButtonStart {};
-    struct ButtonOptions {};
-    struct ButtonQuit {};
+    enum class ButtonType
+    {
+        START,
+        OPTIONS,
+        QUIT,
+        OPTIONS_RESOLUTION_800x600,
+        OPTIONS_RESOLUTION_1920x1080,
+        OPTIONS_BACK
+    };
+
+    struct Button
+    {
+        ButtonType type;
+    };
 
     class UserInterfaceDemoScene : public IScene
     {
@@ -38,10 +49,13 @@ namespace niketica::scene
         niketica::engine::EngineServices* engineServices;
 
         void init();
-        void createTestPanel();
+        void createMainMenuPanel();
+        void createOptionsMenuPanel();
         void createTestPanel2();
         entt::entity createTextLabel(const std::string& text);
         entt::entity createButton(const std::string& text);
+
+        void destroyUIElement(entt::entity entity);
 
     };
 }
