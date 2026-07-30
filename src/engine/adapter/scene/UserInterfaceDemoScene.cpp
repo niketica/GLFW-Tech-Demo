@@ -84,6 +84,9 @@ namespace niketica::scene
             else if (registry->any_of<ButtonQuit>(entity))
             {
                 std::cout << "Quit button activated" << std::endl;
+                auto viewEngineConfig = registry->view<niketica::component::EngineConfig>();
+                auto& engineConfig = viewEngineConfig.get<niketica::component::EngineConfig>(viewEngineConfig.front());
+                engineConfig.running = false;
             }
         }
     }

@@ -47,6 +47,8 @@ namespace niketica::engine
         sceneContext->setRegistry(registry.get());
         sceneContext->initScenes();
 
+        registry->emplace<niketica::component::EngineConfig>(registry->create());
+
         std::cout << "DONE!" << std::endl;
 
         std::cout << "INFO::Engine::init - Engine initialized." << std::endl;
@@ -84,8 +86,10 @@ namespace niketica::engine
         unsigned int frameCount = 0;
         unsigned int fps = 0;
 
-        running = true;
-        while (running)
+        auto viewEngineConfig = registry->view<niketica::component::EngineConfig>();
+        auto& engineConfig = viewEngineConfig.get<niketica::component::EngineConfig>(viewEngineConfig.front());
+        engineConfig.running = true;
+        while (engineConfig.running)
         {
             currentTime = static_cast<float>(glfwGetTime());
             deltaTime = currentTime - lastTime;
@@ -132,16 +136,6 @@ namespace niketica::engine
     void Engine::input()
     {        
         sceneContext->input();
-
-        auto inputView = registry->view<niketica::component::InputComponent>();
-        auto& input = inputView.get<niketica::component::InputComponent>(inputView.front());
-
-        if (input.actions[niketica::component::Action::ESCAPE].pressed)
-        {
-            std::cout << "INFO::Engine::update - Escape key pressed, exiting loop." << std::endl;
-            running = false;
-            return;
-        }
     }
 
     void Engine::update(float deltaTime)
