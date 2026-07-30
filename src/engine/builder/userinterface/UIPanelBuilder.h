@@ -47,13 +47,16 @@ namespace niketica::builder
         UIPanelBuilder& withFontColor(const glm::vec4& value);
 
         UIPanelBuilder& addTextLabel(const std::string& value);
+        UIPanelBuilder& addTextLabel(const entt::entity entity);
         UIPanelBuilder& addButton(const std::string& value, const glm::vec2& size);
+        UIPanelBuilder& addButton(const entt::entity entity);
         entt::entity build();
         
     private:
         entt::registry* registry;
         niketica::engine::EngineServices* engineServices;
 
+        entt::entity panelEntity = registry->create();
         glm::vec2 position;
         glm::vec2 size;
         float paddingTop = 0.0f;
@@ -69,6 +72,7 @@ namespace niketica::builder
         niketica::component::UILayoutType layoutType = niketica::component::UILayoutType::VERTICAL;
 
         std::vector<UIChild> childElements;
+        niketica::component::UIChildren children;
 
         // Use hard coded values until there is a proper text measuring system
         float textHeight = 24.0f;

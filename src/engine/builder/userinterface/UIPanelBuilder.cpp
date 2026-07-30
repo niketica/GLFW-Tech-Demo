@@ -88,16 +88,38 @@ namespace niketica::builder
         return *this;
     }
     
+    UIPanelBuilder& UIPanelBuilder::addTextLabel(const entt::entity entity)
+    {
+        niketica::component::UIAlignment aligment;
+        aligment.horizontal = alignmentHorizontal;
+        aligment.vertical = alignmentVertical;
+
+        niketica::component::ParentTransform parentTransform = { panelEntity };
+        
+        registry->emplace<niketica::component::UIAlignment>(entity, aligment);
+        registry->emplace<niketica::component::ParentTransform>(entity, parentTransform);
+        registry->remove<niketica::component::UILayoutDirty>(entity); // Will be updated as child of the parent container
+        children.children.emplace_back(entity);
+        return *this;        
+    }
+    
     UIPanelBuilder& UIPanelBuilder::addButton(const std::string& value, const glm::vec2& size)
     {
         childElements.emplace_back(UIChild{ UIChildType::BUTTON, value, size });
         return *this;        
     }
     
+    UIPanelBuilder& UIPanelBuilder::addButton(const entt::entity entity)
+    {
+        niketica::component::ParentTransform parentTransform = { panelEntity };
+        registry->emplace<niketica::component::ParentTransform>(entity, parentTransform);
+        registry->remove<niketica::component::UILayoutDirty>(entity); // Will be updated as child of the parent container
+        children.children.emplace_back(entity);
+        return *this;        
+    }
+    
     entt::entity UIPanelBuilder::build()
     {
-        auto panelEntity = registry->create();
-
         niketica::component::LocalTransform transformUI;
         transformUI.position = { position.x, position.y, 1.0f };
         transformUI.size = { size.x, size.y, 1.0f };
@@ -118,7 +140,6 @@ namespace niketica::builder
         layout.type = layoutType;
         layout.spacing = spacing;
 
-        niketica::component::UIChildren children;
         for (const auto& child : childElements)
         {
             switch (child.type)

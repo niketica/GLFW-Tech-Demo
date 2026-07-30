@@ -45,42 +45,8 @@ namespace niketica::scene
             .withPosition(glm::vec2{ 100.0f, (float)windowComponent.height - 100.0f })
             .build();
 
-        float panelWidth = 400.0f;
-        float panelHeight = 600.0f;
-
-        niketica::builder::UIPanelBuilder panelBuilder = { registry, engineServices };
-        panelBuilder
-            .withPosition({600.0f,100.0f})
-            .withSize({panelWidth,panelHeight})
-            .withPadding(20.0f)
-            .withFontColor({ 1.0f, 1.0f, 0.0f, 1.0f })
-            .withFontSize(20.0f)
-            .withAlignmentHorizontal(niketica::component::AlignmentHorizontal::CENTER)
-            .withAlignmentVertical(niketica::component::AlignmentVertical::CENTER)
-            .withLayoutType(niketica::component::UILayoutType::VERTICAL)
-            .addTextLabel("First line")
-            .addTextLabel("Second line")
-            .addButton("Start", { 300.0f, 74.0f})
-            .addButton("Options", { 300.0f, 74.0f})
-            .addButton("Quit", { 300.0f, 74.0f})
-            .build();
-
-        niketica::builder::UIPanelBuilder panelBuilder2 = { registry, engineServices };
-        panelBuilder2
-            .withPosition({600.0f,100.0f})
-            .withSize({windowComponent.width,200.0f})
-            .withPadding(20.0f)
-            .withFontColor({ 1.0f, 1.0f, 0.0f, 1.0f })
-            .withFontSize(20.0f)
-            .withAlignmentHorizontal(niketica::component::AlignmentHorizontal::CENTER)
-            .withAlignmentVertical(niketica::component::AlignmentVertical::BOTTOM)
-            .withLayoutType(niketica::component::UILayoutType::HORIZONTAL)
-            .addTextLabel("A")
-            .addTextLabel("B")
-            .addButton("", { 74.0f, 74.0f})
-            .addButton("", { 74.0f, 74.0f})
-            .addButton("", { 74.0f, 74.0f})
-            .build();
+        createTestPanel();
+        createTestPanel2();
     }
 
     void UserInterfaceDemoScene::input()
@@ -136,6 +102,77 @@ namespace niketica::scene
     {
         systemContext.release();
         init();
+    }
+
+    void UserInterfaceDemoScene::createTestPanel()
+    {
+        float panelWidth = 400.0f;
+        float panelHeight = 600.0f;
+
+        niketica::builder::UIPanelBuilder panelBuilder = { registry, engineServices };
+        panelBuilder
+            .withPosition({600.0f,100.0f})
+            .withSize({panelWidth,panelHeight})
+            .withPadding(20.0f)
+            .withFontColor({ 1.0f, 1.0f, 0.0f, 1.0f })
+            .withFontSize(20.0f)
+            .withAlignmentHorizontal(niketica::component::AlignmentHorizontal::CENTER)
+            .withAlignmentVertical(niketica::component::AlignmentVertical::CENTER)
+            .withLayoutType(niketica::component::UILayoutType::VERTICAL)
+            .addTextLabel(createTextLabel("First line"))
+            .addTextLabel(createTextLabel("Second line"))
+            .addButton(createButton("Start"))
+            .addButton(createButton("Options"))
+            .addButton(createButton("Quit"))
+            .build();
+    }
+
+    void UserInterfaceDemoScene::createTestPanel2()
+    {
+        auto windowView = registry->view<niketica::component::Window>();
+        const auto &windowComponent = windowView.get<niketica::component::Window>(windowView.front());
+        
+        niketica::builder::UIPanelBuilder panelBuilder2 = { registry, engineServices };
+        panelBuilder2
+            .withPosition({600.0f,100.0f})
+            .withSize({windowComponent.width,200.0f})
+            .withPadding(20.0f)
+            .withFontColor({ 1.0f, 1.0f, 0.0f, 1.0f })
+            .withFontSize(20.0f)
+            .withAlignmentHorizontal(niketica::component::AlignmentHorizontal::CENTER)
+            .withAlignmentVertical(niketica::component::AlignmentVertical::BOTTOM)
+            .withLayoutType(niketica::component::UILayoutType::HORIZONTAL)
+            .addTextLabel("A")
+            .addTextLabel("B")
+            .addButton("", { 74.0f, 74.0f})
+            .addButton("", { 74.0f, 74.0f})
+            .addButton("", { 74.0f, 74.0f})
+            .build();
+    }
+    
+    entt::entity UserInterfaceDemoScene::createTextLabel(const std::string& text)
+    {
+        niketica::builder::UITextLabelBuilder textLabelBuilder = { registry, engineServices };
+        return textLabelBuilder
+            .withText(text)
+            .withColor({ 1.0f, 1.0f, 0.0f, 1.0f })
+            .withFontSize(20.0f)
+            .withFontType(niketica::component::FontType::COURIER_PRIME_CODE)
+            .build();
+    }
+    
+    entt::entity UserInterfaceDemoScene::createButton(const std::string& text)
+    {
+        niketica::builder::UIButtonBuilder buttonBuilder = { registry, engineServices };
+        return buttonBuilder
+            .withSize({ 300.0f, 74.0f})
+            .withTextLabel(text)
+            .withFontColor({ 1.0f, 1.0f, 0.0f, 1.0f })
+            .withFontSize(20.0f)
+            .withAlignmentHorizontal(niketica::component::AlignmentHorizontal::CENTER)
+            .withAlignmentVertical(niketica::component::AlignmentVertical::CENTER)
+            .withLayoutType(niketica::component::UILayoutType::VERTICAL)
+            .build();
     }
 
 }

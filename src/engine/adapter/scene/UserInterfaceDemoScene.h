@@ -33,6 +33,10 @@ namespace niketica::scene
         niketica::engine::EngineServices* engineServices;
 
         void init();
+        void createTestPanel();
+        void createTestPanel2();
+        entt::entity createTextLabel(const std::string& text);
+        entt::entity createButton(const std::string& text);
 
     };
 }
