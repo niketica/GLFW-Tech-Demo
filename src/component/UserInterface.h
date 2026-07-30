@@ -125,4 +125,13 @@ namespace niketica::component
 
     struct UILayoutDirty {}; // Indicates that the layout needs to be updated
 
+    struct UIFocus
+    {
+        int index = 0;
+    };
+
+    struct UIActive {};
+
+    struct ButtonActivated {};
+
 }

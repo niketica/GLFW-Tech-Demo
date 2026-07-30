@@ -56,30 +56,6 @@ namespace niketica::scene
         auto inputView = registry->view<niketica::component::InputComponent>();
         auto& input = inputView.get<niketica::component::InputComponent>(inputView.front());
 
-        if (input.actions[niketica::component::Action::W].pressed)
-        {
-            std::cout << "INFO::Engine::update - W key pressed." << std::endl;
-            auto sound = niketica::component::SoundEffect{ "sound/sfx/menu/23910__nightflame__menuui-sounds/397604__nightflame__menu-fx-01.wav" };
-            registry->emplace<niketica::component::SoundEffect>(registry->create(), sound);
-        }
-        if (input.actions[niketica::component::Action::A].pressed)
-        {
-            std::cout << "INFO::Engine::update - A key pressed." << std::endl;
-            auto sound = niketica::component::SoundEffect{ "sound/sfx/menu/23910__nightflame__menuui-sounds/397599__nightflame__menu-fx-02.wav" };
-            registry->emplace<niketica::component::SoundEffect>(registry->create(), sound);
-        }
-        if (input.actions[niketica::component::Action::S].pressed)
-        {
-            std::cout << "INFO::Engine::update - S key pressed." << std::endl;
-            auto sound = niketica::component::SoundEffect{ "sound/sfx/menu/23910__nightflame__menuui-sounds/422514__nightflame__menu-fx-03-normal.wav" };
-            registry->emplace<niketica::component::SoundEffect>(registry->create(), sound);
-        }
-        if (input.actions[niketica::component::Action::D].pressed)
-        {
-            std::cout << "INFO::Engine::update - D key pressed." << std::endl;
-            auto sound = niketica::component::SoundEffect{ "sound/sfx/menu/23910__nightflame__menuui-sounds/422515__nightflame__menu-fx-03-descending.wav" };
-            registry->emplace<niketica::component::SoundEffect>(registry->create(), sound);
-        }
         if (input.actions[niketica::component::Action::MINUS].pressed)
         {
             auto sceneSwitch = niketica::component::SceneSwitchInstruction{ niketica::component::SceneType::TEST };
@@ -91,6 +67,25 @@ namespace niketica::scene
     void UserInterfaceDemoScene::update(float deltaTime)
     {
         systemContext->update(deltaTime);
+
+        auto viewButtonActivated = registry->view<niketica::component::ButtonActivated>();
+        for (auto entity : viewButtonActivated)
+        {
+            registry->remove<niketica::component::ButtonActivated>(entity);
+
+            if (registry->any_of<ButtonStart>(entity))
+            {
+                std::cout << "Start button activated" << std::endl;
+            }
+            else if (registry->any_of<ButtonOptions>(entity))
+            {
+                std::cout << "Options button activated" << std::endl;                
+            }
+            else if (registry->any_of<ButtonQuit>(entity))
+            {
+                std::cout << "Quit button activated" << std::endl;
+            }
+        }
     }
 
     void UserInterfaceDemoScene::render()
@@ -109,8 +104,15 @@ namespace niketica::scene
         float panelWidth = 400.0f;
         float panelHeight = 600.0f;
 
+        auto buttonStart = createButton("Start");
+        registry->emplace<ButtonStart>(buttonStart);
+        auto buttonOptions = createButton("Options");
+        registry->emplace<ButtonOptions>(buttonOptions);
+        auto buttonQuit = createButton("Quit");
+        registry->emplace<ButtonQuit>(buttonQuit);
+
         niketica::builder::UIPanelBuilder panelBuilder = { registry, engineServices };
-        panelBuilder
+        auto panel = panelBuilder
             .withPosition({600.0f,100.0f})
             .withSize({panelWidth,panelHeight})
             .withPadding(20.0f)
@@ -119,12 +121,13 @@ namespace niketica::scene
             .withAlignmentHorizontal(niketica::component::AlignmentHorizontal::CENTER)
             .withAlignmentVertical(niketica::component::AlignmentVertical::CENTER)
             .withLayoutType(niketica::component::UILayoutType::VERTICAL)
-            .addTextLabel(createTextLabel("First line"))
-            .addTextLabel(createTextLabel("Second line"))
-            .addButton(createButton("Start"))
-            .addButton(createButton("Options"))
-            .addButton(createButton("Quit"))
+            .addButton(buttonStart)
+            .addButton(buttonOptions)
+            .addButton(buttonQuit)
             .build();
+
+        registry->emplace<niketica::component::UIActive>(panel);
+        registry->emplace<niketica::component::UIFocus>(panel);
     }
 
     void UserInterfaceDemoScene::createTestPanel2()
@@ -142,8 +145,8 @@ namespace niketica::scene
             .withAlignmentHorizontal(niketica::component::AlignmentHorizontal::CENTER)
             .withAlignmentVertical(niketica::component::AlignmentVertical::BOTTOM)
             .withLayoutType(niketica::component::UILayoutType::HORIZONTAL)
-            .addTextLabel("A")
-            .addTextLabel("B")
+            .addTextLabel(createTextLabel("A"))
+            .addTextLabel(createTextLabel("B"))
             .addButton("", { 74.0f, 74.0f})
             .addButton("", { 74.0f, 74.0f})
             .addButton("", { 74.0f, 74.0f})

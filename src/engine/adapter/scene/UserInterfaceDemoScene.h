@@ -13,6 +13,11 @@
 
 namespace niketica::scene
 {
+
+    struct ButtonStart {};
+    struct ButtonOptions {};
+    struct ButtonQuit {};
+
     class UserInterfaceDemoScene : public IScene
     {
     public:
