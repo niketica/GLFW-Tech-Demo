@@ -43,7 +43,7 @@ namespace niketica::engine
         registry->emplace<niketica::component::Viewport>(windowEntity, viewport);
         registry->emplace<niketica::component::Persistent>(windowEntity);
         
-        auto camera = niketica::component::Camera();
+        niketica::component::Camera camera;
         camera.projection = glm::ortho(
             0.f, windowWidth,
             0.f, windowHeight,
@@ -51,18 +51,23 @@ namespace niketica::engine
         );
         camera.view = glm::mat4(1.0f);
         camera.zoom = 1.0f;
-        camera.virtualWidth = (float)SCR_WIDTH;
-        camera.virtualHeight = (float)SCR_HEIGHT;
 
         auto cameraEntity = registry->create();
         registry->emplace<niketica::component::Camera>(cameraEntity, camera);
         registry->emplace<niketica::component::ActiveCamera>(cameraEntity);
         registry->emplace<niketica::component::Persistent>(cameraEntity);
+
+        niketica::component::RenderSettings renderSettings;
+        renderSettings.virtualWidth = (float)SCR_WIDTH;
+        renderSettings.virtualHeight = (float)SCR_HEIGHT;
+        registry->emplace<niketica::component::RenderSettings>(windowEntity, renderSettings);
         
         sceneContext->setRegistry(registry.get());
         sceneContext->initScenes();
 
         registry->emplace<niketica::component::EngineConfig>(registry->create());
+
+        updateViewport();
 
         std::cout << "INFO::Engine::init - Engine initialized." << std::endl;
     }
@@ -164,5 +169,16 @@ namespace niketica::engine
         engineServices->getRenderContext()->startFrame();
         sceneContext->render();
         engineServices->getRenderContext()->endFrame();
+    }
+
+    void Engine::updateViewport()
+    {
+        auto viewViewport = registry->view<niketica::component::Viewport>();
+        auto& viewport = viewViewport.get<niketica::component::Viewport>(viewViewport.front());
+        auto viewRenderSettings = registry->view<niketica::component::RenderSettings>();
+        auto viewWindow = registry->view<niketica::component::Window>();
+        const auto& window = viewWindow.get<niketica::component::Window>(viewWindow.front());
+        const auto& renderSettings = viewRenderSettings.get<niketica::component::RenderSettings>(viewRenderSettings.front());
+        engineServices->getRenderContext()->updateViewport(viewport, window, renderSettings);
     }
 }

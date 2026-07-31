@@ -161,15 +161,15 @@ namespace niketica::renderer
         glfwSetWindowSize(window, width, height);
     }
     
-    void RenderContext::updateViewport(component::Viewport& viewportComponent, const component::Window& windowComponent, const component::Camera& camera)
+    void RenderContext::updateViewport(component::Viewport& viewportComponent, const component::Window& windowComponent, const component::RenderSettings& renderSettings)
     {
         float scale = std::min
         (
-            (float)windowComponent.width / camera.virtualWidth,
-            (float)windowComponent.height / camera.virtualHeight
+            (float)windowComponent.width / renderSettings.virtualWidth,
+            (float)windowComponent.height / renderSettings.virtualHeight
         );
-        viewportComponent.width = (int)(camera.virtualWidth * scale);
-        viewportComponent.height =  (int)(camera.virtualHeight * scale);
+        viewportComponent.width = (int)(renderSettings.virtualWidth * scale);
+        viewportComponent.height =  (int)(renderSettings.virtualHeight * scale);
         viewportComponent.x = (windowComponent.width - viewportComponent.width) / 2;
         viewportComponent.y = (windowComponent.height - viewportComponent.height) / 2;
         
@@ -182,14 +182,14 @@ namespace niketica::renderer
         );
     }
     
-    void RenderContext::updateCamera(component::Camera& camera)
+    void RenderContext::updateCamera(component::Camera& camera, const component::RenderSettings& renderSettings)
     {
         camera.projection = glm::ortho
         (
             0.0f,
-            camera.virtualWidth,
+            renderSettings.virtualWidth,
             0.0f,
-            camera.virtualHeight,
+            renderSettings.virtualHeight,
             -10.f,
             10.f
         );

@@ -56,6 +56,8 @@ namespace niketica::engine
         void initSystems();
         void initInput();
 
+        void updateViewport();
+
     };
 
 }

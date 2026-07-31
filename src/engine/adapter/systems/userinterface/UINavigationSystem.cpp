@@ -178,10 +178,16 @@ namespace niketica::systems
         const auto& buttonPos = buttonTransform.position;
         const auto& buttonSize = buttonTransform.size;
 
-        return mousePos.x >= buttonPos.x
-            && mousePos.x <= buttonPos.x + buttonSize.x
-            && mousePos.y >= buttonPos.y
-            && mousePos.y <= buttonPos.y + buttonSize.y;
+        auto viewRenderSettings = registry->view<niketica::component::RenderSettings>();
+        const auto& renderSettings = viewRenderSettings.get<niketica::component::RenderSettings>(viewRenderSettings.front());
+        auto viewViewport = registry->view<niketica::component::Viewport>();
+        const auto& viewport = viewViewport.get<niketica::component::Viewport>(viewViewport.front());
+        const auto virtualMouse = niketica::util::screenToVirtual(mousePos, viewport, renderSettings);
+
+        return virtualMouse.x >= buttonPos.x
+            && virtualMouse.x <= buttonPos.x + buttonSize.x
+            && virtualMouse.y >= buttonPos.y
+            && virtualMouse.y <= buttonPos.y + buttonSize.y;
     }
 
     void UINavigationSystem::playMoveSound()

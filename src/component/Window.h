@@ -34,4 +34,11 @@ namespace niketica::component
         int width;
         int height;
     };
+
+    struct RenderSettings
+    {
+        float virtualWidth = 1920.0f;
+        float virtualHeight = 1080.0f;
+    };
+    
 }

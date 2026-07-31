@@ -5,48 +5,48 @@ namespace niketica::systems
 
     void UILayoutSystem::update(float dt)
     {
-        auto viewCamera = registry->view<niketica::component::Camera, niketica::component::ActiveCamera>();
-        const auto& camera = viewCamera.get<niketica::component::Camera>(viewCamera.front());
+        auto viewRenderSettings = registry->view<niketica::component::RenderSettings>();
+        const auto& renderSettings = viewRenderSettings.get<niketica::component::RenderSettings>(viewRenderSettings.front());
 
         auto viewLayoutDirty = registry->view<niketica::component::UILayoutDirty>();
         for (auto container : viewLayoutDirty)
         {
             registry->remove<niketica::component::UILayoutDirty>(container);
-            updatePositionContainer(container, camera);
+            updatePositionContainer(container, renderSettings);
             updateLayoutContainer(container);
         }
     }
 
-    void UILayoutSystem::updatePositionContainer(entt::entity container, const niketica::component::Camera& camera)
+    void UILayoutSystem::updatePositionContainer(entt::entity container, const niketica::component::RenderSettings& renderSettings)
     {
         const auto& alignment = registry->get<niketica::component::UIAlignment>(container);
         auto& transform = registry->get<niketica::component::LocalTransform>(container);
         auto& position = transform.position;
         const auto& size = transform.size;
 
-        float cameraWidth = camera.virtualWidth;
-        float cameraHeight = camera.virtualHeight;
+        float virtualWidth = renderSettings.virtualWidth;
+        float virtualHeight = renderSettings.virtualHeight;
 
         switch (alignment.horizontal)
         {
         case niketica::component::AlignmentHorizontal::CENTER:
-            position.x = (cameraWidth * 0.5f) - (size.x * 0.5f);
+            position.x = (virtualWidth * 0.5f) - (size.x * 0.5f);
             break;
         case niketica::component::AlignmentHorizontal::LEFT:
             position.x = 0.0f;
             break;
         case niketica::component::AlignmentHorizontal::RIGHT:
-            position.x = cameraWidth - size.x;
+            position.x = virtualWidth - size.x;
             break;
         }
 
         switch (alignment.vertical)
         {
         case niketica::component::AlignmentVertical::CENTER:
-            position.y = (cameraHeight * 0.5f) - (size.y * 0.5f);
+            position.y = (virtualHeight * 0.5f) - (size.y * 0.5f);
             break;
         case niketica::component::AlignmentVertical::TOP:
-            position.y = cameraHeight - size.y;
+            position.y = virtualHeight - size.y;
             break;
         case niketica::component::AlignmentVertical::BOTTOM:
             position.y = 0.0f;

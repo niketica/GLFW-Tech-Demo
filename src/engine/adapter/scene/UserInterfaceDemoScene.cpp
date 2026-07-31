@@ -277,12 +277,12 @@ namespace niketica::scene
         auto& window = viewWindow.get<niketica::component::Window>(viewWindow.front());
         engineServices->getRenderContext()->setWindowSize(window, width, height);
 
-        auto viewCamera = registry->view<niketica::component::Camera, niketica::component::ActiveCamera>();
-        const auto& camera = viewCamera.get<niketica::component::Camera>(viewCamera.front());
+        auto viewRenderSettings = registry->view<niketica::component::RenderSettings>();
+        const auto& renderSettings = viewRenderSettings.get<niketica::component::RenderSettings>(viewRenderSettings.front());
 
         auto viewViewport = registry->view<niketica::component::Viewport>();
         auto& viewport = viewViewport.get<niketica::component::Viewport>(viewViewport.front());
-        engineServices->getRenderContext()->updateViewport(viewport, window, camera);
+        engineServices->getRenderContext()->updateViewport(viewport, window, renderSettings);
     }
 
     void UserInterfaceDemoScene::updateResolution(const int width, const int height)
@@ -290,14 +290,14 @@ namespace niketica::scene
         auto viewWindow = registry->view<niketica::component::Window>();
         const auto& window = viewWindow.get<niketica::component::Window>(viewWindow.front());
 
-        auto viewCamera = registry->view<niketica::component::Camera, niketica::component::ActiveCamera>();
-        auto& camera = viewCamera.get<niketica::component::Camera>(viewCamera.front());
-        camera.virtualWidth = (float)width;
-        camera.virtualHeight = (float)height;
+        auto viewRenderSettings = registry->view<niketica::component::RenderSettings>();
+        auto& renderSettings = viewRenderSettings.get<niketica::component::RenderSettings>(viewRenderSettings.front());
+        renderSettings.virtualWidth = (float)width;
+        renderSettings.virtualHeight = (float)height;
 
         auto viewViewport = registry->view<niketica::component::Viewport>();
         auto& viewport = viewViewport.get<niketica::component::Viewport>(viewViewport.front());
-        engineServices->getRenderContext()->updateViewport(viewport, window, camera);
+        engineServices->getRenderContext()->updateViewport(viewport, window, renderSettings);
         
         auto viewRootContainers = registry->view<niketica::component::UILayout>(entt::exclude<component::ParentTransform>);
         for (auto rootConainer : viewRootContainers)
