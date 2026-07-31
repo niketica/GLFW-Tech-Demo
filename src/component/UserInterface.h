@@ -134,4 +134,18 @@ namespace niketica::component
 
     struct ButtonActivated {};
 
+    enum class UISizeMode
+    {
+        PIXELS,
+        PERCENT
+    };
+
+    struct UISize
+    {
+        UISizeMode widthMode;
+        UISizeMode heightMode;
+        float width;
+        float height;
+    };
+
 }

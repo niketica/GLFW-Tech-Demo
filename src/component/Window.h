@@ -37,8 +37,8 @@ namespace niketica::component
 
     struct RenderSettings
     {
-        float virtualWidth = 1920.0f;
-        float virtualHeight = 1080.0f;
+        glm::vec2 worldReferenceResolution = {1920, 1080};
+        glm::vec2 uiReferenceResolution    = {1920, 1080};
     };
     
 }

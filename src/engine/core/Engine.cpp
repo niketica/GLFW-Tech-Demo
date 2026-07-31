@@ -58,8 +58,8 @@ namespace niketica::engine
         registry->emplace<niketica::component::Persistent>(cameraEntity);
 
         niketica::component::RenderSettings renderSettings;
-        renderSettings.virtualWidth = (float)SCR_WIDTH;
-        renderSettings.virtualHeight = (float)SCR_HEIGHT;
+        renderSettings.worldReferenceResolution = { (float)SCR_WIDTH, (float)SCR_HEIGHT };
+        renderSettings.uiReferenceResolution = { (float)SCR_WIDTH, (float)SCR_HEIGHT };
         registry->emplace<niketica::component::RenderSettings>(windowEntity, renderSettings);
         
         sceneContext->setRegistry(registry.get());

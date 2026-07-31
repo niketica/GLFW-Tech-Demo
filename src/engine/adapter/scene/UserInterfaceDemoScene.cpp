@@ -310,8 +310,8 @@ namespace niketica::scene
 
         auto viewRenderSettings = registry->view<niketica::component::RenderSettings>();
         auto& renderSettings = viewRenderSettings.get<niketica::component::RenderSettings>(viewRenderSettings.front());
-        renderSettings.virtualWidth = (float)width;
-        renderSettings.virtualHeight = (float)height;
+        renderSettings.worldReferenceResolution = { (float)width, (float)height };
+        renderSettings.uiReferenceResolution = { (float)width, (float)height };
 
         auto viewViewport = registry->view<niketica::component::Viewport>();
         auto& viewport = viewViewport.get<niketica::component::Viewport>(viewViewport.front());

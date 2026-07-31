@@ -24,8 +24,8 @@ namespace niketica::systems
         auto& position = transform.position;
         const auto& size = transform.size;
 
-        float virtualWidth = renderSettings.virtualWidth;
-        float virtualHeight = renderSettings.virtualHeight;
+        float virtualWidth = renderSettings.uiReferenceResolution.x;
+        float virtualHeight = renderSettings.uiReferenceResolution.y;
 
         switch (alignment.horizontal)
         {

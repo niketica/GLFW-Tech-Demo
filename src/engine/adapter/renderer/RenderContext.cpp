@@ -165,11 +165,11 @@ namespace niketica::renderer
     {
         float scale = std::min
         (
-            (float)windowComponent.width / renderSettings.virtualWidth,
-            (float)windowComponent.height / renderSettings.virtualHeight
+            (float)windowComponent.width / renderSettings.worldReferenceResolution.x,
+            (float)windowComponent.height / renderSettings.worldReferenceResolution.y
         );
-        viewportComponent.width = (int)(renderSettings.virtualWidth * scale);
-        viewportComponent.height =  (int)(renderSettings.virtualHeight * scale);
+        viewportComponent.width = (int)(renderSettings.worldReferenceResolution.x * scale);
+        viewportComponent.height =  (int)(renderSettings.worldReferenceResolution.y * scale);
         viewportComponent.x = (windowComponent.width - viewportComponent.width) / 2;
         viewportComponent.y = (windowComponent.height - viewportComponent.height) / 2;
         
@@ -187,9 +187,9 @@ namespace niketica::renderer
         camera.projection = glm::ortho
         (
             0.0f,
-            renderSettings.virtualWidth,
+            renderSettings.worldReferenceResolution.x,
             0.0f,
-            renderSettings.virtualHeight,
+            renderSettings.worldReferenceResolution.y,
             -10.f,
             10.f
         );
