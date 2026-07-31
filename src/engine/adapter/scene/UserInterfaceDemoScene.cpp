@@ -299,6 +299,13 @@ namespace niketica::scene
         auto& viewport = viewViewport.get<niketica::component::Viewport>(viewViewport.front());
         engineServices->getRenderContext()->updateViewport(viewport, window, renderSettings);
         
+        auto viewCamera = registry->view<niketica::component::Camera>();
+        for (auto cameraEntity : viewCamera)
+        {
+            auto& camera = viewCamera.get<niketica::component::Camera>(cameraEntity);
+            engineServices->getRenderContext()->updateCamera(camera, renderSettings);
+        }
+        
         auto viewRootContainers = registry->view<niketica::component::UILayout>(entt::exclude<component::ParentTransform>);
         for (auto rootConainer : viewRootContainers)
         {
