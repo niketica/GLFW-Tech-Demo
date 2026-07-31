@@ -121,6 +121,15 @@ namespace niketica::scene
             case ButtonType::OPTIONS_RESOLUTION_1920x1080:
                 updateResolution(1920, 1080);
                 break;
+            case ButtonType::OPTIONS_WINDOW_MODE_WINDOWED:
+                updateWindowMode(niketica::component::WindowMode::WINDOWED);
+                break;
+            case ButtonType::OPTIONS_WINDOW_MODE_BORDERLESS:
+                updateWindowMode(niketica::component::WindowMode::BORDERLESS);
+                break;
+            case ButtonType::OPTIONS_WINDOW_MODE_FULLSCREEN:
+                updateWindowMode(niketica::component::WindowMode::FULLSCREEN);
+                break;
             }
         }
     }
@@ -184,6 +193,12 @@ namespace niketica::scene
         registry->emplace<Button>(buttonWindow1600x900, Button{ ButtonType::OPTIONS_WINDOW_1600x900 });
         auto buttonWindow1920x1080 = createButton("Set window 1920x1080");
         registry->emplace<Button>(buttonWindow1920x1080, Button{ ButtonType::OPTIONS_WINDOW_1920x1080 });
+        auto buttonWindowModeWindowed = createButton("Set window mode windowed");
+        registry->emplace<Button>(buttonWindowModeWindowed, Button{ ButtonType::OPTIONS_WINDOW_MODE_WINDOWED });
+        auto buttonWindowModeBorderless = createButton("Set window mode borderless");
+        registry->emplace<Button>(buttonWindowModeBorderless, Button{ ButtonType::OPTIONS_WINDOW_MODE_BORDERLESS });
+        auto buttonWindowModeFullscreen = createButton("Set window mode fullscreen");
+        registry->emplace<Button>(buttonWindowModeFullscreen, Button{ ButtonType::OPTIONS_WINDOW_MODE_FULLSCREEN });
         auto buttonBack = createButton("Back");
         registry->emplace<Button>(buttonBack, Button{ ButtonType::OPTIONS_BACK });
 
@@ -203,6 +218,9 @@ namespace niketica::scene
             .addButton(buttonWindow800x600)
             .addButton(buttonWindow1600x900)
             .addButton(buttonWindow1920x1080)
+            .addButton(buttonWindowModeWindowed)
+            .addButton(buttonWindowModeBorderless)
+            .addButton(buttonWindowModeFullscreen)
             .addButton(buttonBack)
             .build();
 
