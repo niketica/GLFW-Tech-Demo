@@ -19,10 +19,20 @@ namespace niketica::scene
         START,
         OPTIONS,
         QUIT,
+        OPTIONS_WINDOW_800x600,
+        OPTIONS_WINDOW_1600x900,
+        OPTIONS_WINDOW_1920x1080,
         OPTIONS_RESOLUTION_800x600,
+        OPTIONS_RESOLUTION_1600x900,
         OPTIONS_RESOLUTION_1920x1080,
         OPTIONS_BACK
     };
+
+    // 1920x1080
+    // 1600x900
+    // 1280x720
+    // 800x600
+    // 3840x2160
 
     struct Button
     {
@@ -56,6 +66,10 @@ namespace niketica::scene
         entt::entity createButton(const std::string& text);
 
         void destroyUIElement(entt::entity entity);
+
+        void updateWindowSize(const int width, const int height);
+        void updateResolution(const int width, const int height);
+        void updateWindowMode(niketica::component::WindowMode mode);
 
     };
 }

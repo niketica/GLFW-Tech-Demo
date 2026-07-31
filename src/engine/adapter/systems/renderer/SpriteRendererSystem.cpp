@@ -34,11 +34,12 @@ namespace niketica::systems
 
     void SpriteRendererSystem::render()
     {
-        auto windowView = registry->view<niketica::component::Window>();
-        const auto &windowComponent = windowView.get<niketica::component::Window>(windowView.front());
+        // For now just assume there is always exactly 1 active camera.
+        auto viewCamera = registry->view<niketica::component::Camera, niketica::component::ActiveCamera>();
+        const auto &camera = viewCamera.get<niketica::component::Camera>(viewCamera.front());
 
-        engineServices->getRenderContext()->getSpriteInstancedRenderer()->render(windowComponent.projection, windowComponent.view);
-        engineServices->getRenderContext()->getNineSliceInstancedRenderer()->render(windowComponent.projection, windowComponent.view);
+        engineServices->getRenderContext()->getSpriteInstancedRenderer()->render(camera.projection, camera.view);
+        engineServices->getRenderContext()->getNineSliceInstancedRenderer()->render(camera.projection, camera.view);
     }
 
 }

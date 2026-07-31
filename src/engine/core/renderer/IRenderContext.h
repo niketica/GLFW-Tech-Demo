@@ -43,16 +43,12 @@ namespace niketica::renderer
         }
 
         virtual void reset() = 0;
-        
-        virtual void setWindowMode
-        (
-            component::Window& windowComponent,
-            component::WindowMode mode,
-            int width,
-            int height,
-            int monitorIndex
-        ) = 0;
-            
+
+        virtual void setWindowMode(component::Window& windowComponent, component::WindowMode mode) = 0;
+        virtual void setWindowSize(component::Window& windowComponent, int width, int height) = 0;
+        virtual void updateViewport(component::Viewport& viewportComponent, const component::Window& windowComponent, const component::Camera& camera) = 0;
+        virtual void updateCamera(component::Camera& camera) = 0;
+
     protected:
         std::unique_ptr<ITextureLoader> textureLoader;
         std::unique_ptr<ISpriteInstancedRenderer> spriteInstancedRenderer;

@@ -21,7 +21,7 @@ namespace niketica::systems
         void render() override {};
 
     private:
-        void updatePositionContainer(entt::entity container, const niketica::component::Window& window);
+        void updatePositionContainer(entt::entity container, const niketica::component::Camera& camera);
         void updateLayoutContainer(entt::entity container);
 
         // Layout Vertical 

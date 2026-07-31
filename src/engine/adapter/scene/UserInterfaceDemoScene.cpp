@@ -103,31 +103,23 @@ namespace niketica::scene
                 createMainMenuPanel();                
             }
                 break;
+            case ButtonType::OPTIONS_WINDOW_800x600:
+                updateWindowSize(800, 600);
+                break;
+            case ButtonType::OPTIONS_WINDOW_1600x900:
+                updateWindowSize(1600, 900);
+                break;
+            case ButtonType::OPTIONS_WINDOW_1920x1080:
+                updateWindowSize(1920, 1080);
+                break;
             case ButtonType::OPTIONS_RESOLUTION_800x600:
-            {
-                auto viewWindow = registry->view<niketica::component::Window>();
-                auto& window = viewWindow.get<niketica::component::Window>(viewWindow.front());
-                engineServices->getRenderContext()->setWindowMode(window, niketica::component::WindowMode::WINDOWED, 800, 600, 0);
-                
-                auto viewRootContainers = registry->view<niketica::component::UILayout>(entt::exclude<component::ParentTransform>);
-                for (auto rootConainer : viewRootContainers)
-                {
-                    registry->emplace<niketica::component::UILayoutDirty>(rootConainer);
-                }
-            }
+                updateResolution(800, 600);
+                break;
+            case ButtonType::OPTIONS_RESOLUTION_1600x900:
+                updateResolution(1600, 900);
                 break;
             case ButtonType::OPTIONS_RESOLUTION_1920x1080:
-            {
-                auto viewWindow = registry->view<niketica::component::Window>();
-                auto& window = viewWindow.get<niketica::component::Window>(viewWindow.front());
-                engineServices->getRenderContext()->setWindowMode(window, niketica::component::WindowMode::WINDOWED, 1920, 1080, 0);
-                
-                auto viewRootContainers = registry->view<niketica::component::UILayout>(entt::exclude<component::ParentTransform>);
-                for (auto rootConainer : viewRootContainers)
-                {
-                    registry->emplace<niketica::component::UILayoutDirty>(rootConainer);
-                }
-            }
+                updateResolution(1920, 1080);
                 break;
             }
         }
@@ -182,8 +174,16 @@ namespace niketica::scene
 
         auto buttonResolution800x600 = createButton("Set resolution 800x600");
         registry->emplace<Button>(buttonResolution800x600, Button{ ButtonType::OPTIONS_RESOLUTION_800x600 });
+        auto buttonResolution1600x900 = createButton("Set resolution 1600x900");
+        registry->emplace<Button>(buttonResolution1600x900, Button{ ButtonType::OPTIONS_RESOLUTION_1600x900 });
         auto buttonResolution1920x1080 = createButton("Set resolution 1920x1080");
         registry->emplace<Button>(buttonResolution1920x1080, Button{ ButtonType::OPTIONS_RESOLUTION_1920x1080 });
+        auto buttonWindow800x600 = createButton("Set window 800x600");
+        registry->emplace<Button>(buttonWindow800x600, Button{ ButtonType::OPTIONS_WINDOW_800x600 });
+        auto buttonWindow1600x900 = createButton("Set window 1600x900");
+        registry->emplace<Button>(buttonWindow1600x900, Button{ ButtonType::OPTIONS_WINDOW_1600x900 });
+        auto buttonWindow1920x1080 = createButton("Set window 1920x1080");
+        registry->emplace<Button>(buttonWindow1920x1080, Button{ ButtonType::OPTIONS_WINDOW_1920x1080 });
         auto buttonBack = createButton("Back");
         registry->emplace<Button>(buttonBack, Button{ ButtonType::OPTIONS_BACK });
 
@@ -198,7 +198,11 @@ namespace niketica::scene
             .withAlignmentVertical(niketica::component::AlignmentVertical::CENTER)
             .withLayoutType(niketica::component::UILayoutType::VERTICAL)
             .addButton(buttonResolution800x600)
+            .addButton(buttonResolution1600x900)
             .addButton(buttonResolution1920x1080)
+            .addButton(buttonWindow800x600)
+            .addButton(buttonWindow1600x900)
+            .addButton(buttonWindow1920x1080)
             .addButton(buttonBack)
             .build();
 
@@ -265,6 +269,48 @@ namespace niketica::scene
             }
         }
         registry->destroy(entity);
+    }
+
+    void UserInterfaceDemoScene::updateWindowSize(const int width, const int height)
+    {
+        auto viewWindow = registry->view<niketica::component::Window>();
+        auto& window = viewWindow.get<niketica::component::Window>(viewWindow.front());
+        engineServices->getRenderContext()->setWindowSize(window, width, height);
+
+        auto viewCamera = registry->view<niketica::component::Camera, niketica::component::ActiveCamera>();
+        const auto& camera = viewCamera.get<niketica::component::Camera>(viewCamera.front());
+
+        auto viewViewport = registry->view<niketica::component::Viewport>();
+        auto& viewport = viewViewport.get<niketica::component::Viewport>(viewViewport.front());
+        engineServices->getRenderContext()->updateViewport(viewport, window, camera);
+    }
+
+    void UserInterfaceDemoScene::updateResolution(const int width, const int height)
+    {
+        auto viewWindow = registry->view<niketica::component::Window>();
+        const auto& window = viewWindow.get<niketica::component::Window>(viewWindow.front());
+
+        auto viewCamera = registry->view<niketica::component::Camera, niketica::component::ActiveCamera>();
+        auto& camera = viewCamera.get<niketica::component::Camera>(viewCamera.front());
+        camera.virtualWidth = (float)width;
+        camera.virtualHeight = (float)height;
+
+        auto viewViewport = registry->view<niketica::component::Viewport>();
+        auto& viewport = viewViewport.get<niketica::component::Viewport>(viewViewport.front());
+        engineServices->getRenderContext()->updateViewport(viewport, window, camera);
+        
+        auto viewRootContainers = registry->view<niketica::component::UILayout>(entt::exclude<component::ParentTransform>);
+        for (auto rootConainer : viewRootContainers)
+        {
+            registry->emplace<niketica::component::UILayoutDirty>(rootConainer);
+        }
+    }
+
+    void UserInterfaceDemoScene::updateWindowMode(niketica::component::WindowMode mode)
+    {
+        auto viewWindow = registry->view<niketica::component::Window>();
+        auto& window = viewWindow.get<niketica::component::Window>(viewWindow.front());
+        engineServices->getRenderContext()->setWindowMode(window, mode);
     }
 
 }

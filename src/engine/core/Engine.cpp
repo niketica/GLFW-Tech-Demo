@@ -22,34 +22,47 @@ namespace niketica::engine
         initInput();
         initSystems();
 
-        std::cout << "INFO::Engine::init -     Initializing temporary data...";
+        std::cout << "INFO::Engine::init - Initializing temporary data..." << std::endl;
         
         float w = windowWidth;
         float h = windowHeight;
 
-        auto windowComponent = niketica::component::Window();
-        windowComponent.x = 100;
-        windowComponent.y = 100;
-        windowComponent.width = (float)SCR_WIDTH;
-        windowComponent.height = (float)SCR_HEIGHT;
-        windowComponent.projection = glm::ortho(
+        auto window = niketica::component::Window();
+        window.width = (float)SCR_WIDTH;
+        window.height = (float)SCR_HEIGHT;
+
+        auto viewport = niketica::component::Viewport();
+        viewport.x = 100;
+        viewport.y = 100;
+        viewport.width = (float)SCR_WIDTH;
+        viewport.height = (float)SCR_HEIGHT;
+        viewport.scale = 1.0f;
+
+        auto windowEntity = registry->create();
+        registry->emplace<niketica::component::Window>(windowEntity, window);
+        registry->emplace<niketica::component::Viewport>(windowEntity, viewport);
+        registry->emplace<niketica::component::Persistent>(windowEntity);
+        
+        auto camera = niketica::component::Camera();
+        camera.projection = glm::ortho(
             0.f, windowWidth,
             0.f, windowHeight,
             -10.f, 10.f
         );
-        windowComponent.scale = 1.0f;
-        windowComponent.view = glm::mat4(1.0f);
+        camera.view = glm::mat4(1.0f);
+        camera.zoom = 1.0f;
+        camera.virtualWidth = (float)SCR_WIDTH;
+        camera.virtualHeight = (float)SCR_HEIGHT;
 
-        auto windowEntity = registry->create();
-        registry->emplace<niketica::component::Window>(windowEntity, windowComponent);
-        registry->emplace<niketica::component::Persistent>(windowEntity);
+        auto cameraEntity = registry->create();
+        registry->emplace<niketica::component::Camera>(cameraEntity, camera);
+        registry->emplace<niketica::component::ActiveCamera>(cameraEntity);
+        registry->emplace<niketica::component::Persistent>(cameraEntity);
         
         sceneContext->setRegistry(registry.get());
         sceneContext->initScenes();
 
         registry->emplace<niketica::component::EngineConfig>(registry->create());
-
-        std::cout << "DONE!" << std::endl;
 
         std::cout << "INFO::Engine::init - Engine initialized." << std::endl;
     }

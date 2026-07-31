@@ -36,14 +36,10 @@ namespace niketica::renderer
 
         void reset() override;
 
-        void setWindowMode
-        (
-            component::Window& windowComponent,
-            component::WindowMode mode,
-            int width,
-            int height,
-            int monitorIndex
-        ) override;
+        void setWindowMode(component::Window& windowComponent, component::WindowMode mode) override;
+        void setWindowSize(component::Window& windowComponent, int width, int height) override;
+        void updateViewport(component::Viewport& viewportComponent, const component::Window& windowComponent, const component::Camera& camera) override;
+        void updateCamera(component::Camera& camera) override;
 
     private:
         GLFWwindow* window;

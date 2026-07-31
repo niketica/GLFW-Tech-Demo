@@ -1,5 +1,6 @@
 #pragma once
 
+#include "component/Camera.h"
 #include "component/Color.h"
 #include "component/Common.h"
 #include "component/Input.h"

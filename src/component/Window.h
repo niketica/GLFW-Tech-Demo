@@ -14,14 +14,18 @@ namespace niketica::component
 
     struct Window
     {
+        int width;
+        int height;
         WindowMode mode = WindowMode::UNDEFINED;
+    };
+
+    struct Viewport
+    {
         int x;
         int y;
         int width;
         int height;
-        glm::mat4 projection;
-        float scale = 1.0f;
-        glm::mat4 view;
+        float scale;
     };
 
     struct NextWindowState

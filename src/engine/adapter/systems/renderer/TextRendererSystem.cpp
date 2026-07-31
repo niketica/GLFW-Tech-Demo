@@ -5,8 +5,9 @@ namespace niketica::systems
 
     void TextRendererSystem::render()
     {
-        auto windowView = registry->view<niketica::component::Window>();
-        const auto &windowComponent = windowView.get<niketica::component::Window>(windowView.front());
+        // For now just assume there is always exactly 1 active camera.
+        auto viewCamera = registry->view<niketica::component::Camera, niketica::component::ActiveCamera>();
+        const auto &camera = viewCamera.get<niketica::component::Camera>(viewCamera.front());
 
         auto viewText = registry->view<niketica::component::Text, niketica::component::Transform>();
 
@@ -34,7 +35,7 @@ namespace niketica::systems
         renderer->startFrame();
         for (const auto& [key, entities] : batches)
         {
-            renderer->begin(windowComponent.projection, key.font, key.size);
+            renderer->begin(camera.projection, key.font, key.size);
 
             for (auto entity : entities)
             {

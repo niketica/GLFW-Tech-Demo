@@ -100,48 +100,37 @@ namespace niketica::renderer
         releaseRenderers();
         initRenderers();
     }
-
-    void RenderContext::setWindowMode
-    (
-        component::Window& windowComponent,
-        component::WindowMode mode,
-        int width,
-        int height,
-        int monitorIndex
-    )
+    
+    void RenderContext::setWindowMode(component::Window& windowComponent, component::WindowMode mode)
     {
+        if (mode == windowComponent.mode) return;
+
+        int monitorIndex = 0; // TODO - Hard coded for now.
         int monitorCount;
         GLFWmonitor** monitors = glfwGetMonitors(&monitorCount);
 
-        if (monitorIndex >= monitorCount)
-            monitorIndex = 0;
+        if (monitorIndex >= monitorCount) monitorIndex = 0;
 
         GLFWmonitor* monitor = monitors[monitorIndex];
         const GLFWvidmode* vidMode = glfwGetVideoMode(monitor);
 
-        if (mode == windowComponent.mode && width == windowComponent.width && height == windowComponent.height)
-            return;
-
         if (mode == component::WindowMode::WINDOWED)
         {
             glfwSetWindowAttrib(window, GLFW_DECORATED, GLFW_TRUE);
-
             glfwSetWindowMonitor(window,
                 NULL,
                 100,
                 100,
-                width,
-                height,
+                windowComponent.width,
+                windowComponent.height,
                 0);
         }
         else if (mode == component::WindowMode::BORDERLESS)
         {
             // Save current windowed position before switching
-            glfwGetWindowPos(window, &windowComponent.x, &windowComponent.y);
+            // glfwGetWindowPos(window, &windowComponent.x, &windowComponent.y);
             glfwGetWindowSize(window, &windowComponent.width, &windowComponent.height);
-
             glfwSetWindowAttrib(window, GLFW_DECORATED, GLFW_FALSE);
-
             glfwSetWindowMonitor(window,
                 NULL,
                 0,
@@ -153,35 +142,57 @@ namespace niketica::renderer
         else if (mode == component::WindowMode::FULLSCREEN)
         {
             // Save windowed state
-            glfwGetWindowPos(window, &windowComponent.x, &windowComponent.y);
+            // glfwGetWindowPos(window, &windowComponent.x, &windowComponent.y);
             glfwGetWindowSize(window, &windowComponent.width, &windowComponent.height);
-
             glfwSetWindowMonitor(window,
                 monitor,
                 0,
                 0,
-                width,
-                height,
+                windowComponent.width,
+                windowComponent.height,
                 vidMode->refreshRate);
         }
+    }
 
-        windowComponent.mode = mode;
+    void RenderContext::setWindowSize(component::Window& windowComponent, int width, int height)
+    {
         windowComponent.width = width;
         windowComponent.height = height;
-        windowComponent.scale = 1.0f;
-
-        windowComponent.projection = glm::ortho
+        glfwSetWindowSize(window, width, height);
+    }
+    
+    void RenderContext::updateViewport(component::Viewport& viewportComponent, const component::Window& windowComponent, const component::Camera& camera)
+    {
+        float scale = std::min
         (
-            0.f, (float)width,
-            0.f, (float)height,
-            -10.f, 10.f
+            (float)windowComponent.width / camera.virtualWidth,
+            (float)windowComponent.height / camera.virtualHeight
         );
-
-        float w = width;
-        float h = height;
-        windowComponent.view = glm::mat4(1.0f);
-
-        glViewport(0, 0, width, height);
+        viewportComponent.width = (int)(camera.virtualWidth * scale);
+        viewportComponent.height =  (int)(camera.virtualHeight * scale);
+        viewportComponent.x = (windowComponent.width - viewportComponent.width) / 2;
+        viewportComponent.y = (windowComponent.height - viewportComponent.height) / 2;
+        
+        glViewport
+        (
+            viewportComponent.x,
+            viewportComponent.y,
+            viewportComponent.width,
+            viewportComponent.height
+        );
+    }
+    
+    void RenderContext::updateCamera(component::Camera& camera)
+    {
+        camera.projection = glm::ortho
+        (
+            0.0f,
+            camera.virtualWidth,
+            0.0f,
+            camera.virtualHeight,
+            -10.f,
+            10.f
+        );
     }
 
 }
