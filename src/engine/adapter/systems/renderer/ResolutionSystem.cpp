@@ -23,7 +23,8 @@ namespace niketica::systems
             engineServices->getRenderContext()->updateCamera(camera, renderSettings);
         }
         
-        updateText(renderSettings);
+        updateUIText(renderSettings);
+        updateUINineSlice(renderSettings);
     }
 
     bool ResolutionSystem::isResolutionDirty() const
@@ -38,7 +39,7 @@ namespace niketica::systems
         return resolutionDirty;
     }
 
-    void ResolutionSystem::updateText(const niketica::component::RenderSettings& renderSettings)
+    void ResolutionSystem::updateUIText(const niketica::component::RenderSettings& renderSettings)
     {
         auto viewUIStuff = registry->view<niketica::component::UIAnchor, niketica::component::UISize, niketica::component::LocalTransform, niketica::component::Text>();
         for (auto entity : viewUIStuff)
@@ -52,8 +53,8 @@ namespace niketica::systems
             float scaleX = uiReferenceResolution.x / 1920.0f;
             float scaleY = uiReferenceResolution.y / 1080.0f;
 
-            auto calculatedPosition = calculateTextPosition({ uiReferenceResolution.x, uiReferenceResolution.y }, { scaleX, scaleY }, anchor);
-            auto calculatedSize = calculateTextSize({ scaleX, scaleY }, size);
+            auto calculatedPosition = calculatePosition({ uiReferenceResolution.x, uiReferenceResolution.y }, { scaleX, scaleY }, anchor);
+            auto calculatedSize = calculateSize({ scaleX, scaleY }, size);
 
             text.fontSize = (int)calculatedSize.y;
             local.position = { calculatedPosition.x, calculatedPosition.y, 0.0f };
@@ -61,7 +62,29 @@ namespace niketica::systems
         }
     }
 
-    glm::vec2 ResolutionSystem::calculateTextPosition(const glm::vec2& resolution, const glm::vec2& scale, const niketica::component::UIAnchor& anchor) const
+    void ResolutionSystem::updateUINineSlice(const niketica::component::RenderSettings& renderSettings)
+    {
+        auto viewNineSlice = registry->view<niketica::component::UIAnchor, niketica::component::UISize, niketica::component::LocalTransform, niketica::component::NineSlice>();
+        for (auto entity : viewNineSlice)
+        {
+            const auto& anchor = viewNineSlice.get<niketica::component::UIAnchor>(entity);
+            const auto& size = viewNineSlice.get<niketica::component::UISize>(entity);
+            auto& local = viewNineSlice.get<niketica::component::LocalTransform>(entity);
+            // auto& nineSlice = viewNineSlice.get<niketica::component::NineSlice>(entity);
+
+            const auto& uiReferenceResolution = renderSettings.uiReferenceResolution;
+            float scaleX = uiReferenceResolution.x / 1920.0f;
+            float scaleY = uiReferenceResolution.y / 1080.0f;
+
+            auto calculatedPosition = calculatePosition({ uiReferenceResolution.x, uiReferenceResolution.y }, { scaleX, scaleY }, anchor);
+            auto calculatedSize = calculateSize({ scaleX, scaleY }, size);
+
+            local.position = { calculatedPosition.x, calculatedPosition.y, 0.0f };
+            local.size = { calculatedSize.x, calculatedSize.y, 0.0f };
+        }
+    }
+
+    glm::vec2 ResolutionSystem::calculatePosition(const glm::vec2& resolution, const glm::vec2& scale, const niketica::component::UIAnchor& anchor) const
     {
         float offsetX = anchor.offset.x * scale.x;
         float offsetY = anchor.offset.y * scale.y;
@@ -98,7 +121,7 @@ namespace niketica::systems
         return { posX, posY };
     }
 
-    glm::vec2 ResolutionSystem::calculateTextSize(const glm::vec2& scale, const niketica::component::UISize& size) const
+    glm::vec2 ResolutionSystem::calculateSize(const glm::vec2& scale, const niketica::component::UISize& size) const
     {
         float sizeX = 0.0f;
         float sizeY = 0.0f;

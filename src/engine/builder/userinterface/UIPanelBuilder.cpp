@@ -140,6 +140,12 @@ namespace niketica::builder
         layout.type = layoutType;
         layout.spacing = spacing;
 
+        niketica::component::UISize uiSize;
+        uiSize.widthMode = niketica::component::UISizeMode::PIXELS;
+        uiSize.heightMode = niketica::component::UISizeMode::PIXELS;
+        uiSize.width = size.x;
+        uiSize.height = size.y;
+
         for (const auto& child : childElements)
         {
             switch (child.type)
@@ -170,6 +176,8 @@ namespace niketica::builder
         registry->emplace<niketica::component::UIAlignment>(panelEntity, aligment);
         registry->emplace<niketica::component::UILayout>(panelEntity, layout);
         registry->emplace<niketica::component::UILayoutDirty>(panelEntity);
+        registry->emplace<niketica::component::UIAnchor>(panelEntity, niketica::component::UIAnchor{ alignmentHorizontal, alignmentVertical, position });
+        registry->emplace<niketica::component::UISize>(panelEntity, uiSize);
 
         return panelEntity;
     }

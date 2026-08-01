@@ -126,6 +126,12 @@ namespace niketica::builder
         layout.type = layoutType;
         layout.spacing = 0.0f;
 
+        niketica::component::UISize uiSize;
+        uiSize.widthMode = niketica::component::UISizeMode::PIXELS;
+        uiSize.heightMode = niketica::component::UISizeMode::PIXELS;
+        uiSize.width = size.x;
+        uiSize.height = size.y;
+
         auto entity = registry->create();
         registry->emplace<niketica::component::UIButton>(entity);
         registry->emplace<niketica::component::NineSlice>(entity, niketica::config::NINE_SLICE_BUTTON_NORMAL);
@@ -135,6 +141,8 @@ namespace niketica::builder
         registry->emplace<niketica::component::UIContentPadding>(entity);
         registry->emplace<niketica::component::UISpacing>(entity);
         registry->emplace<niketica::component::UILayout>(entity, layout);
+        registry->emplace<niketica::component::UIAnchor>(entity, niketica::component::UIAnchor{ alignmentHorizontal, alignmentVertical, position });
+        registry->emplace<niketica::component::UISize>(entity, uiSize);
 
         auto childEntity = createTextLabel(entity);        
         niketica::component::UIChildren children;
