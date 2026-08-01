@@ -52,10 +52,23 @@ namespace niketica::builder
         local.position = { position.x, position.y, 0.0f };
         local.size = { ((float)text.length() * (fontSize * 0.6)), fontSize, 1.0f };
 
+        niketica::component::UISize uiSize;
+        uiSize.widthMode = niketica::component::UISizeMode::PIXELS;
+        uiSize.heightMode = niketica::component::UISizeMode::PIXELS;
+        uiSize.width = ((float)text.length() * (fontSize * 0.6));
+        uiSize.height = fontSize;
+
+        niketica::component::UIAnchor anchor;
+        anchor.horizontal = niketica::component::AlignmentHorizontal::LEFT;
+        anchor.vertical = niketica::component::AlignmentVertical::TOP;
+        anchor.offset = { 100.0f, -100.0f };
+
         auto entity = registry->create();
         registry->emplace<niketica::component::Text>(entity, textComponent);
         registry->emplace<niketica::component::LocalTransform>(entity, local);
         registry->emplace<niketica::component::Transform>(entity);
+        registry->emplace<niketica::component::UISize>(entity, uiSize);
+        registry->emplace<niketica::component::UIAnchor>(entity, anchor);
 
         return entity;
     }

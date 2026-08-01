@@ -148,4 +148,13 @@ namespace niketica::component
         float height;
     };
 
+    struct UIAnchor
+    {
+        AlignmentHorizontal horizontal = AlignmentHorizontal::LEFT;
+        AlignmentVertical vertical = AlignmentVertical::TOP;
+        glm::vec2 offset;
+    };
+
+    struct ResolutionDirty {}; // Indicates that the resolution needs to be updated
+
 }

@@ -12,11 +12,7 @@ namespace niketica::systems
         auto viewText = registry->view<niketica::component::Text, niketica::component::Transform>();
 
         // Collect all text components and batch by font type and font size.
-        using BatchMap =
-            std::unordered_map<
-                TextBatchKey,
-                std::vector<entt::entity>,
-                TextBatchHash>;
+        using BatchMap = std::unordered_map<TextBatchKey, std::vector<entt::entity>, TextBatchHash>;
         BatchMap batches;
         for (auto entity : viewText)
         {

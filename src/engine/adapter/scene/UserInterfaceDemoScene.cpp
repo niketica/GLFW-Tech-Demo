@@ -147,6 +147,7 @@ namespace niketica::scene
 
     void UserInterfaceDemoScene::createMainMenuPanel()
     {
+        niketica::component::UISize uiSize;
         float panelWidth = 400.0f;
         float panelHeight = 600.0f;
 
@@ -305,24 +306,12 @@ namespace niketica::scene
 
     void UserInterfaceDemoScene::updateResolution(const int width, const int height)
     {
-        auto viewWindow = registry->view<niketica::component::Window>();
-        const auto& window = viewWindow.get<niketica::component::Window>(viewWindow.front());
-
         auto viewRenderSettings = registry->view<niketica::component::RenderSettings>();
         auto& renderSettings = viewRenderSettings.get<niketica::component::RenderSettings>(viewRenderSettings.front());
         renderSettings.worldReferenceResolution = { (float)width, (float)height };
         renderSettings.uiReferenceResolution = { (float)width, (float)height };
 
-        auto viewViewport = registry->view<niketica::component::Viewport>();
-        auto& viewport = viewViewport.get<niketica::component::Viewport>(viewViewport.front());
-        engineServices->getRenderContext()->updateViewport(viewport, window, renderSettings);
-        
-        auto viewCamera = registry->view<niketica::component::Camera>();
-        for (auto cameraEntity : viewCamera)
-        {
-            auto& camera = viewCamera.get<niketica::component::Camera>(cameraEntity);
-            engineServices->getRenderContext()->updateCamera(camera, renderSettings);
-        }
+        registry->emplace<niketica::component::ResolutionDirty>(registry->create());
         
         auto viewRootContainers = registry->view<niketica::component::UILayout>(entt::exclude<component::ParentTransform>);
         for (auto rootConainer : viewRootContainers)
