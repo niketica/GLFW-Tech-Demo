@@ -23,6 +23,9 @@ namespace niketica::systems
         bool isResolutionDirty() const;
         void updateText(const niketica::component::RenderSettings& renderSettings);
 
+        glm::vec2 calculateTextPosition(const glm::vec2& resolution, const glm::vec2& scale, const niketica::component::UIAnchor& anchor) const;
+        glm::vec2 calculateTextSize(const glm::vec2& scale, const niketica::component::UISize& size) const;
+
     };
 
 }

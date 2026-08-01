@@ -38,6 +38,12 @@ namespace niketica::builder
         this->scale = value;
         return *this;
     }
+
+    UITextLabelBuilder& UITextLabelBuilder::withAnchor(const niketica::component::UIAnchor& value)
+    {
+        this->anchor = value;
+        return *this;
+    }
     
     entt::entity UITextLabelBuilder::build()
     {
@@ -57,11 +63,6 @@ namespace niketica::builder
         uiSize.heightMode = niketica::component::UISizeMode::PIXELS;
         uiSize.width = ((float)text.length() * (fontSize * 0.6));
         uiSize.height = fontSize;
-
-        niketica::component::UIAnchor anchor;
-        anchor.horizontal = niketica::component::AlignmentHorizontal::LEFT;
-        anchor.vertical = niketica::component::AlignmentVertical::TOP;
-        anchor.offset = { 100.0f, -100.0f };
 
         auto entity = registry->create();
         registry->emplace<niketica::component::Text>(entity, textComponent);

@@ -48,69 +48,81 @@ namespace niketica::systems
             auto& local = viewUIStuff.get<niketica::component::LocalTransform>(entity);
             auto& text = viewUIStuff.get<niketica::component::Text>(entity);
 
-            float posX = 0.0f;
-            float posY = 0.0f;
-
             const auto& uiReferenceResolution = renderSettings.uiReferenceResolution;
-
             float scaleX = uiReferenceResolution.x / 1920.0f;
             float scaleY = uiReferenceResolution.y / 1080.0f;
 
-            float offsetX = anchor.offset.x * scaleX;
-            float offsetY = anchor.offset.y * scaleY;
+            auto calculatedPosition = calculateTextPosition({ uiReferenceResolution.x, uiReferenceResolution.y }, { scaleX, scaleY }, anchor);
+            auto calculatedSize = calculateTextSize({ scaleX, scaleY }, size);
 
-            switch (anchor.horizontal)
-            {
-            case niketica::component::AlignmentHorizontal::LEFT:
-                posX = 0.0f + offsetX;
-                break;
-            case niketica::component::AlignmentHorizontal::RIGHT:
-                posX = uiReferenceResolution.x + offsetX;
-                break;
-            case niketica::component::AlignmentHorizontal::CENTER:
-                posX = (uiReferenceResolution.x * 0.5f) + offsetX;
-                break;
-            }
-
-            switch (anchor.vertical)
-            {
-            case niketica::component::AlignmentVertical::TOP:
-                posY = uiReferenceResolution.y + offsetY;
-                break;
-            case niketica::component::AlignmentVertical::BOTTOM:
-                posY = 0.0f + offsetY;
-                break;
-            case niketica::component::AlignmentVertical::CENTER:
-                posY = (uiReferenceResolution.y * 0.5f) + offsetY;
-                break;
-            }
-
-            float sizeX = 0.0f;
-            float sizeY = 0.0f;
-            switch (size.widthMode)
-            {
-            case niketica::component::UISizeMode::PIXELS:
-                sizeX = size.width * scaleX;
-                break;
-            case niketica::component::UISizeMode::PERCENT:
-                sizeX = size.width * scaleX; // TODO calc percentage of window height?
-                break;
-            }
-            
-            switch (size.heightMode)
-            {
-            case niketica::component::UISizeMode::PIXELS:
-                sizeY = size.height * scaleY;
-                break;
-            case niketica::component::UISizeMode::PERCENT:
-                sizeY = size.height * scaleX; // TODO calc percentage of window height?
-                break;
-            }
-
-            text.fontSize = (int)sizeY;
-            local.position = { posX, posY, 0.0f };
-            local.size = { sizeX, sizeY, 0.0f };
+            text.fontSize = (int)calculatedSize.y;
+            local.position = { calculatedPosition.x, calculatedPosition.y, 0.0f };
+            local.size = { calculatedSize.x, calculatedSize.y, 0.0f };
         }
+    }
+
+    glm::vec2 ResolutionSystem::calculateTextPosition(const glm::vec2& resolution, const glm::vec2& scale, const niketica::component::UIAnchor& anchor) const
+    {
+        float offsetX = anchor.offset.x * scale.x;
+        float offsetY = anchor.offset.y * scale.y;
+
+        float posX = 0.0f;
+        float posY = 0.0f;
+
+        switch (anchor.horizontal)
+        {
+        case niketica::component::AlignmentHorizontal::LEFT:
+            posX = 0.0f + offsetX;
+            break;
+        case niketica::component::AlignmentHorizontal::RIGHT:
+            posX = resolution.x + offsetX;
+            break;
+        case niketica::component::AlignmentHorizontal::CENTER:
+            posX = (resolution.x * 0.5f) + offsetX;
+            break;
+        }
+
+        switch (anchor.vertical)
+        {
+        case niketica::component::AlignmentVertical::TOP:
+            posY = resolution.y + offsetY;
+            break;
+        case niketica::component::AlignmentVertical::BOTTOM:
+            posY = 0.0f + offsetY;
+            break;
+        case niketica::component::AlignmentVertical::CENTER:
+            posY = (resolution.y * 0.5f) + offsetY;
+            break;
+        }
+
+        return { posX, posY };
+    }
+
+    glm::vec2 ResolutionSystem::calculateTextSize(const glm::vec2& scale, const niketica::component::UISize& size) const
+    {
+        float sizeX = 0.0f;
+        float sizeY = 0.0f;
+        switch (size.widthMode)
+        {
+        case niketica::component::UISizeMode::PIXELS:
+            sizeX = size.width * scale.x;
+            break;
+        case niketica::component::UISizeMode::PERCENT:
+            sizeX = size.width * scale.x; // TODO calc percentage of window height?
+            break;
+        }
+        
+        switch (size.heightMode)
+        {
+        case niketica::component::UISizeMode::PIXELS:
+            sizeY = size.height * scale.y;
+            break;
+        case niketica::component::UISizeMode::PERCENT:
+            sizeY = size.height * scale.y; // TODO calc percentage of window height?
+            break;
+        }
+
+        return { sizeX, sizeY };
     }
 
 }

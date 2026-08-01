@@ -19,6 +19,7 @@ namespace niketica::builder
         UITextLabelBuilder& withFontSize(const float value);
         UITextLabelBuilder& withColor(const glm::vec4& value);
         UITextLabelBuilder& withScale(const float value);
+        UITextLabelBuilder& withAnchor(const niketica::component::UIAnchor& value);
         entt::entity build();
         
     private:
@@ -31,6 +32,7 @@ namespace niketica::builder
         float fontSize = 14;
         glm::vec4 color = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
         float scale = 1.0f;
+        niketica::component::UIAnchor anchor = { niketica::component::AlignmentHorizontal::LEFT, niketica::component::AlignmentVertical::TOP, { 0.0f, 0.0f } };
         
     };
 

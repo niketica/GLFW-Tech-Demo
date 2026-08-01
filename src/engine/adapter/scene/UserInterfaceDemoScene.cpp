@@ -43,6 +43,7 @@ namespace niketica::scene
             .withFontType(niketica::component::FontType::OPEN_SANS_REGULAR)
             .withColor(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f))
             .withPosition(glm::vec2{ 100.0f, (float)windowComponent.height - 100.0f })
+            .withAnchor({ niketica::component::AlignmentHorizontal::LEFT, niketica::component::AlignmentVertical::TOP, { 100.0f, -100.0f } })
             .build();
 
         createMainMenuPanel();
