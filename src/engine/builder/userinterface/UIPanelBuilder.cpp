@@ -182,6 +182,7 @@ namespace niketica::builder
             .withColor(fontColor)
             .withFontSize(fontSize)
             .withFontType(niketica::component::FontType::COURIER_PRIME_CODE)
+            .withAnchor({ alignmentHorizontal, alignmentVertical, { 0.0f, 0.0f } })
             .build();
 
         niketica::component::UIAlignment aligment;
