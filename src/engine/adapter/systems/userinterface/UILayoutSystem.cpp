@@ -12,8 +12,25 @@ namespace niketica::systems
         {
             updateUIText(renderSettings);
             updateUINineSlice(renderSettings);
+            updateAllContainers(renderSettings);
         }
+        
+        updateDirtyContainers(renderSettings);
+    }
 
+    void UILayoutSystem::updateAllContainers(const niketica::component::RenderSettings& renderSettings)
+    {
+        auto viewContainers = registry->view<niketica::component::UIChildren>(entt::exclude<component::ParentTransform>);
+        for (auto container : viewContainers)
+        {
+            registry->remove<niketica::component::UIContainerLayoutDirty>(container);
+            updatePositionContainer(container, renderSettings);
+            updateLayoutContainer(container);
+        }
+    }
+
+    void UILayoutSystem::updateDirtyContainers(const niketica::component::RenderSettings& renderSettings)
+    {
         auto viewLayoutDirty = registry->view<niketica::component::UIContainerLayoutDirty>();
         for (auto container : viewLayoutDirty)
         {

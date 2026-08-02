@@ -45,6 +45,8 @@ namespace niketica::systems
         glm::vec2 calculateSize(const glm::vec2& scale, const niketica::component::UISize& size) const;
 
         bool isGlobalLayoutDirty() const;
+        void updateAllContainers(const niketica::component::RenderSettings& renderSettings);
+        void updateDirtyContainers(const niketica::component::RenderSettings& renderSettings);
 
     };
 
