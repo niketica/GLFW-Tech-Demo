@@ -9,10 +9,10 @@ This is not a project with an end result in mind. It is more of a testbed to cre
 The architecture is ECS with a focus on hexagonal design.
 On the root level the vendor directory contains all third party libraries and the src directory contains custom code.
 <br/>
+The compressor directory is not really part of the engine. It has isolated logic and is used to compress asset files. Read more about it in [Asset compression](#asset-compression).
+<br/>
 <br/>
 The hierarchy of the directory structure is shown below. The order determines accessibility. For example, engine/builder is allowed to access engine/core, but not vice versa.
-<br/>
-The compressor directory is not really part of the engine. It has isolated logic and is used to compress asset files. Read more about it in [Asset compression](#asset-compression).
 <br/>
 - compressor
 - component
