@@ -38,6 +38,14 @@ namespace niketica::systems
         void placeChildrenHorizontally(const niketica::component::UIChildren& children, const float spacing, float cursorX);
         void alignChildrenVertically(const niketica::component::UIChildren& children, const float containerPosZ, const float containerSizeY, const niketica::component::UIContentPadding padding);
 
+        void updateUIText(const niketica::component::RenderSettings& renderSettings);
+        void updateUINineSlice(const niketica::component::RenderSettings& renderSettings);
+
+        glm::vec2 calculatePosition(const glm::vec2& resolution, const glm::vec2& scale, const niketica::component::UIAnchor& anchor) const;
+        glm::vec2 calculateSize(const glm::vec2& scale, const niketica::component::UISize& size) const;
+
+        bool isGlobalLayoutDirty() const;
+
     };
 
 }

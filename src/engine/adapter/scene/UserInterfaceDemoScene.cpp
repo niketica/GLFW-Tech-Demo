@@ -311,14 +311,7 @@ namespace niketica::scene
         auto& renderSettings = viewRenderSettings.get<niketica::component::RenderSettings>(viewRenderSettings.front());
         renderSettings.worldReferenceResolution = { (float)width, (float)height };
         renderSettings.uiReferenceResolution = { (float)width, (float)height };
-
         registry->emplace<niketica::component::ResolutionDirty>(registry->create());
-        
-        auto viewRootContainers = registry->view<niketica::component::UILayout>(entt::exclude<component::ParentTransform>);
-        for (auto rootConainer : viewRootContainers)
-        {
-            registry->emplace<niketica::component::UILayoutDirty>(rootConainer);
-        }
     }
 
     void UserInterfaceDemoScene::updateWindowMode(niketica::component::WindowMode mode)

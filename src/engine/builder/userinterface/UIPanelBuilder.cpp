@@ -98,7 +98,7 @@ namespace niketica::builder
         
         registry->emplace<niketica::component::UIAlignment>(entity, aligment);
         registry->emplace<niketica::component::ParentTransform>(entity, parentTransform);
-        registry->remove<niketica::component::UILayoutDirty>(entity); // Will be updated as child of the parent container
+        registry->remove<niketica::component::UIContainerLayoutDirty>(entity); // Will be updated as child of the parent container
         children.children.emplace_back(entity);
         return *this;        
     }
@@ -113,7 +113,7 @@ namespace niketica::builder
     {
         niketica::component::ParentTransform parentTransform = { panelEntity };
         registry->emplace<niketica::component::ParentTransform>(entity, parentTransform);
-        registry->remove<niketica::component::UILayoutDirty>(entity); // Will be updated as child of the parent container
+        registry->remove<niketica::component::UIContainerLayoutDirty>(entity); // Will be updated as child of the parent container
         children.children.emplace_back(entity);
         return *this;        
     }
@@ -175,7 +175,7 @@ namespace niketica::builder
         registry->emplace<niketica::component::UISpacing>(panelEntity, spacingComponent);
         registry->emplace<niketica::component::UIAlignment>(panelEntity, aligment);
         registry->emplace<niketica::component::UILayout>(panelEntity, layout);
-        registry->emplace<niketica::component::UILayoutDirty>(panelEntity);
+        registry->emplace<niketica::component::UIContainerLayoutDirty>(panelEntity);
         registry->emplace<niketica::component::UIAnchor>(panelEntity, niketica::component::UIAnchor{ alignmentHorizontal, alignmentVertical, position });
         registry->emplace<niketica::component::UISize>(panelEntity, uiSize);
 
@@ -219,7 +219,7 @@ namespace niketica::builder
         
         niketica::component::ParentTransform parentTransform = { parent };
         registry->emplace<niketica::component::ParentTransform>(entity, parentTransform);
-        registry->remove<niketica::component::UILayoutDirty>(entity); // Will be updated as child of the parent container
+        registry->remove<niketica::component::UIContainerLayoutDirty>(entity); // Will be updated as child of the parent container
 
         return entity;
     }

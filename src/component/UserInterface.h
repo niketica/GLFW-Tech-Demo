@@ -123,7 +123,8 @@ namespace niketica::component
         std::vector<entt::entity> children;
     };
 
-    struct UILayoutDirty {}; // Indicates that the layout needs to be updated
+    struct UIGlobalLayoutDirty {}; // Indicates that all layout containers needs to be updated
+    struct UIContainerLayoutDirty {}; // Indicates that the layout container needs to be updated
 
     struct UIFocus
     {
