@@ -29,6 +29,9 @@ The hierarchy of the directory structure is shown below. The order determines ac
 <br/>
 The component directory contains all ECS components and is the backbone of the architecture. The implementation inside the core directory forms the basis for hexagonal design.
 Interfaces are used to separate the core logic from the inner workings of the engine. Adapters are used to handle specific logic, such as rendering or sound.
+<br/>
+<br/>
+This hierarchy works for now but I will later work on a better structure and see to it that the separation of logic is enforced better. Probably.
 
 ## Setup in Visual Studio Code
 This project is created in Visual Studio Code but using CMake it should work in the IDE of your choice.
