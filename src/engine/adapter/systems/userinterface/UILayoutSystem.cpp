@@ -14,7 +14,7 @@ namespace niketica::systems
             updateUINineSlice(renderSettings);
             updateAllContainers(renderSettings);
         }
-        
+
         updateDirtyContainers(renderSettings);
     }
 
@@ -302,8 +302,8 @@ namespace niketica::systems
             auto& text = viewUIStuff.get<niketica::component::Text>(entity);
 
             const auto& uiReferenceResolution = renderSettings.uiReferenceResolution;
-            float scaleX = uiReferenceResolution.x / 1920.0f;
-            float scaleY = uiReferenceResolution.y / 1080.0f;
+            float scaleX = uiReferenceResolution.x / niketica::config::ORIGINAL_WIDTH;
+            float scaleY = uiReferenceResolution.y / niketica::config::ORIGINAL_HEIGHT;
 
             auto calculatedPosition = calculatePosition({ uiReferenceResolution.x, uiReferenceResolution.y }, { scaleX, scaleY }, anchor);
             auto calculatedSize = calculateSize({ scaleX, scaleY }, size);
@@ -324,8 +324,8 @@ namespace niketica::systems
             auto& local = viewNineSlice.get<niketica::component::LocalTransform>(entity);
 
             const auto& uiReferenceResolution = renderSettings.uiReferenceResolution;
-            float scaleX = uiReferenceResolution.x / 1920.0f;
-            float scaleY = uiReferenceResolution.y / 1080.0f;
+            float scaleX = uiReferenceResolution.x / niketica::config::ORIGINAL_WIDTH;
+            float scaleY = uiReferenceResolution.y / niketica::config::ORIGINAL_HEIGHT;
 
             auto calculatedPosition = calculatePosition({ uiReferenceResolution.x, uiReferenceResolution.y }, { scaleX, scaleY }, anchor);
             auto calculatedSize = calculateSize({ scaleX, scaleY }, size);

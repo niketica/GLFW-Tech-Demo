@@ -24,18 +24,18 @@ namespace niketica::engine
 
         std::cout << "INFO::Engine::init - Initializing temporary data..." << std::endl;
         
-        float w = windowWidth;
-        float h = windowHeight;
+        float w = niketica::config::ORIGINAL_WIDTH;
+        float h = niketica::config::ORIGINAL_HEIGHT;
 
         auto window = niketica::component::Window();
-        window.width = (float)SCR_WIDTH;
-        window.height = (float)SCR_HEIGHT;
+        window.width = (int)w;
+        window.height = (int)h;
 
         auto viewport = niketica::component::Viewport();
         viewport.x = 100;
         viewport.y = 100;
-        viewport.width = (float)SCR_WIDTH;
-        viewport.height = (float)SCR_HEIGHT;
+        viewport.width = (int)w;
+        viewport.height = (int)h;
         viewport.scale = 1.0f;
 
         auto windowEntity = registry->create();
@@ -45,8 +45,8 @@ namespace niketica::engine
         
         niketica::component::Camera camera;
         camera.projection = glm::ortho(
-            0.f, windowWidth,
-            0.f, windowHeight,
+            0.f, w,
+            0.f, h,
             -10.f, 10.f
         );
         camera.view = glm::mat4(1.0f);
@@ -58,8 +58,8 @@ namespace niketica::engine
         registry->emplace<niketica::component::Persistent>(cameraEntity);
 
         niketica::component::RenderSettings renderSettings;
-        renderSettings.worldReferenceResolution = { (float)SCR_WIDTH, (float)SCR_HEIGHT };
-        renderSettings.uiReferenceResolution = { (float)SCR_WIDTH, (float)SCR_HEIGHT };
+        renderSettings.worldReferenceResolution = { w, h };
+        renderSettings.uiReferenceResolution = { w, h };
         registry->emplace<niketica::component::RenderSettings>(windowEntity, renderSettings);
         
         sceneContext->setRegistry(registry.get());
@@ -121,8 +121,6 @@ namespace niketica::engine
                 if (engineServices->getRenderContext()->windowShouldClose())
                 {
                     std::cout << "INFO::Engine::loop - Window close requested, exiting loop." << std::endl;
-                    auto viewEngineConfig = registry->view<niketica::component::EngineConfig>();
-                    auto& engineConfig = viewEngineConfig.get<niketica::component::EngineConfig>(viewEngineConfig.front());
                     engineConfig.running = false;
                     break;
                 }

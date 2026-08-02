@@ -11,6 +11,7 @@
 #include <entt/entt.hpp>
 
 #include "component/Components.h"
+#include "engine/config/Config.h"
 #include "engine/core/EngineServices.h"
 #include "engine/core/scene/ISceneContext.h"
 
@@ -25,12 +26,6 @@ namespace niketica::engine
         void start();
 
     private:
-
-        const unsigned int SCR_WIDTH = 1920;
-        const unsigned int SCR_HEIGHT = 1080;
-        float windowWidth = static_cast<float>(SCR_WIDTH);
-        float windowHeight = static_cast<float>(SCR_HEIGHT);
-
         float xOffset = 0.0;
         float yOffset = 0.0;
 

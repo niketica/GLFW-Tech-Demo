@@ -33,4 +33,7 @@ namespace niketica::config
         glm::vec2{ 212.0f, 74.0f },    // size
         24, 24, 24, 24 };
 
+    inline constexpr float ORIGINAL_WIDTH = 1920.0f;
+    inline constexpr float ORIGINAL_HEIGHT = 1080.0f;
+
 }
