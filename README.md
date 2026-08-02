@@ -1,13 +1,36 @@
 # GLFW Tech Demo
 
 ## Description
-This is a tech demo for an OpenGL GLFW project.
-Basic template to start a bare bones OpenGL GLFW project using CMake.
-The CMakePresets.json defines a debug build and a release build.
-Tested in Visual Studio Code but it should work in the IDE of your choice.
+This is a personal practice project for creating a 2D game engine in C++.
+
+## Architecture
+The architecture is ECS with a focus on hexagonal design.
+On the root level the vendor directory contains all third party libraries and the src directory contains custom code.
+<br/>
+<br/>
+The hierarchy of the directory structure is shown below. The order determines accessibility. For example, engine/builder is allowed to access engine/core, but not vice versa.
+<br/>
+- compressor
+- component
+- engine
+    - config
+    - util
+    - core
+    - builder
+    - adapter
+        - asset
+        - ....
+        - systems
+        - scene
+<br/>
+<br/>
+The component directory contains all ECS components and is the backbone of the architecture. The implementation inside the core directory forms the basis for hexagonal design.
+Interfaces are used to separate the core logic from the inner workings of the engine. Adapters are used to handle specific logic, such as rendering or sound.
 
 ## Setup in Visual Studio Code
+This project is created in Visual Studio Code but using CMake it should work in the IDE of your choice.
 Have the CMake extension installed.
+The CMakePresets.json defines a debug build and a release build.
 To change between debug and release configuration, go to the CMake extension tool (most likely on the left side of the window).
 Navigate to "Configure". Here you should be able to select either "debug" or "release".
 
