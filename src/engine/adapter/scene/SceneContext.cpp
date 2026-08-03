@@ -10,8 +10,8 @@ namespace niketica::scene
     void SceneContext::initScenes()
     {
         sceneMap.emplace(niketica::component::SceneType::TEST, std::make_unique<TestScene>(registry, engineServices));
-        sceneMap.emplace(niketica::component::SceneType::USER_INTERFACE_DEMO, std::make_unique<UserInterfaceDemoScene>(registry, engineServices));
-        setCurrentScene(niketica::component::SceneType::USER_INTERFACE_DEMO);
+        sceneMap.emplace(niketica::component::SceneType::MAIN_MENU, std::make_unique<MainMenuScene>(registry, engineServices));
+        setCurrentScene(niketica::component::SceneType::MAIN_MENU);
     }
 
     void SceneContext::setCurrentScene(niketica::component::SceneType type)

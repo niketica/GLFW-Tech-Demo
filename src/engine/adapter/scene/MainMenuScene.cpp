@@ -1,8 +1,8 @@
-#include "engine/adapter/scene/UserInterfaceDemoScene.h"
+#include "engine/adapter/scene/MainMenuScene.h"
 
 namespace niketica::scene
 {
-    UserInterfaceDemoScene::UserInterfaceDemoScene(
+    MainMenuScene::MainMenuScene(
             entt::registry* registry,
             niketica::engine::EngineServices* engineServices
         ) : registry(registry),
@@ -11,7 +11,7 @@ namespace niketica::scene
         init();
     }
 
-    void UserInterfaceDemoScene::init()
+    void MainMenuScene::init()
     {
         systemContext = std::make_unique<niketica::systems::SystemContext>(registry, engineServices);
         systemContext->init();
@@ -50,7 +50,7 @@ namespace niketica::scene
         createTestPanel2();
     }
 
-    void UserInterfaceDemoScene::input()
+    void MainMenuScene::input()
     {
         systemContext->input();
 
@@ -65,7 +65,7 @@ namespace niketica::scene
 
     }
 
-    void UserInterfaceDemoScene::update(float deltaTime)
+    void MainMenuScene::update(float deltaTime)
     {
         systemContext->update(deltaTime);
 
@@ -135,18 +135,18 @@ namespace niketica::scene
         }
     }
 
-    void UserInterfaceDemoScene::render()
+    void MainMenuScene::render()
     {
         systemContext->render();
     }
 
-    void UserInterfaceDemoScene::reset()
+    void MainMenuScene::reset()
     {
         systemContext.release();
         init();
     }
 
-    void UserInterfaceDemoScene::createMainMenuPanel()
+    void MainMenuScene::createMainMenuPanel()
     {
         niketica::component::UISize uiSize;
         float panelWidth = 400.0f;
@@ -178,7 +178,7 @@ namespace niketica::scene
         registry->emplace<niketica::component::UIFocus>(panel);
     }
 
-    void UserInterfaceDemoScene::createOptionsMenuPanel()
+    void MainMenuScene::createOptionsMenuPanel()
     {
         float panelWidth = 400.0f;
         float panelHeight = 600.0f;
@@ -230,7 +230,7 @@ namespace niketica::scene
         registry->emplace<niketica::component::UIFocus>(panel);
     }
 
-    void UserInterfaceDemoScene::createTestPanel2()
+    void MainMenuScene::createTestPanel2()
     {
         auto windowView = registry->view<niketica::component::Window>();
         const auto &windowComponent = windowView.get<niketica::component::Window>(windowView.front());
@@ -253,7 +253,7 @@ namespace niketica::scene
             .build();
     }
     
-    entt::entity UserInterfaceDemoScene::createTextLabel(const std::string& text)
+    entt::entity MainMenuScene::createTextLabel(const std::string& text)
     {
         niketica::builder::UITextLabelBuilder textLabelBuilder = { registry, engineServices };
         return textLabelBuilder
@@ -264,7 +264,7 @@ namespace niketica::scene
             .build();
     }
     
-    entt::entity UserInterfaceDemoScene::createButton(const std::string& text)
+    entt::entity MainMenuScene::createButton(const std::string& text)
     {
         niketica::builder::UIButtonBuilder buttonBuilder = { registry, engineServices };
         return buttonBuilder
@@ -278,7 +278,7 @@ namespace niketica::scene
             .build();
     }
 
-    void UserInterfaceDemoScene::destroyUIElement(entt::entity entity)
+    void MainMenuScene::destroyUIElement(entt::entity entity)
     {
         if (registry->any_of<niketica::component::UIChildren>(entity))
         {
@@ -291,7 +291,7 @@ namespace niketica::scene
         registry->destroy(entity);
     }
 
-    void UserInterfaceDemoScene::updateWindowSize(const int width, const int height)
+    void MainMenuScene::updateWindowSize(const int width, const int height)
     {
         auto viewWindow = registry->view<niketica::component::Window>();
         auto& window = viewWindow.get<niketica::component::Window>(viewWindow.front());
@@ -305,7 +305,7 @@ namespace niketica::scene
         engineServices->getRenderContext()->updateViewport(viewport, window, renderSettings);
     }
 
-    void UserInterfaceDemoScene::updateResolution(const int width, const int height)
+    void MainMenuScene::updateResolution(const int width, const int height)
     {
         auto viewRenderSettings = registry->view<niketica::component::RenderSettings>();
         auto& renderSettings = viewRenderSettings.get<niketica::component::RenderSettings>(viewRenderSettings.front());
@@ -314,7 +314,7 @@ namespace niketica::scene
         registry->emplace<niketica::component::ResolutionDirty>(registry->create());
     }
 
-    void UserInterfaceDemoScene::updateWindowMode(niketica::component::WindowMode mode)
+    void MainMenuScene::updateWindowMode(niketica::component::WindowMode mode)
     {
         auto viewWindow = registry->view<niketica::component::Window>();
         auto& window = viewWindow.get<niketica::component::Window>(viewWindow.front());

@@ -42,14 +42,14 @@ namespace niketica::scene
         ButtonType type;
     };
 
-    class UserInterfaceDemoScene : public IScene
+    class MainMenuScene : public IScene
     {
     public:
-        UserInterfaceDemoScene(
+        MainMenuScene(
             entt::registry* registry,
             niketica::engine::EngineServices* engineServices
         );
-        ~UserInterfaceDemoScene() = default;
+        ~MainMenuScene() = default;
 
         void input() override;
         void update(float deltaTime) override;

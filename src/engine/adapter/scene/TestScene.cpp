@@ -83,7 +83,7 @@ namespace niketica::scene
         }
         if (input.actions[niketica::component::Action::MINUS].pressed)
         {
-            auto sceneSwitch = niketica::component::SceneSwitchInstruction{ niketica::component::SceneType::USER_INTERFACE_DEMO };
+            auto sceneSwitch = niketica::component::SceneSwitchInstruction{ niketica::component::SceneType::MAIN_MENU };
             registry->emplace<niketica::component::SceneSwitchInstruction>(registry->create(), sceneSwitch);
         }
 
