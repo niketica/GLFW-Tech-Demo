@@ -16,7 +16,9 @@ namespace niketica::scene
 
     enum class ButtonType
     {
-        START,
+        DEMOS,
+        DEMOS_SNAKE,
+        DEMOS_BACK,
         OPTIONS,
         QUIT,
         OPTIONS_WINDOW_800x600,
@@ -65,6 +67,7 @@ namespace niketica::scene
         void createMainMenuPanel();
         void createOptionsMenuPanel();
         void createTestPanel2();
+        void createDemosPanel();
         entt::entity createTextLabel(const std::string& text);
         entt::entity createButton(const std::string& text);
 

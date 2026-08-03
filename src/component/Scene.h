@@ -6,7 +6,8 @@ namespace niketica::component
     enum class SceneType
     {
         TEST,
-        MAIN_MENU
+        MAIN_MENU,
+        SNAKE
     };
 
     struct SceneSwitchInstruction

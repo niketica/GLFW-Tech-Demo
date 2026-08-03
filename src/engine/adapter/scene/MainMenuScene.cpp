@@ -77,12 +77,17 @@ namespace niketica::scene
 
             switch(buttonType)
             {
-            case ButtonType::START:
+            case ButtonType::DEMOS:
+            {
                 std::cout << "Start button activated" << std::endl;
+                const auto& parentTransform = registry->get<niketica::component::ParentTransform>(entity);
+                destroyUIElement(parentTransform.parent);
+                createDemosPanel();
+            }
                 break;
             case ButtonType::OPTIONS:
             {
-                std::cout << "Options button activated" << std::endl;                
+                std::cout << "Options button activated" << std::endl;
                 const auto& parentTransform = registry->get<niketica::component::ParentTransform>(entity);
                 destroyUIElement(parentTransform.parent);
                 createOptionsMenuPanel();                
@@ -131,6 +136,21 @@ namespace niketica::scene
             case ButtonType::OPTIONS_WINDOW_MODE_FULLSCREEN:
                 updateWindowMode(niketica::component::WindowMode::FULLSCREEN);
                 break;
+            case ButtonType::DEMOS_BACK:
+            {
+                std::cout << "Demos back activated" << std::endl;                
+                const auto& parentTransform = registry->get<niketica::component::ParentTransform>(entity);
+                destroyUIElement(parentTransform.parent);
+                createMainMenuPanel();                
+            }
+                break;
+            case ButtonType::DEMOS_SNAKE:
+            {
+                std::cout << "Demos Snake activated" << std::endl;
+                auto sceneSwitch = niketica::component::SceneSwitchInstruction{ niketica::component::SceneType::SNAKE };
+                registry->emplace<niketica::component::SceneSwitchInstruction>(registry->create(), sceneSwitch);
+            }
+                break;
             }
         }
     }
@@ -152,8 +172,8 @@ namespace niketica::scene
         float panelWidth = 400.0f;
         float panelHeight = 600.0f;
 
-        auto buttonStart = createButton("Start");
-        registry->emplace<Button>(buttonStart, Button{ ButtonType::START });
+        auto buttonStart = createButton("Demos");
+        registry->emplace<Button>(buttonStart, Button{ ButtonType::DEMOS });
         auto buttonOptions = createButton("Options");
         registry->emplace<Button>(buttonOptions, Button{ ButtonType::OPTIONS });
         auto buttonQuit = createButton("Quit");
@@ -319,6 +339,36 @@ namespace niketica::scene
         auto viewWindow = registry->view<niketica::component::Window>();
         auto& window = viewWindow.get<niketica::component::Window>(viewWindow.front());
         engineServices->getRenderContext()->setWindowMode(window, mode);
+    }
+
+    void MainMenuScene::createDemosPanel()
+    {
+        niketica::component::UISize uiSize;
+        float panelWidth = 400.0f;
+        float panelHeight = 600.0f;
+
+        auto buttonSnake = createButton("Snake");
+        registry->emplace<Button>(buttonSnake, Button{ ButtonType::DEMOS_SNAKE });
+        auto buttonBack = createButton("Back");
+        registry->emplace<Button>(buttonBack, Button{ ButtonType::DEMOS_BACK });
+
+        niketica::builder::UIPanelBuilder panelBuilder = { registry, engineServices };
+        auto panel = panelBuilder
+            .withPosition({600.0f,100.0f})
+            .withSize({panelWidth,panelHeight})
+            .withPadding(20.0f)
+            .withFontColor({ 1.0f, 1.0f, 0.0f, 1.0f })
+            .withFontSize(20.0f)
+            .withAlignmentHorizontal(niketica::component::AlignmentHorizontal::CENTER)
+            .withAlignmentVertical(niketica::component::AlignmentVertical::CENTER)
+            .withLayoutType(niketica::component::UILayoutType::VERTICAL)
+            .addButton(buttonSnake)
+            .addButton(buttonBack)
+            .build();
+
+        registry->emplace<niketica::component::UIActive>(panel);
+        registry->emplace<niketica::component::UIFocus>(panel);
+        
     }
 
 }
