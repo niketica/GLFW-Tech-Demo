@@ -9,24 +9,97 @@ namespace niketica::renderer
     
     void RectangleRenderer::init()
     {
-        basicShader = std::make_unique<Shader>("shaders/rect_shader.vert", "shaders/rect_shader.frag");
+        rectShader = std::make_unique<Shader>
+        (
+            "shaders/rect_shader.vert",
+            "shaders/rect_shader.frag"
+        );
 
         glGenVertexArrays(1, &VAO);
-        glGenBuffers(1, &VBO);
+        glGenBuffers(1, &quadVBO);
+        glGenBuffers(1, &instanceVBO);
         glGenBuffers(1, &EBO);
 
         glBindVertexArray(VAO);
 
-        glBindBuffer(GL_ARRAY_BUFFER, VBO);
+        glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
+
         glBufferData
         (
             GL_ARRAY_BUFFER,
-            sizeof(vertices),
-            vertices,
+            sizeof(quad),
+            quad,
             GL_STATIC_DRAW
         );
 
+        glVertexAttribPointer
+        (
+            0,
+            2,
+            GL_FLOAT,
+            GL_FALSE,
+            2 * sizeof(float),
+            nullptr
+        );
+
+        glEnableVertexAttribArray(0);
+
+        glBindBuffer(GL_ARRAY_BUFFER, instanceVBO);
+
+        glBufferData
+        (
+            GL_ARRAY_BUFFER,
+            0,
+            nullptr,
+            GL_DYNAMIC_DRAW
+        );
+
+        // Position
+        glVertexAttribPointer
+        (
+            1,
+            3,
+            GL_FLOAT,
+            GL_FALSE,
+            sizeof(niketica::component::Rectangle),
+            (void*)offsetof(niketica::component::Rectangle, position)
+        );
+
+        glEnableVertexAttribArray(1);
+
+        // Size
+        glVertexAttribPointer
+        (
+            2,
+            2,
+            GL_FLOAT,
+            GL_FALSE,
+            sizeof(niketica::component::Rectangle),
+            (void*)offsetof(niketica::component::Rectangle, size)
+        );
+
+        glEnableVertexAttribArray(2);
+
+        // Color
+        glVertexAttribPointer
+        (
+            3,
+            4,
+            GL_FLOAT,
+            GL_FALSE,
+            sizeof(niketica::component::Rectangle),
+            (void*)offsetof(niketica::component::Rectangle, color)
+        );
+
+        glEnableVertexAttribArray(3);
+
+        glVertexAttribDivisor(1, 1);
+        glVertexAttribDivisor(2, 1);
+        glVertexAttribDivisor(3, 1);
+
+        // EBO
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+
         glBufferData
         (
             GL_ELEMENT_ARRAY_BUFFER,
@@ -34,18 +107,6 @@ namespace niketica::renderer
             indices,
             GL_STATIC_DRAW
         );
-
-        glVertexAttribPointer
-        (
-            0,
-            3,
-            GL_FLOAT,
-            GL_FALSE,
-            3 * sizeof(float),
-            (void*)0
-        );
-
-        glEnableVertexAttribArray(0);
 
         glBindVertexArray(0);
     }
@@ -55,39 +116,41 @@ namespace niketica::renderer
         rectangles.push_back(rectangle);
     }
 
-    void RectangleRenderer::render()
+    void RectangleRenderer::render
+    (
+        const glm::mat4& projection,
+        const glm::mat4& view
+    )
     {
-        basicShader->use();
+        if (rectangles.empty()) return;
+
+        rectShader->use();
+
+        rectShader->setMat4("projection", projection);
+        rectShader->setMat4("view", view);
 
         glBindVertexArray(VAO);
 
-        for (const auto& rect : rectangles)
-        {
-            glm::mat4 transform(1.0f);
+        glBindBuffer(GL_ARRAY_BUFFER, instanceVBO);
 
-            transform = glm::translate
-            (
-                transform,
-                glm::vec3(rect.position, 0.0f)
-            );
+        glBufferData
+        (
+            GL_ARRAY_BUFFER,
+            rectangles.size() * sizeof(niketica::component::Rectangle),
+            rectangles.data(),
+            GL_DYNAMIC_DRAW
+        );
 
-            transform = glm::scale
-            (
-                transform,
-                glm::vec3(rect.size, 1.0f)
-            );
+        glDrawElementsInstanced
+        (
+            GL_TRIANGLES,
+            6,
+            GL_UNSIGNED_INT,
+            nullptr,
+            static_cast<GLsizei>(rectangles.size())
+        );
 
-            basicShader->setMat4("uTransform", transform);
-            basicShader->setVec4("uColor", rect.color);
-
-            glDrawElements
-            (
-                GL_TRIANGLES,
-                6,
-                GL_UNSIGNED_INT,
-                nullptr
-            );
-        }
+        glBindVertexArray(0);
     }
 
     void RectangleRenderer::clear()

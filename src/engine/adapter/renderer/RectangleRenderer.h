@@ -19,21 +19,12 @@ namespace niketica::renderer
 
         void submit(const niketica::component::Rectangle& rectangle) override;
         
-        void render() override;
+        void render(const glm::mat4& projection, const glm::mat4& view) override;
 
         void clear() override;
 
     private:
-        std::unique_ptr<Shader> basicShader;
-
-        float vertices[12] =
-        {
-            // positions
-            0.0f, 0.0f, 0.0f, // bottom left
-            1.0f, 0.0f, 0.0f, // bottom right
-            1.0f, 1.0f, 0.0f, // top right
-            0.0f, 1.0f, 0.0f  // top left
-        };
+        std::unique_ptr<Shader> rectShader;
 
         unsigned int indices[6] =
         {
@@ -41,9 +32,19 @@ namespace niketica::renderer
             2,3,0
         };
 
-        unsigned int VBO;
-        unsigned int VAO;
-        unsigned int EBO;
+        float quad[8] =
+        {
+            0.f,0.f,
+            1.f,0.f,
+            1.f,1.f,
+            0.f,1.f
+        };
+
+        unsigned int  quadVBO;
+        unsigned int  instanceVBO;
+        unsigned int  EBO;
+        unsigned int  VAO;
+        
 
         void init();
 

@@ -14,7 +14,7 @@ namespace niketica::renderer
         virtual ~IRectangleRenderer() = default;
 
         virtual void submit(const niketica::component::Rectangle& rectangle) = 0;
-        virtual void render() = 0;
+        virtual void render(const glm::mat4& projection, const glm::mat4& view) = 0;
         virtual void clear() = 0;
         
     };
