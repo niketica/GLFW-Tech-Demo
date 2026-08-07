@@ -41,7 +41,7 @@ namespace niketica::scene
     void SnakeScene::render()
     {
         systemContext->render();
-
+        engineServices->getRenderContext()->getRectangleRenderer()->render();
     }
     
     void SnakeScene::reset()

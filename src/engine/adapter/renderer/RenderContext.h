@@ -9,6 +9,7 @@
 #include "engine/adapter/renderer/TextureLoader.h"
 #include "engine/adapter/renderer/SpriteInstancedRenderer.h"
 #include "engine/adapter/renderer/NineSliceInstancedRenderer.h"
+#include "engine/adapter/renderer/RectangleRenderer.h"
 #include "engine/adapter/renderer/text/TextRenderer.h"
 
 namespace niketica::renderer

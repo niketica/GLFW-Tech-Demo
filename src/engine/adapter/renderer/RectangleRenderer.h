@@ -3,17 +3,18 @@
 #include <memory>
 #include <glad/glad.h>
 
+#include "engine/core/renderer/IRectangleRenderer.h"
 #include "engine/adapter/renderer/Shader.h"
 
 namespace niketica::renderer
 {
-    class SimpleRenderer
+    class RectangleRenderer : public IRectangleRenderer
     {
     public:
-        SimpleRenderer();
-        ~SimpleRenderer() = default;
+        RectangleRenderer();
+        ~RectangleRenderer() = default;
         
-        void render();
+        void render() override;
 
     private:
         std::unique_ptr<Shader> basicShader;

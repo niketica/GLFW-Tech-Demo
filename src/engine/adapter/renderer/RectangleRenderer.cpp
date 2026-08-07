@@ -1,13 +1,13 @@
-#include "engine/adapter/renderer/SimpleRenderer.h"
+#include "engine/adapter/renderer/RectangleRenderer.h"
 
 namespace niketica::renderer
 {
-    SimpleRenderer::SimpleRenderer()
+    RectangleRenderer::RectangleRenderer()
     {
         init();
     }
     
-    void SimpleRenderer::init()
+    void RectangleRenderer::init()
     {
         basicShader = std::make_unique<Shader>("shaders/basic_shader.vert", "shaders/basic_shader.frag");
         
@@ -30,7 +30,7 @@ namespace niketica::renderer
         glBindVertexArray(0);
     }
 
-    void SimpleRenderer::render()
+    void RectangleRenderer::render()
     {
         basicShader->use();
         glBindVertexArray(VAO);

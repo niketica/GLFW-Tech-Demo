@@ -110,12 +110,12 @@ add_library(engine
     src/engine/adapter/asset/EncryptionUtil.cpp
     src/engine/adapter/renderer/Shader.cpp
     src/engine/adapter/renderer/TextureLoader.cpp
-    src/engine/adapter/renderer/SimpleRenderer.cpp
     src/engine/adapter/renderer/SpriteInstancedRenderer.cpp
     src/engine/adapter/renderer/NineSliceInstancedRenderer.cpp
     src/engine/adapter/renderer/RenderContext.cpp
     src/engine/adapter/renderer/text/Font.cpp
     src/engine/adapter/renderer/text/TextRenderer.cpp
+    src/engine/adapter/renderer/RectangleRenderer.cpp
     src/engine/adapter/sound/SoundBackendMiniaudio.cpp
     src/engine/adapter/systems/common/WorldTransformSystem.cpp
     src/engine/adapter/systems/input/InputSystem.cpp
@@ -127,7 +127,6 @@ add_library(engine
     src/engine/adapter/systems/userinterface/UINavigationSystem.cpp
     src/engine/adapter/systems/SystemContext.cpp
     src/engine/adapter/scene/SceneContext.cpp
-    src/engine/adapter/scene/TestScene.cpp
     src/engine/adapter/scene/MainMenuScene.cpp
     src/engine/adapter/scene/SnakeScene.cpp
 )
