@@ -38,10 +38,15 @@ namespace niketica::engine
         viewport.height = (int)h;
         viewport.scale = 1.0f;
 
+        niketica::component::RenderSettings renderSettings;
+        renderSettings.worldReferenceResolution = { w, h };
+        renderSettings.uiReferenceResolution = { w, h };
+
         auto windowEntity = registry->create();
+        registry->emplace<niketica::component::Persistent>(windowEntity);
         registry->emplace<niketica::component::Window>(windowEntity, window);
         registry->emplace<niketica::component::Viewport>(windowEntity, viewport);
-        registry->emplace<niketica::component::Persistent>(windowEntity);
+        registry->emplace<niketica::component::RenderSettings>(windowEntity, renderSettings);
         
         niketica::component::Camera camera;
         camera.projection = glm::ortho(
@@ -53,19 +58,16 @@ namespace niketica::engine
         camera.zoom = 1.0f;
 
         auto cameraEntity = registry->create();
+        registry->emplace<niketica::component::Persistent>(cameraEntity);
         registry->emplace<niketica::component::Camera>(cameraEntity, camera);
         registry->emplace<niketica::component::ActiveCamera>(cameraEntity);
-        registry->emplace<niketica::component::Persistent>(cameraEntity);
-
-        niketica::component::RenderSettings renderSettings;
-        renderSettings.worldReferenceResolution = { w, h };
-        renderSettings.uiReferenceResolution = { w, h };
-        registry->emplace<niketica::component::RenderSettings>(windowEntity, renderSettings);
         
         sceneContext->setRegistry(registry.get());
         sceneContext->initScenes();
 
-        registry->emplace<niketica::component::EngineConfig>(registry->create());
+        auto engineConfigEntity = registry->create();
+        registry->emplace<niketica::component::Persistent>(engineConfigEntity);
+        registry->emplace<niketica::component::EngineConfig>(engineConfigEntity);
 
         updateViewport();
 

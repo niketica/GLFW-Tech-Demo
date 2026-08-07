@@ -79,7 +79,7 @@ namespace niketica::scene
             {
             case ButtonType::DEMOS:
             {
-                std::cout << "Start button activated" << std::endl;
+                std::cout << "INFO::MainMenuScene::update - Demos button activated" << std::endl;
                 const auto& parentTransform = registry->get<niketica::component::ParentTransform>(entity);
                 destroyUIElement(parentTransform.parent);
                 createDemosPanel();
@@ -87,7 +87,7 @@ namespace niketica::scene
                 break;
             case ButtonType::OPTIONS:
             {
-                std::cout << "Options button activated" << std::endl;
+                std::cout << "INFO::MainMenuScene::update - Options button activated" << std::endl;
                 const auto& parentTransform = registry->get<niketica::component::ParentTransform>(entity);
                 destroyUIElement(parentTransform.parent);
                 createOptionsMenuPanel();                
@@ -95,15 +95,15 @@ namespace niketica::scene
                 break;
             case ButtonType::QUIT:
             {
-                std::cout << "Quit button activated" << std::endl;
+                std::cout << "INFO::MainMenuScene::update - Quit button activated" << std::endl;
                 auto viewEngineConfig = registry->view<niketica::component::EngineConfig>();
                 auto& engineConfig = viewEngineConfig.get<niketica::component::EngineConfig>(viewEngineConfig.front());
-                engineConfig.running = false;                
+                engineConfig.running = false;
             }
                 break;
             case ButtonType::OPTIONS_BACK:
             {
-                std::cout << "Options back activated" << std::endl;                
+                std::cout << "INFO::MainMenuScene::update - Options back activated" << std::endl;                
                 const auto& parentTransform = registry->get<niketica::component::ParentTransform>(entity);
                 destroyUIElement(parentTransform.parent);
                 createMainMenuPanel();                

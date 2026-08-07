@@ -19,22 +19,35 @@ namespace niketica::scene
 
     void SnakeScene::input()
     {
+        systemContext->input();
+
+        auto inputView = registry->view<niketica::component::InputComponent>();
+        auto& input = inputView.get<niketica::component::InputComponent>(inputView.front());
+
+        if (input.actions[niketica::component::Action::ESCAPE].pressed)
+        {
+            auto sceneSwitch = niketica::component::SceneSwitchInstruction{ niketica::component::SceneType::MAIN_MENU };
+            registry->emplace<niketica::component::SceneSwitchInstruction>(registry->create(), sceneSwitch);
+        }
 
     }
 
     void SnakeScene::update(float deltaTime)
     {
+        systemContext->update(deltaTime);
 
     }
     
     void SnakeScene::render()
     {
+        systemContext->render();
 
     }
     
     void SnakeScene::reset()
-    {
-
+    {        
+        systemContext.release();
+        init();
     }
 
 }

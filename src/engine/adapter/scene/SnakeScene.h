@@ -11,6 +11,7 @@
 
 namespace niketica::scene
 {
+
     class SnakeScene : public IScene
     {
     public:
