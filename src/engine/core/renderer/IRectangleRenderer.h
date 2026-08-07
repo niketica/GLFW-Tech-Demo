@@ -13,7 +13,9 @@ namespace niketica::renderer
     public:
         virtual ~IRectangleRenderer() = default;
 
+        virtual void submit(const niketica::component::Rectangle& rectangle) = 0;
         virtual void render() = 0;
+        virtual void clear() = 0;
         
     };
     

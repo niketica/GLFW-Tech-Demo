@@ -3,6 +3,7 @@
 #include "component/Camera.h"
 #include "component/Color.h"
 #include "component/Common.h"
+#include "component/Geometry.h"
 #include "component/Input.h"
 #include "component/Scene.h"
 #include "component/Sound.h"

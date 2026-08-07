@@ -36,6 +36,21 @@ namespace niketica::scene
     {
         systemContext->update(deltaTime);
 
+        auto renderer = engineServices->getRenderContext()->getRectangleRenderer();
+        renderer->clear();
+        renderer->submit({
+            { -0.8f, -0.5f },
+            { 0.3f, 0.4f },
+            { 1,0,0,1 }});
+        renderer->submit({
+            { 0.1f, 0.3f },
+            { 0.6f, 0.2f },
+            { 0,1,0,1 }});
+        renderer->submit({
+            { -0.2f, -0.2f },
+            { 0.2f, 0.7f },
+            { 0,0,1,1 }});
+
     }
     
     void SnakeScene::render()
