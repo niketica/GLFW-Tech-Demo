@@ -61,8 +61,8 @@ namespace niketica::renderer
             3,
             GL_FLOAT,
             GL_FALSE,
-            sizeof(niketica::component::Rectangle),
-            (void*)offsetof(niketica::component::Rectangle, position)
+            sizeof(RectangleBorderlessData),
+            (void*)offsetof(RectangleBorderlessData, position)
         );
 
         glEnableVertexAttribArray(1);
@@ -74,8 +74,8 @@ namespace niketica::renderer
             2,
             GL_FLOAT,
             GL_FALSE,
-            sizeof(niketica::component::Rectangle),
-            (void*)offsetof(niketica::component::Rectangle, size)
+            sizeof(RectangleBorderlessData),
+            (void*)offsetof(RectangleBorderlessData, size)
         );
 
         glEnableVertexAttribArray(2);
@@ -87,8 +87,8 @@ namespace niketica::renderer
             4,
             GL_FLOAT,
             GL_FALSE,
-            sizeof(niketica::component::Rectangle),
-            (void*)offsetof(niketica::component::Rectangle, color)
+            sizeof(RectangleBorderlessData),
+            (void*)offsetof(RectangleBorderlessData, color)
         );
 
         glEnableVertexAttribArray(3);
@@ -111,7 +111,7 @@ namespace niketica::renderer
         glBindVertexArray(0);
     }
 
-    void RectangleBorderlessRenderer::submit(const niketica::component::Rectangle& rectangle)
+    void RectangleBorderlessRenderer::submit(const RectangleBorderlessData& rectangle)
     {
         rectangles.push_back(rectangle);
     }
@@ -136,7 +136,7 @@ namespace niketica::renderer
         glBufferData
         (
             GL_ARRAY_BUFFER,
-            rectangles.size() * sizeof(niketica::component::Rectangle),
+            rectangles.size() * sizeof(RectangleBorderlessData),
             rectangles.data(),
             GL_DYNAMIC_DRAW
         );

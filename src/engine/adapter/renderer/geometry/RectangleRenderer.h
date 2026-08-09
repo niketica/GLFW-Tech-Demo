@@ -19,8 +19,8 @@ namespace niketica::renderer
         RectangleRenderer();
         ~RectangleRenderer() = default;
 
-        void submit(const niketica::component::Rectangle& rectangle) override;
-        void submit(const niketica::component::RectangleBorder& rectangle) override;
+        void submit(const RectangleBorderlessData& rectangle) override;
+        void submit(const RectangleBorderData& rectangle) override;
         void render(const glm::mat4& projection, const glm::mat4& view) override;
         void clear() override;
 

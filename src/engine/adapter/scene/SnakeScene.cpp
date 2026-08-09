@@ -83,14 +83,27 @@ namespace niketica::scene
         for (auto entity : viewRect)
         {
             const auto& rect = viewRect.get<niketica::component::Rectangle>(entity);
-            renderer->submit(rect);
+            auto rectData = niketica::renderer::RectangleBorderlessData{
+                rect.position,
+                rect.size,
+                rect.color
+            };
+            renderer->submit(rectData);
         }
 
         auto viewRectBorder = registry->view<niketica::component::RectangleBorder>();
         for (auto entity : viewRectBorder)
         {
             const auto& rectBorder = viewRectBorder.get<niketica::component::RectangleBorder>(entity);
-            renderer->submit(rectBorder);
+            auto rectBorderData = niketica::renderer::RectangleBorderData{
+                rectBorder.position,
+                rectBorder.size,
+                rectBorder.fillColor,
+                rectBorder.borderColor,
+                rectBorder.borderThickness,
+                rectBorder.fill
+            };
+            renderer->submit(rectBorderData);
         }
     }
     

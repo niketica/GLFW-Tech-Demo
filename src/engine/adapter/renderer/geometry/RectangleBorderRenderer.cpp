@@ -59,7 +59,7 @@ namespace niketica::renderer
             GL_DYNAMIC_DRAW
         );
 
-        const auto stride = sizeof(niketica::component::RectangleBorder);
+        const auto stride = sizeof(RectangleBorderData);
 
         // Position
         glVertexAttribPointer(
@@ -69,7 +69,7 @@ namespace niketica::renderer
             GL_FALSE,
             stride,
             (void*)offsetof(
-                niketica::component::RectangleBorder,
+                RectangleBorderData,
                 position)
         );
 
@@ -83,7 +83,7 @@ namespace niketica::renderer
             GL_FALSE,
             stride,
             (void*)offsetof(
-                niketica::component::RectangleBorder,
+                RectangleBorderData,
                 size)
         );
 
@@ -97,7 +97,7 @@ namespace niketica::renderer
             GL_FALSE,
             stride,
             (void*)offsetof(
-                niketica::component::RectangleBorder,
+                RectangleBorderData,
                 fillColor)
         );
 
@@ -111,7 +111,7 @@ namespace niketica::renderer
             GL_FALSE,
             stride,
             (void*)offsetof(
-                niketica::component::RectangleBorder,
+                RectangleBorderData,
                 borderColor)
         );
 
@@ -125,7 +125,7 @@ namespace niketica::renderer
             GL_FALSE,
             stride,
             (void*)offsetof(
-                niketica::component::RectangleBorder,
+                RectangleBorderData,
                 borderThickness)
         );
 
@@ -139,7 +139,7 @@ namespace niketica::renderer
             GL_FALSE,
             stride,
             (void*)offsetof(
-                niketica::component::RectangleBorder,
+                RectangleBorderData,
                 fill)
         );
 
@@ -169,7 +169,7 @@ namespace niketica::renderer
         glBindVertexArray(0);
     }
 
-    void RectangleBorderRenderer::submit(const niketica::component::RectangleBorder& rectangle)
+    void RectangleBorderRenderer::submit(const RectangleBorderData& rectangle)
     {
         rectangles.push_back(rectangle);
     }
@@ -189,7 +189,7 @@ namespace niketica::renderer
         glBufferData
         (
             GL_ARRAY_BUFFER,
-            rectangles.size() * sizeof(niketica::component::RectangleBorder),
+            rectangles.size() * sizeof(RectangleBorderData),
             rectangles.data(),
             GL_DYNAMIC_DRAW
         );

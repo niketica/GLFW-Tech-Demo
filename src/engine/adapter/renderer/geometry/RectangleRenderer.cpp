@@ -13,12 +13,12 @@ namespace niketica::renderer
         borderlessRenderer = std::make_unique<RectangleBorderlessRenderer>();
     }
 
-    void RectangleRenderer::submit(const niketica::component::Rectangle& rectangle)
+    void RectangleRenderer::submit(const RectangleBorderlessData& rectangle)
     {
         borderlessRenderer->submit(rectangle);
     }
 
-    void RectangleRenderer::submit(const niketica::component::RectangleBorder& rectangle)
+    void RectangleRenderer::submit(const RectangleBorderData& rectangle)
     {
         borderRenderer->submit(rectangle);
     }
