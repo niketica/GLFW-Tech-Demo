@@ -35,8 +35,8 @@ namespace niketica::scene
 
         void init();
 
-        void createRectangleWithBorder(const glm::vec3& position, const glm::vec2& size, const glm::vec4& fillColor, const glm::vec4& borderColor, float borderThickness, float fill);
-        void createRectangleBorderless(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color);
+        entt::entity createRectangleWithBorder(const glm::vec3& position, const glm::vec2& size, const glm::vec4& fillColor, const glm::vec4& borderColor, float borderThickness, float fill);
+        entt::entity createRectangleBorderless(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color);
 
     };
 }

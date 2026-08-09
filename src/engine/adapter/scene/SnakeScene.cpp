@@ -16,28 +16,26 @@ namespace niketica::scene
         systemContext = std::make_unique<niketica::systems::SystemContext>(registry, engineServices);
         systemContext->init();
 
-        createRectangleBorderless({ 100.0f, 100.0f, 0.0f  }, { 300.0f, 200.0f }, { 1, 0, 0, 1 });
-        createRectangleBorderless({ 600.0f, 300.0f, 0.0f  }, { 500.0f, 150.0f }, { 0, 1, 0, 1 });
-        createRectangleBorderless({ 1200.0f, 200.0f, 0.0f }, { 200.0f, 500.0f }, { 0, 0, 1, 1 });
+        auto viewViewport = registry->view<niketica::component::Viewport>();
+        const auto& viewport = viewViewport.get<niketica::component::Viewport>(viewViewport.front());
+        
+        float size = 64.0f;
 
-        createRectangleWithBorder
-        (
-            { 400.0f, 400.0f, 0.0f },
-            { 200.0f, 200.0f },
-            { 1, 0, 1, 1 },
-            { 1, 1, 1, 1 },
-            10.0f,
-            1.0f
-        );
-        createRectangleWithBorder
-        (
-            { 700.0f, 100.0f, 0.0f },
-            { 300.0f, 300.0f },
-            { 0, 1, 0, 1 },
-            { 1, 1, 1, 1 },
-            10.0f,
-            0.0f
-        );
+        for (int x = 0; x < viewport.width / size; ++x)
+        {
+            for (int y = 0; y < viewport.height / size; ++y)
+            {
+                createRectangleWithBorder
+                (
+                    { x * size, y * size, 0.0f },
+                    { size, size },
+                    { 0.1f, 0.1f, 0.1f, 1.0f },
+                    { 1.0f, 1.0f, 1.0f, 1.0f },
+                    1.0f,
+                    1.0f
+                );
+            }
+        }
     }
 
     void SnakeScene::input()
@@ -76,7 +74,7 @@ namespace niketica::scene
         init();
     }
     
-    void SnakeScene::createRectangleWithBorder(const glm::vec3& position, const glm::vec2& size, const glm::vec4& fillColor, const glm::vec4& borderColor, float borderThickness, float fill)
+    entt::entity SnakeScene::createRectangleWithBorder(const glm::vec3& position, const glm::vec2& size, const glm::vec4& fillColor, const glm::vec4& borderColor, float borderThickness, float fill)
     {
         auto transform = niketica::component::Transform{ position, {size.x, size.y, 0.0f}, {1.0f, 1.0f, 1.0f} };
         auto fillColorCmpnt = niketica::component::FillColor{ fillColor };
@@ -93,9 +91,11 @@ namespace niketica::scene
         {
             registry->emplace<niketica::component::FillColor>(entity, fillColorCmpnt);
         }
+        
+        return entity;
     }
 
-    void SnakeScene::createRectangleBorderless(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color)
+    entt::entity SnakeScene::createRectangleBorderless(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color)
     {
         auto transform = niketica::component::Transform{ position, {size.x, size.y, 0.0f}, {1.0f, 1.0f, 1.0f} };
         auto fillColor = niketica::component::FillColor{ color };
@@ -104,6 +104,8 @@ namespace niketica::scene
         registry->emplace<niketica::component::Rectangle>(entity);
         registry->emplace<niketica::component::Transform>(entity, transform);
         registry->emplace<niketica::component::FillColor>(entity, fillColor);
+
+        return entity;
     }
 
 }
