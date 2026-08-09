@@ -41,12 +41,20 @@ namespace niketica::scene
             {0.0f, 0.0f, 0.0f},
             {300.0f, 200.0f},
             {1, 1, 0, 1},
-            {1, 1, 0, 1},
+            {1, 0, 0, 1},
             5.0f,
-            true
+            1.0f
+        };
+        auto rectBorder2 = niketica::component::RectangleBorder{
+            {800.0f, 500.0f, 0.0f},
+            {500.0f, 500.0f},
+            {0, 1, 1, 1},
+            {0, 1, 1, 1},
+            5.0f,
+            0.0f
         };
         registry->emplace<niketica::component::RectangleBorder>(registry->create(), rectBorder1);
-
+        registry->emplace<niketica::component::RectangleBorder>(registry->create(), rectBorder2);
     }
 
     void SnakeScene::input()
@@ -78,6 +86,7 @@ namespace niketica::scene
             renderer->submit(rect);
         }
 
+        engineServices->getRenderContext()->getRectangleBorderRenderer()->clear();
         auto viewRectBorder = registry->view<niketica::component::RectangleBorder>();
         for (auto entity : viewRectBorder)
         {

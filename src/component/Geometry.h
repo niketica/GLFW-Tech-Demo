@@ -15,13 +15,10 @@ namespace niketica::component
     {
         glm::vec3 position;
         glm::vec2 size;
-
         glm::vec4 fillColor;
         glm::vec4 borderColor;
-
         float borderThickness;
-
-        bool fill;
+        float fill; // 1.0f for filled, 0.0f for unfilled; floats are more straightforward for OpenGL.
     };
     
 }
