@@ -6,7 +6,6 @@
 #include "engine/core/renderer/ISpriteInstancedRenderer.h"
 #include "engine/core/renderer/INineSliceInstancedRenderer.h"
 #include "engine/core/renderer/IRectangleRenderer.h"
-#include "engine/core/renderer/IRectangleBorderRenderer.h"
 #include "engine/core/renderer/ITextRenderer.h"
 
 namespace niketica::renderer
@@ -49,11 +48,6 @@ namespace niketica::renderer
             return rectangleRenderer.get();
         }
 
-        IRectangleBorderRenderer* getRectangleBorderRenderer() const
-        {
-            return rectangleBorderRenderer.get();
-        }
-
         virtual void reset() = 0;
 
         virtual void setWindowMode(component::Window& windowComponent, component::WindowMode mode) = 0;
@@ -67,7 +61,6 @@ namespace niketica::renderer
         std::unique_ptr<INineSliceInstancedRenderer> nineSliceInstancedRenderer;
         std::unique_ptr<ITextRenderer> textRenderer;
         std::unique_ptr<IRectangleRenderer> rectangleRenderer;
-        std::unique_ptr<IRectangleBorderRenderer> rectangleBorderRenderer;
 
     };
 

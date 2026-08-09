@@ -8,6 +8,8 @@
 #include "component/Components.h"
 #include "engine/core/renderer/IRectangleRenderer.h"
 #include "engine/adapter/renderer/Shader.h"
+#include "engine/adapter/renderer/geometry/RectangleBorderRenderer.h"
+#include "engine/adapter/renderer/geometry/RectangleBorderlessRenderer.h"
 
 namespace niketica::renderer
 {
@@ -18,37 +20,14 @@ namespace niketica::renderer
         ~RectangleRenderer() = default;
 
         void submit(const niketica::component::Rectangle& rectangle) override;
-        
+        void submit(const niketica::component::RectangleBorder& rectangle) override;
         void render(const glm::mat4& projection, const glm::mat4& view) override;
-
         void clear() override;
 
     private:
-        std::unique_ptr<Shader> rectShader;
-
-        unsigned int indices[6] =
-        {
-            0,1,2,
-            2,3,0
-        };
-
-        float quad[8] =
-        {
-            0.f,0.f,
-            1.f,0.f,
-            1.f,1.f,
-            0.f,1.f
-        };
-
-        unsigned int  quadVBO;
-        unsigned int  instanceVBO;
-        unsigned int  EBO;
-        unsigned int  VAO;
-        
+        std::unique_ptr<RectangleBorderRenderer> borderRenderer;
+        std::unique_ptr<RectangleBorderlessRenderer> borderlessRenderer;
 
         void init();
-
-        std::vector<niketica::component::Rectangle> rectangles;
-
     };
 }

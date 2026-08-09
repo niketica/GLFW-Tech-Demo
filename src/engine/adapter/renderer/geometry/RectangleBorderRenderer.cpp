@@ -1,4 +1,4 @@
-#include "engine/adapter/renderer/RectangleBorderRenderer.h"
+#include "engine/adapter/renderer/geometry/RectangleBorderRenderer.h"
 
 namespace niketica::renderer
 {

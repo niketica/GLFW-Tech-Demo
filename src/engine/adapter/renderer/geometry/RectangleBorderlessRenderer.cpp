@@ -1,13 +1,13 @@
-#include "engine/adapter/renderer/RectangleRenderer.h"
+#include "engine/adapter/renderer/geometry/RectangleBorderlessRenderer.h"
 
 namespace niketica::renderer
 {
-    RectangleRenderer::RectangleRenderer()
+    RectangleBorderlessRenderer::RectangleBorderlessRenderer()
     {
         init();
     }
     
-    void RectangleRenderer::init()
+    void RectangleBorderlessRenderer::init()
     {
         rectShader = std::make_unique<Shader>
         (
@@ -111,12 +111,12 @@ namespace niketica::renderer
         glBindVertexArray(0);
     }
 
-    void RectangleRenderer::submit(const niketica::component::Rectangle& rectangle)
+    void RectangleBorderlessRenderer::submit(const niketica::component::Rectangle& rectangle)
     {
         rectangles.push_back(rectangle);
     }
 
-    void RectangleRenderer::render
+    void RectangleBorderlessRenderer::render
     (
         const glm::mat4& projection,
         const glm::mat4& view
@@ -153,7 +153,7 @@ namespace niketica::renderer
         glBindVertexArray(0);
     }
 
-    void RectangleRenderer::clear()
+    void RectangleBorderlessRenderer::clear()
     {
         rectangles.clear();
     }

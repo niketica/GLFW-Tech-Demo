@@ -86,12 +86,11 @@ namespace niketica::scene
             renderer->submit(rect);
         }
 
-        engineServices->getRenderContext()->getRectangleBorderRenderer()->clear();
         auto viewRectBorder = registry->view<niketica::component::RectangleBorder>();
         for (auto entity : viewRectBorder)
         {
             const auto& rectBorder = viewRectBorder.get<niketica::component::RectangleBorder>(entity);
-            engineServices->getRenderContext()->getRectangleBorderRenderer()->submit(rectBorder);
+            renderer->submit(rectBorder);
         }
     }
     
@@ -103,7 +102,6 @@ namespace niketica::scene
 
         systemContext->render();
         engineServices->getRenderContext()->getRectangleRenderer()->render(camera.projection, camera.view);
-        engineServices->getRenderContext()->getRectangleBorderRenderer()->render(camera.projection, camera.view);
     }
     
     void SnakeScene::reset()

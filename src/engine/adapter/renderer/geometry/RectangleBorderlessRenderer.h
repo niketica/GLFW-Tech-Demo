@@ -6,22 +6,19 @@
 #include <glad/glad.h>
 
 #include "component/Components.h"
-#include "engine/core/renderer/IRectangleBorderRenderer.h"
 #include "engine/adapter/renderer/Shader.h"
 
 namespace niketica::renderer
 {
-    class RectangleBorderRenderer : public IRectangleBorderRenderer
+    class RectangleBorderlessRenderer
     {
     public:
-        RectangleBorderRenderer();
-        ~RectangleBorderRenderer() = default;
+        RectangleBorderlessRenderer();
+        ~RectangleBorderlessRenderer() = default;
 
-        void submit(const niketica::component::RectangleBorder& rectangle) override;
-        
-        void render(const glm::mat4& projection, const glm::mat4& view) override;
-
-        void clear() override;
+        void submit(const niketica::component::Rectangle& rectangle);        
+        void render(const glm::mat4& projection, const glm::mat4& view);
+        void clear();
 
     private:
         std::unique_ptr<Shader> rectShader;
@@ -48,7 +45,7 @@ namespace niketica::renderer
 
         void init();
 
-        std::vector<niketica::component::RectangleBorder> rectangles;
+        std::vector<niketica::component::Rectangle> rectangles;
 
     };
 }
