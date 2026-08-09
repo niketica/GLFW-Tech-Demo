@@ -50,8 +50,8 @@ namespace niketica::engine
         
         niketica::component::Camera camera;
         camera.projection = glm::ortho(
-            0.f, w,
-            0.f, h,
+            0.f, renderSettings.worldReferenceResolution.x,
+            0.f, renderSettings.worldReferenceResolution.y,
             -10.f, 10.f
         );
         camera.view = glm::mat4(1.0f);

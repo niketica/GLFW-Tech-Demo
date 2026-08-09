@@ -17,19 +17,21 @@ namespace niketica::scene
         systemContext->init();
 
         auto rect1 = niketica::component::Rectangle{
-            { -0.8f, -0.5f, 0.0f },
-            { 0.3f, 0.4f },
-            { 1,0,0,1 }
+            {100.0f, 100.0f, 0.0f},
+            {300.0f, 200.0f},
+            {1, 0, 0, 1}
         };
+
         auto rect2 = niketica::component::Rectangle{
-            { 0.1f, 0.3f, 0.0f },
-            { 0.6f, 0.2f },
-            { 0,1,0,1 }
+            {600.0f, 300.0f, 0.0f},
+            {500.0f, 150.0f},
+            {0, 1, 0, 1}
         };
+
         auto rect3 = niketica::component::Rectangle{
-            { -0.2f, -0.2f, 0.0f },
-            { 0.2f, 0.7f },
-            { 0,0,1,1 }
+            {1200.0f, 200.0f, 0.0f},
+            {200.0f, 500.0f},
+            {0, 0, 1, 1}
         };
         registry->emplace<niketica::component::Rectangle>(registry->create(), rect1);
         registry->emplace<niketica::component::Rectangle>(registry->create(), rect2);
@@ -72,17 +74,8 @@ namespace niketica::scene
         auto viewCamera = registry->view<niketica::component::Camera, niketica::component::ActiveCamera>();
         const auto &camera = viewCamera.get<niketica::component::Camera>(viewCamera.front());
 
-        glm::mat4 projection = glm::ortho(
-            -1.0f,  // left
-            1.0f,  // right
-            -1.0f,  // bottom
-            1.0f   // top
-        );
-
-        glm::mat4 view = glm::mat4(1.0f);
-
         systemContext->render();
-        engineServices->getRenderContext()->getRectangleRenderer()->render(projection, view);
+        engineServices->getRenderContext()->getRectangleRenderer()->render(camera.projection, camera.view);
     }
     
     void SnakeScene::reset()
