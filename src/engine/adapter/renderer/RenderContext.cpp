@@ -58,6 +58,7 @@ namespace niketica::renderer
         rectangleRenderer = std::make_unique<RectangleRenderer>();
         nineSliceInstancedRenderer = std::make_unique<NineSliceInstancedRenderer>(textureLoader.get());
         textRenderer = std::make_unique<TextRenderer>(1920.0f, 1080.0f); // Just give the dimensions hard coded for now
+        rectangleBorderRenderer = std::make_unique<RectangleBorderRenderer>();
 
         std::cout << "DONE!" << std::endl;     
     }
@@ -71,6 +72,7 @@ namespace niketica::renderer
         nineSliceInstancedRenderer.release();
         rectangleRenderer.release();
         textRenderer.release();
+        rectangleBorderRenderer.release();
 
         std::cout << "DONE!" << std::endl;     
     }

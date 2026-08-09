@@ -3,7 +3,7 @@
 #include <string>
 #include <glm/glm.hpp>
 
-#include "component/Text.h"
+#include "component/Components.h"
 
 namespace niketica::renderer
 {

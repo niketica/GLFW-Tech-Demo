@@ -1,6 +1,6 @@
 #pragma once
 
-#include "component/TextureHandle.h"
+#include "component/Components.h"
 
 namespace niketica::renderer
 {

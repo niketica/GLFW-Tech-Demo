@@ -8,12 +8,12 @@
 namespace niketica::renderer
 {
 
-    class IRectangleRenderer
+    class IRectangleBorderRenderer
     {
     public:
-        virtual ~IRectangleRenderer() = default;
+        virtual ~IRectangleBorderRenderer() = default;
 
-        virtual void submit(const niketica::component::Rectangle& rectangle) = 0;
+        virtual void submit(const niketica::component::RectangleBorder& rectangle) = 0;
         virtual void render(const glm::mat4& projection, const glm::mat4& view) = 0;
         virtual void clear() = 0;
         

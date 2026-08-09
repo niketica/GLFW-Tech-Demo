@@ -36,6 +36,17 @@ namespace niketica::scene
         registry->emplace<niketica::component::Rectangle>(registry->create(), rect1);
         registry->emplace<niketica::component::Rectangle>(registry->create(), rect2);
         registry->emplace<niketica::component::Rectangle>(registry->create(), rect3);
+
+        auto rectBorder1 = niketica::component::RectangleBorder{
+            {0.0f, 0.0f, 0.0f},
+            {300.0f, 200.0f},
+            {1, 1, 0, 1},
+            {1, 1, 0, 1},
+            5.0f,
+            true
+        };
+        registry->emplace<niketica::component::RectangleBorder>(registry->create(), rectBorder1);
+
     }
 
     void SnakeScene::input()
@@ -66,6 +77,13 @@ namespace niketica::scene
             const auto& rect = viewRect.get<niketica::component::Rectangle>(entity);
             renderer->submit(rect);
         }
+
+        auto viewRectBorder = registry->view<niketica::component::RectangleBorder>();
+        for (auto entity : viewRectBorder)
+        {
+            const auto& rectBorder = viewRectBorder.get<niketica::component::RectangleBorder>(entity);
+            engineServices->getRenderContext()->getRectangleBorderRenderer()->submit(rectBorder);
+        }
     }
     
     void SnakeScene::render()
@@ -76,6 +94,7 @@ namespace niketica::scene
 
         systemContext->render();
         engineServices->getRenderContext()->getRectangleRenderer()->render(camera.projection, camera.view);
+        engineServices->getRenderContext()->getRectangleBorderRenderer()->render(camera.projection, camera.view);
     }
     
     void SnakeScene::reset()
