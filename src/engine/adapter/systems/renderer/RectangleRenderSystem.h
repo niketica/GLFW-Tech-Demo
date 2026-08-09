@@ -9,15 +9,15 @@
 namespace niketica::systems
 {
 
-    class SpriteRendererSystem : public ISystem
+    class RectangleRenderSystem : public ISystem
     {
     public:
-        SpriteRendererSystem(entt::registry* registry, niketica::engine::EngineServices* engineServices)
+        RectangleRenderSystem(entt::registry* registry, niketica::engine::EngineServices* engineServices)
             : ISystem(registry, engineServices) {}
 
         void input() override {}
         void update(float dt) override;
-        void render() override;
+        void render() override {};
 
     };
 

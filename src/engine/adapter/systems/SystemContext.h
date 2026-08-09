@@ -12,6 +12,7 @@
 #include "engine/adapter/systems/renderer/SpriteRendererSystem.h"
 #include "engine/adapter/systems/renderer/TextRendererSystem.h"
 #include "engine/adapter/systems/renderer/ResolutionSystem.h"
+#include "engine/adapter/systems/renderer/RectangleRenderSystem.h"
 #include "engine/adapter/systems/userinterface/UILayoutSystem.h"
 #include "engine/adapter/systems/userinterface/UINavigationSystem.h"
 
