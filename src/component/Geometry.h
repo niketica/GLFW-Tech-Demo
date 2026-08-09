@@ -4,21 +4,21 @@
 
 namespace niketica::component
 {
-    struct Rectangle
+    struct Rectangle {};
+
+    struct FillColor
     {
-        glm::vec3 position;
-        glm::vec2 size;
         glm::vec4 color;
     };
 
-    struct RectangleBorder
+    struct BorderColor
     {
-        glm::vec3 position;
-        glm::vec2 size;
-        glm::vec4 fillColor;
-        glm::vec4 borderColor;
-        float borderThickness;
-        float fill; // 1.0f for filled, 0.0f for unfilled; floats are more straightforward for OpenGL.
+        glm::vec4 color;
+    };
+
+    struct BorderThickness
+    {
+        float thickness;
     };
     
 }

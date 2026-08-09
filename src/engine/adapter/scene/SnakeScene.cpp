@@ -16,45 +16,28 @@ namespace niketica::scene
         systemContext = std::make_unique<niketica::systems::SystemContext>(registry, engineServices);
         systemContext->init();
 
-        auto rect1 = niketica::component::Rectangle{
-            {100.0f, 100.0f, 0.0f},
-            {300.0f, 200.0f},
-            {1, 0, 0, 1}
-        };
+        createRectangleBorderless({ 100.0f, 100.0f, 0.0f  }, { 300.0f, 200.0f }, { 1, 0, 0, 1 });
+        createRectangleBorderless({ 600.0f, 300.0f, 0.0f  }, { 500.0f, 150.0f }, { 0, 1, 0, 1 });
+        createRectangleBorderless({ 1200.0f, 200.0f, 0.0f }, { 200.0f, 500.0f }, { 0, 0, 1, 1 });
 
-        auto rect2 = niketica::component::Rectangle{
-            {600.0f, 300.0f, 0.0f},
-            {500.0f, 150.0f},
-            {0, 1, 0, 1}
-        };
-
-        auto rect3 = niketica::component::Rectangle{
-            {1200.0f, 200.0f, 0.0f},
-            {200.0f, 500.0f},
-            {0, 0, 1, 1}
-        };
-        registry->emplace<niketica::component::Rectangle>(registry->create(), rect1);
-        registry->emplace<niketica::component::Rectangle>(registry->create(), rect2);
-        registry->emplace<niketica::component::Rectangle>(registry->create(), rect3);
-
-        auto rectBorder1 = niketica::component::RectangleBorder{
-            {0.0f, 0.0f, 0.0f},
-            {300.0f, 200.0f},
-            {1, 1, 0, 1},
-            {1, 0, 0, 1},
-            5.0f,
+        createRectangleWithBorder
+        (
+            { 400.0f, 400.0f, 0.0f },
+            { 200.0f, 200.0f },
+            { 1, 0, 1, 1 },
+            { 1, 1, 1, 1 },
+            10.0f,
             1.0f
-        };
-        auto rectBorder2 = niketica::component::RectangleBorder{
-            {800.0f, 500.0f, 0.0f},
-            {500.0f, 500.0f},
-            {0, 1, 1, 1},
-            {0, 1, 1, 1},
-            5.0f,
+        );
+        createRectangleWithBorder
+        (
+            { 700.0f, 100.0f, 0.0f },
+            { 300.0f, 300.0f },
+            { 0, 1, 0, 1 },
+            { 1, 1, 1, 1 },
+            10.0f,
             0.0f
-        };
-        registry->emplace<niketica::component::RectangleBorder>(registry->create(), rectBorder1);
-        registry->emplace<niketica::component::RectangleBorder>(registry->create(), rectBorder2);
+        );
     }
 
     void SnakeScene::input()
@@ -79,31 +62,54 @@ namespace niketica::scene
         auto renderer = engineServices->getRenderContext()->getRectangleRenderer();
         renderer->clear();
 
-        auto viewRect = registry->view<niketica::component::Rectangle>();
+        auto viewRect = registry->view<niketica::component::Rectangle, niketica::component::Transform>();
         for (auto entity : viewRect)
         {
-            const auto& rect = viewRect.get<niketica::component::Rectangle>(entity);
-            auto rectData = niketica::renderer::RectangleBorderlessData{
-                rect.position,
-                rect.size,
-                rect.color
-            };
-            renderer->submit(rectData);
-        }
+            const bool hasBorder = registry->all_of<niketica::component::BorderColor, niketica::component::BorderThickness>(entity);
+            const bool hasFill = registry->all_of<niketica::component::FillColor>(entity);
 
-        auto viewRectBorder = registry->view<niketica::component::RectangleBorder>();
-        for (auto entity : viewRectBorder)
-        {
-            const auto& rectBorder = viewRectBorder.get<niketica::component::RectangleBorder>(entity);
-            auto rectBorderData = niketica::renderer::RectangleBorderData{
-                rectBorder.position,
-                rectBorder.size,
-                rectBorder.fillColor,
-                rectBorder.borderColor,
-                rectBorder.borderThickness,
-                rectBorder.fill
-            };
-            renderer->submit(rectBorderData);
+            const auto& transform = viewRect.get<niketica::component::Transform>(entity);
+
+            if (hasBorder)
+            {
+                const auto& borderColor = registry->get<niketica::component::BorderColor>(entity);
+                const auto& borderThickness = registry->get<niketica::component::BorderThickness>(entity);
+                if (hasFill)
+                {
+                    const auto& fillColor = registry->get<niketica::component::FillColor>(entity);
+                    auto rectBorderData = niketica::renderer::RectangleBorderData{
+                        transform.position,
+                        transform.size,
+                        fillColor.color,
+                        borderColor.color,
+                        borderThickness.thickness,
+                        1.0f
+                    };
+                    renderer->submit(rectBorderData);                    
+                }
+                else
+                {
+                    auto rectBorderData = niketica::renderer::RectangleBorderData{
+                        transform.position,
+                        transform.size,
+                        {},
+                        borderColor.color,
+                        borderThickness.thickness,
+                        0.0f
+                    };
+                    renderer->submit(rectBorderData);
+                }
+            }
+            else if (hasFill)
+            {
+                const auto& fillColor = registry->get<niketica::component::FillColor>(entity);
+                auto rectData = niketica::renderer::RectangleBorderlessData{
+                    transform.position,
+                    transform.size,
+                    fillColor.color
+                };
+                renderer->submit(rectData);                
+            }
         }
     }
     
@@ -121,6 +127,36 @@ namespace niketica::scene
     {        
         systemContext.release();
         init();
+    }
+    
+    void SnakeScene::createRectangleWithBorder(const glm::vec3& position, const glm::vec2& size, const glm::vec4& fillColor, const glm::vec4& borderColor, float borderThickness, float fill)
+    {
+        auto transform = niketica::component::Transform{ position, {size.x, size.y, 0.0f}, {1.0f, 1.0f, 1.0f} };
+        auto fillColorCmpnt = niketica::component::FillColor{ fillColor };
+        auto borderColorCmpnt = niketica::component::BorderColor{ borderColor };
+        auto borderThicknessCmpnt = niketica::component::BorderThickness{ borderThickness };
+        
+        auto entity = registry->create();
+        registry->emplace<niketica::component::Rectangle>(entity);
+        registry->emplace<niketica::component::Transform>(entity, transform);
+        registry->emplace<niketica::component::BorderColor>(entity, borderColorCmpnt);
+        registry->emplace<niketica::component::BorderThickness>(entity, borderThicknessCmpnt);
+
+        if (fill > 0.0f)
+        {
+            registry->emplace<niketica::component::FillColor>(entity, fillColorCmpnt);
+        }
+    }
+
+    void SnakeScene::createRectangleBorderless(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color)
+    {
+        auto transform = niketica::component::Transform{ position, {size.x, size.y, 0.0f}, {1.0f, 1.0f, 1.0f} };
+        auto fillColor = niketica::component::FillColor{ color };
+        
+        auto entity = registry->create();
+        registry->emplace<niketica::component::Rectangle>(entity);
+        registry->emplace<niketica::component::Transform>(entity, transform);
+        registry->emplace<niketica::component::FillColor>(entity, fillColor);
     }
 
 }
