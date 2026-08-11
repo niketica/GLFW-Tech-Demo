@@ -142,7 +142,6 @@ namespace niketica::scene
             return entt::null; // Return null entity if out of bounds
         }
 
-        // int index = y * gridWidth + x;
         int index = x * gridHeight + y;
         return gridEntities[index];
     }
@@ -159,14 +158,6 @@ namespace niketica::scene
 
     void SnakeScene::colorSnake()
     {
-        // Color the snake head
-        auto headEntity = getEntityAtGridPosition(snakeHeadPosition.x, snakeHeadPosition.y);
-        if (headEntity != entt::null && registry->any_of<niketica::component::FillColor>(headEntity))
-        {
-            auto& fillColor = registry->get<niketica::component::FillColor>(headEntity);
-            fillColor.color = { 0.0f, 1.0f, 0.0f, 1.0f }; // Green color for the head
-        }
-
         // Color the snake body
         for (const auto& bodyPos : snakeBodyPositions)
         {
@@ -176,6 +167,14 @@ namespace niketica::scene
                 auto& fillColor = registry->get<niketica::component::FillColor>(bodyEntity);
                 fillColor.color = { 0.0f, 0.5f, 0.0f, 1.0f }; // Darker green for the body
             }
+        }
+
+        // Color the snake head
+        auto headEntity = getEntityAtGridPosition(snakeHeadPosition.x, snakeHeadPosition.y);
+        if (headEntity != entt::null && registry->any_of<niketica::component::FillColor>(headEntity))
+        {
+            auto& fillColor = registry->get<niketica::component::FillColor>(headEntity);
+            fillColor.color = { 0.0f, 1.0f, 0.0f, 1.0f }; // Green color for the head
         }
     }
 
@@ -235,8 +234,22 @@ namespace niketica::scene
 
     void SnakeScene::moveSnakeBody()
     {
-        // TODO implement me
-        // Just position the first body part on the snake head, then each body part on the body part before it
+        bool first = true;
+        glm::ivec2 previous;
+        for (auto& bodyPosition : snakeBodyPositions)
+        {
+            glm::ivec2 current = { bodyPosition.x, bodyPosition.y };
+            if (first)
+            {
+                first = false;
+                bodyPosition = { snakeHeadPosition.x, snakeHeadPosition.y };
+            }
+            else
+            {
+                bodyPosition = { previous.x, previous.y };
+            }
+            previous = { current.x, current.y };
+        }
     }
 
     void SnakeScene::createFruit()
@@ -266,7 +279,7 @@ namespace niketica::scene
         if (hit)
         {
             fruitActive = false;
-            // TODO add body part to snake
+            snakeBodyPositions.push_back({ snakeHeadPosition.x, snakeHeadPosition.y });
         }
     }
 
