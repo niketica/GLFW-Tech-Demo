@@ -77,6 +77,10 @@ namespace niketica::scene
         systemContext->update(dt);
         clearGrid();
         moveSnake(dt);
+        checkSnakeEatsFruit();
+        createFruit();
+
+        colorFruit();
         colorSnake();
     }
     
@@ -187,7 +191,7 @@ namespace niketica::scene
 
     void SnakeScene::moveSnakeHead()
     {
-        // TODO these wrap around functions should really be game over
+        // TODO collision with wall or body part should result in game over
         switch (currentDirection)
         {
         case Direction::UP:
@@ -233,6 +237,37 @@ namespace niketica::scene
     {
         // TODO implement me
         // Just position the first body part on the snake head, then each body part on the body part before it
+    }
+
+    void SnakeScene::createFruit()
+    {
+        if (fruitActive) return;
+        fruitActive = true;
+
+        int x = rand() % gridWidth;
+        int y = rand() % gridHeight;
+        // TODO check if position is not on snake
+        fruitPosition = { x, y };
+    }
+
+    void SnakeScene::colorFruit()
+    {
+        auto entity = getEntityAtGridPosition(fruitPosition.x, fruitPosition.y);
+        if (entity != entt::null && registry->any_of<niketica::component::FillColor>(entity))
+        {
+            auto& fillColor = registry->get<niketica::component::FillColor>(entity);
+            fillColor.color = { 0.6f, 0.1f, 0.1f, 1.0f };
+        }
+    }
+
+    void SnakeScene::checkSnakeEatsFruit()
+    {
+        bool hit = snakeHeadPosition.x == fruitPosition.x && snakeHeadPosition.y == fruitPosition.y;
+        if (hit)
+        {
+            fruitActive = false;
+            // TODO add body part to snake
+        }
     }
 
 }

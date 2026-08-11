@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <cstdlib>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <memory>
@@ -50,6 +51,9 @@ namespace niketica::scene
         std::vector<glm::ivec2> snakeBodyPositions;
         Direction currentDirection = Direction::RIGHT;
 
+        bool fruitActive = false;
+        glm::ivec2 fruitPosition{ 0, 0 };
+
         float currentTimer = 0.0f;
         float cooldownPeriod = 0.2f;
 
@@ -60,9 +64,12 @@ namespace niketica::scene
 
         void clearGrid();
         void colorSnake();
+        void colorFruit();
         void moveSnake(float dt);
         void moveSnakeHead();
         void moveSnakeBody();
+        void createFruit();
+        void checkSnakeEatsFruit();
 
     };
 }
