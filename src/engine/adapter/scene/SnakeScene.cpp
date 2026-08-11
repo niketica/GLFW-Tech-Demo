@@ -257,10 +257,34 @@ namespace niketica::scene
         if (fruitActive) return;
         fruitActive = true;
 
-        int x = rand() % gridWidth;
-        int y = rand() % gridHeight;
-        // TODO check if position is not on snake
-        fruitPosition = { x, y };
+        bool validPosition = false;
+
+        // Defensive measure
+        int maxAttempts = gridWidth * gridHeight;
+        int currentAttempt = 0;
+
+        while (!validPosition)
+        {
+            currentAttempt++;
+            if (currentAttempt > maxAttempts)
+            {
+                std::cerr << "ERROR::SnakeScene::createFruit - Max number of attemps reached." << std::endl;
+                return;
+            }
+
+            int x = rand() % gridWidth;
+            int y = rand() % gridHeight;
+
+            if (x == snakeHeadPosition.x && y == snakeHeadPosition.y) continue;
+
+            for (const auto& bodyPosition : snakeBodyPositions)
+            {
+                if (x == bodyPosition.x && y == bodyPosition.y) continue;
+            }
+            fruitPosition = { x, y };
+            validPosition = true;
+        }
+
     }
 
     void SnakeScene::colorFruit()
