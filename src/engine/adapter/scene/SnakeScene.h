@@ -57,6 +57,9 @@ namespace niketica::scene
         float currentTimer = 0.0f;
         float cooldownPeriod = 0.2f;
 
+        bool snakeHitWall = false;
+        bool gameActive = false;
+
         void init();
         entt::entity createRectangleWithBorder(const glm::vec3& position, const glm::vec2& size, const glm::vec4& fillColor, const glm::vec4& borderColor, float borderThickness, float fill);
         entt::entity createRectangleBorderless(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color);
@@ -70,6 +73,8 @@ namespace niketica::scene
         void moveSnakeBody();
         void createFruit();
         void checkSnakeEatsFruit();
+        void checkLoseConditions();
+        bool snakeHitBody() const;
 
     };
 }

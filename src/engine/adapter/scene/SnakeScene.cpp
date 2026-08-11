@@ -39,6 +39,13 @@ namespace niketica::scene
                 gridEntities.push_back(entity);
             }
         }
+
+        snakeHitWall = false;
+        snakeBodyPositions.clear();
+        snakeHeadPosition = { 5, 5 };
+        fruitActive = false;
+        currentDirection = Direction::RIGHT;
+        gameActive = true;
     }
 
     void SnakeScene::input()
@@ -75,13 +82,16 @@ namespace niketica::scene
     void SnakeScene::update(float dt)
     {
         systemContext->update(dt);
-        clearGrid();
-        moveSnake(dt);
-        checkSnakeEatsFruit();
-        createFruit();
 
-        colorFruit();
-        colorSnake();
+        if (gameActive)
+        {
+            moveSnake(dt);
+            checkSnakeEatsFruit();
+            createFruit();
+            clearGrid();
+            colorFruit();
+            colorSnake();
+        }
     }
     
     void SnakeScene::render()
@@ -186,11 +196,11 @@ namespace niketica::scene
 
         moveSnakeBody();
         moveSnakeHead();
+        checkLoseConditions();
     }
 
     void SnakeScene::moveSnakeHead()
     {
-        // TODO collision with wall or body part should result in game over
         switch (currentDirection)
         {
         case Direction::UP:
@@ -198,7 +208,8 @@ namespace niketica::scene
             snakeHeadPosition.y++;
             if (snakeHeadPosition.y >= gridHeight)
             {
-                snakeHeadPosition.y = 0;
+                snakeHeadPosition.y--;
+                snakeHitWall = true;
             }
         }
         break;
@@ -207,7 +218,8 @@ namespace niketica::scene
             snakeHeadPosition.y--;
             if (snakeHeadPosition.y < 0)
             {
-                snakeHeadPosition.y = gridHeight - 1;
+                snakeHeadPosition.y = 0;
+                snakeHitWall = true;
             }
         }
         break;
@@ -216,7 +228,8 @@ namespace niketica::scene
             snakeHeadPosition.x--;
             if (snakeHeadPosition.x < 0)
             {
-                snakeHeadPosition.x = gridWidth - 1;
+                snakeHeadPosition.x = 0;
+                snakeHitWall = true;
             }
         }
         break;
@@ -225,7 +238,8 @@ namespace niketica::scene
             snakeHeadPosition.x++;
             if (snakeHeadPosition.x >= gridWidth)
             {
-                snakeHeadPosition.x = 0;
+                snakeHeadPosition.x--;
+                snakeHitWall = true;
             }
         }
         break;
@@ -305,6 +319,27 @@ namespace niketica::scene
             fruitActive = false;
             snakeBodyPositions.push_back({ snakeHeadPosition.x, snakeHeadPosition.y });
         }
+    }
+
+    void SnakeScene::checkLoseConditions()
+    {
+        if (snakeHitWall || snakeHitBody())
+        {
+            gameActive = false;
+            std::cout << "INFO::SnakeScene::checkVictoryConditions - You lose!" << std::endl;
+        }
+    }
+
+    bool SnakeScene::snakeHitBody() const
+    {
+        for (const auto& bodyPosition : snakeBodyPositions)
+        {
+            if (bodyPosition.x == snakeHeadPosition.x && bodyPosition.y == snakeHeadPosition.y)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
 }
