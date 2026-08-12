@@ -16,13 +16,24 @@ namespace niketica::scene
         systemContext = std::make_unique<niketica::systems::SystemContext>(registry, engineServices);
         systemContext->init();
 
-        auto viewViewport = registry->view<niketica::component::Viewport>();
-        const auto& viewport = viewViewport.get<niketica::component::Viewport>(viewViewport.front());
-        
-        float size = 64.0f;
-
         gridEntities.clear();
+        snakeHitWall = false;
+        snakeBodyPositions.clear();
+        snakeHeadPosition = { 5, 5 };
+        fruitActive = false;
+        currentDirection = Direction::RIGHT;
+        gameActive = true;
 
+        float size = 64.0f;
+        
+        float windowWidth = 1920; // TODO Should be retrieved and updated dynamically
+        float totalGridWidth = size * gridWidth;
+        float containerX = (windowWidth * 0.5f) - (totalGridWidth * 0.5f);
+        auto containerEntity = registry->create();
+        niketica::component::Transform containerTransform;
+        containerTransform.position.x = containerX;
+        registry->emplace<niketica::component::Transform>(containerEntity, containerTransform);
+        
         for (int x = 0; x < gridWidth; ++x)
         {
             for (int y = 0; y < gridHeight; ++y)
@@ -36,16 +47,16 @@ namespace niketica::scene
                     1.0f,
                     1.0f
                 );
+                niketica::component::LocalTransform local;
+                local.position.x = x * size;
+                local.position.y = y * size;
+                local.size.x = size;
+                local.size.y = size;
+                registry->emplace<niketica::component::LocalTransform>(entity, niketica::component::LocalTransform{ local });
+                registry->emplace<niketica::component::ParentTransform>(entity, niketica::component::ParentTransform{ containerEntity });
                 gridEntities.push_back(entity);
             }
         }
-
-        snakeHitWall = false;
-        snakeBodyPositions.clear();
-        snakeHeadPosition = { 5, 5 };
-        fruitActive = false;
-        currentDirection = Direction::RIGHT;
-        gameActive = true;
     }
 
     void SnakeScene::input()
