@@ -75,7 +75,7 @@ namespace niketica::tetris
                 {
                     if (matrix[y][x] == 'X')
                     {
-                        blockPositions.emplace_back(glm::ivec2{x,y});
+                        blockPositions.emplace_back(glm::ivec2{x,1-y});
                     }
                 }
             }
@@ -91,7 +91,7 @@ namespace niketica::tetris
                 {
                     if (matrix[y][x] == 'X')
                     {
-                        blockPositions.emplace_back(glm::ivec2{x,y});
+                        blockPositions.emplace_back(glm::ivec2{x,2-y});
                     }
                 }
             }
@@ -107,7 +107,7 @@ namespace niketica::tetris
                 {
                     if (matrix[y][x] == 'X')
                     {
-                        blockPositions.emplace_back(glm::ivec2{x,y});
+                        blockPositions.emplace_back(glm::ivec2{x,3-y});
                     }
                 }
             }

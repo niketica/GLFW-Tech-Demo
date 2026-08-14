@@ -51,7 +51,7 @@ namespace niketica::scene
             }
         }
 
-        currentTetromino = std::make_unique<niketica::tetris::Tetromino_I>();
+        currentTetromino = std::make_unique<niketica::tetris::Tetromino_J>();
     }
 
     void TetrisScene::input()
