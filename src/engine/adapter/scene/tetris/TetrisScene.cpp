@@ -98,25 +98,7 @@ namespace niketica::scene
             clearGrid();
         }
 
-        auto viewTetromino = registry->view<Tetromino, GridPosition>();
-        const auto& tetromino = viewTetromino.get<Tetromino>(viewTetromino.front());
-
-        switch (tetromino.direction)
-        {
-        case Direction::LEFT:
-        {
-            auto& position = viewTetromino.get<GridPosition>(viewTetromino.front()).position;
-            position.x--;
-        }
-        break;
-        case Direction::RIGHT:
-        {
-            auto& position = viewTetromino.get<GridPosition>(viewTetromino.front()).position;
-            position.x++;
-        }
-        break;
-        }
-
+        moveTetromino();
         colorTetrominoOnGrid();
     }
     
@@ -454,6 +436,71 @@ namespace niketica::scene
             auto& fillColor = registry->get<niketica::component::FillColor>(gridEntity);
             fillColor.color = { 0.8f, 0.1f, 0.1f, 1.0f };
         }
+    }
+    
+    void TetrisScene::moveTetromino()
+    {
+        auto viewTetromino = registry->view<Tetromino, GridPosition>();
+        const auto& tetromino = viewTetromino.get<Tetromino>(viewTetromino.front());
+
+        switch (tetromino.direction)
+        {
+        case Direction::LEFT:
+        {
+            if (canMoveLeft())
+            {
+                auto& position = viewTetromino.get<GridPosition>(viewTetromino.front()).position;
+                position.x--;
+            }
+        }
+        break;
+        case Direction::RIGHT:
+        {
+            if (canMoveRight())
+            {
+                auto& position = viewTetromino.get<GridPosition>(viewTetromino.front()).position;
+                position.x++;
+            }
+        }
+        break;
+        }
+    }
+
+    bool TetrisScene::canMoveLeft()
+    {
+        auto viewTetromino = registry->view<Tetromino, GridPosition, BlockPositions>();
+        const auto& gridPosition = viewTetromino.get<GridPosition>(viewTetromino.front()).position;
+        const auto& blockPositions = viewTetromino.get<BlockPositions>(viewTetromino.front()).blockPositions;
+
+        for (const auto& blockPosition : blockPositions)
+        {
+            int x = gridPosition.x + blockPosition.x - 1;
+            if (x < 0)
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    bool TetrisScene::canMoveRight()
+    {
+        auto viewTetromino = registry->view<Tetromino, GridPosition, BlockPositions>();
+        const auto& gridPosition = viewTetromino.get<GridPosition>(viewTetromino.front()).position;
+        const auto& blockPositions = viewTetromino.get<BlockPositions>(viewTetromino.front()).blockPositions;
+
+        for (const auto& blockPosition : blockPositions)
+        {
+            int x = gridPosition.x + blockPosition.x + 1;
+            if (x >= gridWidth)
+            {
+                return false;
+            }
+        }
+
+        return true;
+
     }
 
 }

@@ -124,7 +124,10 @@ namespace niketica::scene
         void createTetrominoT();
         void createTetrominoZ();
 
+        void moveTetromino();
         void colorTetrominoOnGrid();
+        bool canMoveLeft();
+        bool canMoveRight();
 
     };
 }
