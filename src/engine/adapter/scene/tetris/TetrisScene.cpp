@@ -51,7 +51,7 @@ namespace niketica::scene
             }
         }
 
-        currentTetromino = std::make_unique<niketica::tetris::Tetromino_J>();
+        createTetrominoL();
     }
 
     void TetrisScene::input()
@@ -80,7 +80,7 @@ namespace niketica::scene
         }
         if (input.actions[niketica::component::Action::E].pressed)
         {
-            currentTetromino->rotate();
+            rotateTetromino();
         }
 
     }
@@ -94,7 +94,9 @@ namespace niketica::scene
             clearGrid();
         }
 
-        const auto& blockPositions = currentTetromino->getBlockPositions();
+        auto viewTetromino = registry->view<Tetromino, BlockPositions>();
+        auto entity = viewTetromino.front();
+        const auto& blockPositions = viewTetromino.get<BlockPositions>(entity).blockPositions;
         for (const auto& blockPosition : blockPositions)
         {
             auto gridEntity = getEntityAtGridPosition(blockPosition.x, blockPosition.y);
@@ -174,6 +176,260 @@ namespace niketica::scene
             auto& fillColor = registry->get<niketica::component::FillColor>(entity);
             fillColor.color = { 0.1f, 0.1f, 0.1f, 1.0f };
         }
+    }
+
+    void TetrisScene::setBlockPositions()
+    {
+        auto viewTetromino = registry->view<Tetromino, BlockPositions>();
+        auto entity = viewTetromino.front();
+
+       auto& blockPositions = viewTetromino.get<BlockPositions>(entity).blockPositions;
+
+        if (registry->any_of<Matrices2X2>(entity))
+        {
+            auto& matrix = getMatrix2x2(entity);
+            blockPositions.clear();
+            for (int y=0; y<2; y++)
+            {
+                for (int x=0; x<2; x++)
+                {
+                    if (matrix[y][x] == 'X')
+                    {
+                        blockPositions.emplace_back(glm::ivec2{x,3-y});
+                    }
+                }
+            }
+        }
+        else if (registry->any_of<Matrices3X3>(entity))
+        {
+            auto& matrix = getMatrix3x3(entity);
+            blockPositions.clear();
+            for (int y=0; y<3; y++)
+            {
+                for (int x=0; x<3; x++)
+                {
+                    if (matrix[y][x] == 'X')
+                    {
+                        blockPositions.emplace_back(glm::ivec2{x,3-y});
+                    }
+                }
+            }
+        }
+        else if (registry->any_of<Matrices4X4>(entity))
+        {
+            auto& matrix = getMatrix4x4(entity);
+            blockPositions.clear();
+            for (int y=0; y<4; y++)
+            {
+                for (int x=0; x<4; x++)
+                {
+                    if (matrix[y][x] == 'X')
+                    {
+                        blockPositions.emplace_back(glm::ivec2{x,3-y});
+                    }
+                }
+            }
+        }
+    }
+
+    TetrisScene::MATRIX_2X2& TetrisScene::getMatrix2x2(entt::entity entity)
+    {
+        auto matrices = registry->get<Matrices2X2>(entity);
+        return matrices.matrix;
+    }
+
+    TetrisScene::MATRIX_3X3& TetrisScene::getMatrix3x3(entt::entity entity)
+    {
+        auto viewTetromino = registry->view<Tetromino, BlockPositions>();
+        const auto& tetromino = viewTetromino.get<Tetromino>(entity);
+        auto matrices = registry->get<Matrices3X3>(entity);
+
+        switch (tetromino.rotation)
+        {
+        case Rotation::_1:
+            return matrices.matrix1;
+        case Rotation::_2:
+            return matrices.matrix2;
+        case Rotation::_3:
+            return matrices.matrix3;
+        case Rotation::_4:
+            return matrices.matrix4;
+        }
+        throw std::invalid_argument("TetrisScene::getMatrix3x3 - No valid rotation for tetromino.");
+    }
+
+    TetrisScene::MATRIX_4X4& TetrisScene::getMatrix4x4(entt::entity entity)
+    {
+        auto viewTetromino = registry->view<Tetromino, BlockPositions>();
+        const auto& tetromino = viewTetromino.get<Tetromino>(entity);
+        auto matrices = registry->get<Matrices4X4>(entity);
+
+        switch (tetromino.rotation)
+        {
+        case Rotation::_1:
+            return matrices.matrix1;
+        case Rotation::_2:
+            return matrices.matrix2;
+        case Rotation::_3:
+            return matrices.matrix3;
+        case Rotation::_4:
+            return matrices.matrix4;
+        }
+        throw std::invalid_argument("TetrisScene::getMatrix4x4 - No valid rotation for tetromino.");
+    }
+
+    void TetrisScene::rotateTetromino()
+    {
+        auto viewTetromino = registry->view<Tetromino>();
+        auto& tetromino = viewTetromino.get<Tetromino>(viewTetromino.front());
+
+        switch (tetromino.rotation)
+        {
+        case Rotation::_1:
+            tetromino.rotation = Rotation::_2;
+            break;
+        case Rotation::_2:
+            tetromino.rotation = Rotation::_3;
+            break;
+        case Rotation::_3:
+            tetromino.rotation = Rotation::_4;
+            break;
+        case Rotation::_4:
+            tetromino.rotation = Rotation::_1;
+            break;
+        }
+
+        setBlockPositions();
+    }
+    
+    void TetrisScene::createTetrominoI()
+    {
+        auto matrices = Matrices4X4
+        {
+            niketica::tetris::TETROMINO_I_1,            
+            niketica::tetris::TETROMINO_I_2,            
+            niketica::tetris::TETROMINO_I_3,
+            niketica::tetris::TETROMINO_I_4
+        };
+        
+        auto tetromino = registry->create();
+        registry->emplace<Tetromino>(tetromino);
+        registry->emplace<niketica::component::Color>(tetromino, niketica::tetris::COLOR_I);
+        registry->emplace<BlockPositions>(tetromino);
+        registry->emplace<Matrices4X4>(tetromino, matrices);
+
+        setBlockPositions();
+    }
+
+    void TetrisScene::createTetrominoJ()
+    {
+        auto matrices = Matrices3X3
+        {
+            niketica::tetris::TETROMINO_J_1,            
+            niketica::tetris::TETROMINO_J_2,            
+            niketica::tetris::TETROMINO_J_3,
+            niketica::tetris::TETROMINO_J_4
+        };
+        
+        auto tetromino = registry->create();
+        registry->emplace<Tetromino>(tetromino);
+        registry->emplace<niketica::component::Color>(tetromino, niketica::tetris::COLOR_J);
+        registry->emplace<BlockPositions>(tetromino);
+        registry->emplace<Matrices3X3>(tetromino, matrices);
+
+        setBlockPositions();
+    }
+    
+    void TetrisScene::createTetrominoL()
+    {
+        auto matrices = Matrices3X3
+        {
+            niketica::tetris::TETROMINO_L_1,            
+            niketica::tetris::TETROMINO_L_2,            
+            niketica::tetris::TETROMINO_L_3,
+            niketica::tetris::TETROMINO_L_4
+        };
+        
+        auto tetromino = registry->create();
+        registry->emplace<Tetromino>(tetromino);
+        registry->emplace<niketica::component::Color>(tetromino, niketica::tetris::COLOR_L);
+        registry->emplace<BlockPositions>(tetromino);
+        registry->emplace<Matrices3X3>(tetromino, matrices);
+
+        setBlockPositions();        
+    }
+    
+    void TetrisScene::createTetrominoO()
+    {
+        auto matrices = Matrices2X2
+        {
+            niketica::tetris::TETROMINO_O_1
+        };
+        
+        auto tetromino = registry->create();
+        registry->emplace<Tetromino>(tetromino);
+        registry->emplace<niketica::component::Color>(tetromino, niketica::tetris::COLOR_O);
+        registry->emplace<BlockPositions>(tetromino);
+        registry->emplace<Matrices2X2>(tetromino, matrices);
+
+        setBlockPositions();        
+    }
+    
+    void TetrisScene::createTetrominoS()
+    {
+        auto matrices = Matrices3X3
+        {
+            niketica::tetris::TETROMINO_S_1,
+            niketica::tetris::TETROMINO_S_2,
+            niketica::tetris::TETROMINO_S_3,
+            niketica::tetris::TETROMINO_S_4
+        };
+        
+        auto tetromino = registry->create();
+        registry->emplace<Tetromino>(tetromino);
+        registry->emplace<niketica::component::Color>(tetromino, niketica::tetris::COLOR_S);
+        registry->emplace<BlockPositions>(tetromino);
+        registry->emplace<Matrices3X3>(tetromino, matrices);
+
+        setBlockPositions();
+    }
+    
+    void TetrisScene::createTetrominoT()
+    {
+        auto matrices = Matrices3X3
+        {
+            niketica::tetris::TETROMINO_T_1,
+            niketica::tetris::TETROMINO_T_2,
+            niketica::tetris::TETROMINO_T_3,
+            niketica::tetris::TETROMINO_T_4
+        };
+        
+        auto tetromino = registry->create();
+        registry->emplace<Tetromino>(tetromino);
+        registry->emplace<niketica::component::Color>(tetromino, niketica::tetris::COLOR_T);
+        registry->emplace<BlockPositions>(tetromino);
+        registry->emplace<Matrices3X3>(tetromino, matrices);
+
+        setBlockPositions();
+    }
+
+    void TetrisScene::createTetrominoZ()
+    {
+        auto matrices = Matrices3X3
+        {
+            niketica::tetris::TETROMINO_Z_1,
+            niketica::tetris::TETROMINO_Z_2,
+            niketica::tetris::TETROMINO_Z_3,
+            niketica::tetris::TETROMINO_Z_4
+        };
+        
+        auto tetromino = registry->create();
+        registry->emplace<Tetromino>(tetromino);
+        registry->emplace<niketica::component::Color>(tetromino, niketica::tetris::COLOR_Z);
+        registry->emplace<BlockPositions>(tetromino);
+        registry->emplace<Matrices3X3>(tetromino, matrices);
+
+        setBlockPositions();
     }
 
 }

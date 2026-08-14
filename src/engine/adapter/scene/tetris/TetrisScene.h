@@ -12,14 +12,7 @@
 #include "engine/core/scene/IScene.h"
 #include "engine/core/systems/ISystemContext.h"
 #include "engine/adapter/systems/SystemContext.h"
-#include "engine/adapter/scene/tetris/tetronimo/ITetromino.h"
-#include "engine/adapter/scene/tetris/tetronimo/TetrominoI.h"
-#include "engine/adapter/scene/tetris/tetronimo/TetrominoJ.h"
-#include "engine/adapter/scene/tetris/tetronimo/TetrominoL.h"
-#include "engine/adapter/scene/tetris/tetronimo/TetrominoO.h"
-#include "engine/adapter/scene/tetris/tetronimo/TetrominoS.h"
-#include "engine/adapter/scene/tetris/tetronimo/TetrominoT.h"
-#include "engine/adapter/scene/tetris/tetronimo/TetrominoZ.h"
+#include "engine/adapter/scene/tetris/tetronimo/Tetrominoes.h"
 
 namespace niketica::scene
 {
@@ -40,6 +33,18 @@ namespace niketica::scene
     
     private:
 
+        using MATRIX_2X2 = const char[2][2];
+        using MATRIX_3X3 = const char[3][3];
+        using MATRIX_4X4 = const char[4][4];
+
+        enum class Rotation
+        {
+            _1,
+            _2,
+            _3,
+            _4
+        };
+
         enum class Direction
         {
             UNDEFINED,
@@ -47,6 +52,33 @@ namespace niketica::scene
             DOWN,
             LEFT,
             RIGHT
+        };
+
+        struct Tetromino
+        {
+            Rotation rotation = Rotation::_1;
+        };
+        struct BlockPositions
+        {
+            std::vector<glm::ivec2> blockPositions;
+        };
+        struct Matrices2X2
+        {
+            MATRIX_2X2& matrix; // The O Tetromino does not rotate so only 1 matrix is sufficient.
+        };
+        struct Matrices3X3
+        {
+            MATRIX_3X3& matrix1;
+            MATRIX_3X3& matrix2;
+            MATRIX_3X3& matrix3;
+            MATRIX_3X3& matrix4;
+        };
+        struct Matrices4X4
+        {
+            MATRIX_4X4& matrix1;
+            MATRIX_4X4& matrix2;
+            MATRIX_4X4& matrix3;
+            MATRIX_4X4& matrix4;
         };
 
         entt::registry* registry;
@@ -65,14 +97,26 @@ namespace niketica::scene
 
         bool gameActive = false;
 
-        std::unique_ptr<tetris::ITetromino> currentTetromino;
-
         void init();
         entt::entity createRectangleWithBorder(const glm::vec3& position, const glm::vec2& size, const glm::vec4& fillColor, const glm::vec4& borderColor, float borderThickness, float fill);
         entt::entity createRectangleBorderless(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color);
         entt::entity getEntityAtGridPosition(int x, int y);
 
         void clearGrid();
+
+        void setBlockPositions();
+        MATRIX_2X2& getMatrix2x2(entt::entity entity);
+        MATRIX_3X3& getMatrix3x3(entt::entity entity);
+        MATRIX_4X4& getMatrix4x4(entt::entity entity);
+        void rotateTetromino();
+
+        void createTetrominoI();
+        void createTetrominoJ();
+        void createTetrominoL();
+        void createTetrominoO();
+        void createTetrominoS();
+        void createTetrominoT();
+        void createTetrominoZ();
 
     };
 }
