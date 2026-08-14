@@ -639,11 +639,15 @@ namespace niketica::scene
 
         for (const auto& blockPosition : blockPositions)
         {
+            int x = gridPosition.x + blockPosition.x;
             int y = gridPosition.y + blockPosition.y;
             if (y < 0)
             {
                 return true;
             }
+
+            auto grindBlockEntity = getEntityAtGridPosition(x, y);
+            if (registry->any_of<SolidBlock>(grindBlockEntity)) return true;
         }
         return false;
     }
