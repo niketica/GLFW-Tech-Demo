@@ -16,14 +16,6 @@
 namespace niketica::scene
 {
 
-    enum class Direction
-    {
-        UP,
-        DOWN,
-        LEFT,
-        RIGHT
-    };
-
     class SnakeScene : public IScene
     {
     public:
@@ -39,6 +31,15 @@ namespace niketica::scene
         void reset() override;
     
     private:
+
+        enum class Direction
+        {
+            UP,
+            DOWN,
+            LEFT,
+            RIGHT
+        };
+        
         entt::registry* registry;
         std::unique_ptr<niketica::systems::ISystemContext> systemContext;
         niketica::engine::EngineServices* engineServices;

@@ -16,15 +16,6 @@
 namespace niketica::scene
 {
 
-    enum class TetrisDirection
-    {
-        UNDEFINED,
-        UP,
-        DOWN,
-        LEFT,
-        RIGHT
-    };
-
     class TetrisScene : public IScene
     {
     public:
@@ -40,6 +31,16 @@ namespace niketica::scene
         void reset() override;
     
     private:
+
+        enum class Direction
+        {
+            UNDEFINED,
+            UP,
+            DOWN,
+            LEFT,
+            RIGHT
+        };
+
         entt::registry* registry;
         std::unique_ptr<niketica::systems::ISystemContext> systemContext;
         niketica::engine::EngineServices* engineServices;
@@ -49,7 +50,7 @@ namespace niketica::scene
         float blockSize = 54.0f;
         std::vector<entt::entity> gridEntities;
 
-        TetrisDirection currentDirection = TetrisDirection::RIGHT;
+        Direction currentDirection = Direction::RIGHT;
 
         float currentTimer = 0.0f;
         float cooldownPeriod = 0.2f;

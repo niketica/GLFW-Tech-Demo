@@ -66,19 +66,19 @@ namespace niketica::scene
         }
         if (input.actions[niketica::component::Action::W].pressed)
         {
-            currentDirection = TetrisDirection::UP;
+            currentDirection = Direction::UP;
         }
         if (input.actions[niketica::component::Action::A].pressed)
         {
-            currentDirection = TetrisDirection::LEFT;
+            currentDirection = Direction::LEFT;
         }
         if (input.actions[niketica::component::Action::S].pressed)
         {
-            currentDirection = TetrisDirection::DOWN;
+            currentDirection = Direction::DOWN;
         }
         if (input.actions[niketica::component::Action::D].pressed)
         {
-            currentDirection = TetrisDirection::RIGHT;
+            currentDirection = Direction::RIGHT;
         }
 
     }
