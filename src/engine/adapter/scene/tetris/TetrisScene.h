@@ -12,7 +12,8 @@
 #include "engine/core/scene/IScene.h"
 #include "engine/core/systems/ISystemContext.h"
 #include "engine/adapter/systems/SystemContext.h"
-#include "engine/adapter/scene/tetris/Tetrominoes.h"
+#include "engine/adapter/scene/tetris/ITetromino.h"
+#include "engine/adapter/scene/tetris/TetrominoI.h"
 
 namespace niketica::scene
 {

@@ -66,10 +66,6 @@ namespace niketica::scene
             auto sceneSwitch = niketica::component::SceneSwitchInstruction{ niketica::component::SceneType::MAIN_MENU };
             registry->emplace<niketica::component::SceneSwitchInstruction>(registry->create(), sceneSwitch);
         }
-        if (input.actions[niketica::component::Action::W].pressed)
-        {
-            currentDirection = Direction::UP;
-        }
         if (input.actions[niketica::component::Action::A].pressed)
         {
             currentDirection = Direction::LEFT;
