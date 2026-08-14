@@ -49,17 +49,11 @@ namespace niketica::scene
         float blockSize = 54.0f;
         std::vector<entt::entity> gridEntities;
 
-        glm::ivec2 snakeHeadPosition{ 5, 5 };
-        std::vector<glm::ivec2> snakeBodyPositions;
         TetrisDirection currentDirection = TetrisDirection::RIGHT;
-
-        bool fruitActive = false;
-        glm::ivec2 fruitPosition{ 0, 0 };
 
         float currentTimer = 0.0f;
         float cooldownPeriod = 0.2f;
 
-        bool snakeHitWall = false;
         bool gameActive = false;
 
         void init();
@@ -68,15 +62,6 @@ namespace niketica::scene
         entt::entity getEntityAtGridPosition(int x, int y);
 
         void clearGrid();
-        void colorSnake();
-        void colorFruit();
-        void moveSnake(float dt);
-        void moveSnakeHead();
-        void moveSnakeBody();
-        void createFruit();
-        void checkSnakeEatsFruit();
-        void checkLoseConditions();
-        bool snakeHitBody() const;
 
     };
 }
