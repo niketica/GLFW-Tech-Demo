@@ -85,6 +85,10 @@ namespace niketica::scene
         {
             glm::ivec2 position;
         };
+        struct Block
+        {
+            bool solid;
+        };
 
         entt::registry* registry;
         std::unique_ptr<niketica::systems::ISystemContext> systemContext;
@@ -98,7 +102,7 @@ namespace niketica::scene
         Direction currentDirection = Direction::RIGHT;
 
         float currentTimer = 0.0f;
-        float cooldownPeriod = 0.2f;
+        float cooldownPeriod = 0.6f;
 
         bool gameActive = false;
 
@@ -124,12 +128,15 @@ namespace niketica::scene
         void createTetrominoT();
         void createTetrominoZ();
 
-        void moveTetromino();
+        void moveTetrominoHorizontal();
+        void moveTetrominoDown(float dt);
+
         void colorTetrominoOnGrid();
         bool canMoveLeft();
         bool canMoveRight();
         bool shouldPushLeft();
         bool shouldPushRight();
+
 
     };
 }

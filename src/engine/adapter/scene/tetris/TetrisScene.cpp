@@ -82,7 +82,7 @@ namespace niketica::scene
         {
             tetromino.direction = Direction::DOWN;
         }
-        if (input.actions[niketica::component::Action::E].pressed)
+        if (input.actions[niketica::component::Action::E].pressed || input.actions[niketica::component::Action::R].pressed)
         {
             rotateTetromino();
         }
@@ -98,7 +98,8 @@ namespace niketica::scene
             clearGrid();
         }
 
-        moveTetromino();
+        moveTetrominoDown(dt);
+        moveTetrominoHorizontal();
         colorTetrominoOnGrid();
     }
     
@@ -430,7 +431,7 @@ namespace niketica::scene
         auto entity = registry->create();
         registry->emplace<Tetromino>(entity);
         registry->emplace<BlockPositions>(entity);
-        registry->emplace<GridPosition>(entity);
+        registry->emplace<GridPosition>(entity, GridPosition{{4,20}});
         return entity;
     }
 
@@ -442,14 +443,18 @@ namespace niketica::scene
         const auto& gridPosition = viewTetromino.get<GridPosition>(entity).position;
         for (const auto& blockPosition : blockPositions)
         {
-            auto gridEntity = getEntityAtGridPosition(gridPosition.x + blockPosition.x, gridPosition.y + blockPosition.y);
+            int x = gridPosition.x + blockPosition.x;
+            int y = gridPosition.y + blockPosition.y;
+            if (x < 0 || x >= gridWidth || y < 0 || y >= gridHeight) continue;
+
+            auto gridEntity = getEntityAtGridPosition(x, y);
             if (!registry->any_of<niketica::component::FillColor>(gridEntity)) continue; // Skip if the entity doesn't have a FillColor component
             auto& fillColor = registry->get<niketica::component::FillColor>(gridEntity);
             fillColor.color = { 0.8f, 0.1f, 0.1f, 1.0f };
         }
     }
     
-    void TetrisScene::moveTetromino()
+    void TetrisScene::moveTetrominoHorizontal()
     {
         auto viewTetromino = registry->view<Tetromino, GridPosition>();
         const auto& tetromino = viewTetromino.get<Tetromino>(viewTetromino.front());
@@ -547,6 +552,20 @@ namespace niketica::scene
         }
 
         return false;
+    }
+
+    void TetrisScene::moveTetrominoDown(float dt)
+    {
+        currentTimer += dt;
+        if (currentTimer < cooldownPeriod)
+        {
+            return;
+        }
+        currentTimer = 0;
+
+        auto viewTetromino = registry->view<Tetromino, GridPosition, BlockPositions>();
+        auto& gridPosition = viewTetromino.get<GridPosition>(viewTetromino.front()).position;
+        gridPosition.y--;
     }
 
 }
