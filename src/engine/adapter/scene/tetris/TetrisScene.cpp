@@ -50,6 +50,8 @@ namespace niketica::scene
                 gridEntities.push_back(entity);
             }
         }
+
+        currentTetromino = std::make_unique<niketica::tetris::Tetromino_I>();
     }
 
     void TetrisScene::input()
@@ -80,6 +82,10 @@ namespace niketica::scene
         {
             currentDirection = Direction::RIGHT;
         }
+        if (input.actions[niketica::component::Action::E].pressed)
+        {
+            currentTetromino->rotate();
+        }
 
     }
 
@@ -90,6 +96,15 @@ namespace niketica::scene
         if (gameActive)
         {
             clearGrid();
+        }
+
+        const auto& blockPositions = currentTetromino->getBlockPositions();
+        for (const auto& blockPosition : blockPositions)
+        {
+            auto gridEntity = getEntityAtGridPosition(blockPosition.x, blockPosition.y);
+            if (!registry->any_of<niketica::component::FillColor>(gridEntity)) continue; // Skip if the entity doesn't have a FillColor component
+            auto& fillColor = registry->get<niketica::component::FillColor>(gridEntity);
+            fillColor.color = { 0.8f, 0.1f, 0.1f, 1.0f };
         }
     }
     

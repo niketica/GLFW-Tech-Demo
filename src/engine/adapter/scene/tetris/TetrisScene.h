@@ -58,6 +58,8 @@ namespace niketica::scene
 
         bool gameActive = false;
 
+        std::unique_ptr<tetris::ITetromino> currentTetromino;
+
         void init();
         entt::entity createRectangleWithBorder(const glm::vec3& position, const glm::vec2& size, const glm::vec4& fillColor, const glm::vec4& borderColor, float borderThickness, float fill);
         entt::entity createRectangleBorderless(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color);
