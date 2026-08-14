@@ -63,5 +63,14 @@ namespace niketica::scene
 
         void clearGrid();
 
+        // TETROMINOS
+        const char block_line_1[4][4] =
+        {
+            { ' ', ' ', ' ', ' ' },
+            { 'X', 'X', 'X', 'X' },
+            { ' ', ' ', ' ', ' ' },
+            { ' ', ' ', ' ', ' ' },
+        };
+
     };
 }

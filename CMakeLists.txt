@@ -130,9 +130,9 @@ add_library(engine
     src/engine/adapter/systems/userinterface/UINavigationSystem.cpp
     src/engine/adapter/systems/SystemContext.cpp
     src/engine/adapter/scene/SceneContext.cpp
-    src/engine/adapter/scene/MainMenuScene.cpp
-    src/engine/adapter/scene/SnakeScene.cpp
-    src/engine/adapter/scene/TetrisScene.cpp
+    src/engine/adapter/scene/mainmenu/MainMenuScene.cpp
+    src/engine/adapter/scene/snake/SnakeScene.cpp
+    src/engine/adapter/scene/tetris/TetrisScene.cpp
 )
 
 target_include_directories(engine PUBLIC

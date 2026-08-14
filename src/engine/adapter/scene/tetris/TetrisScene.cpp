@@ -1,4 +1,4 @@
-#include "engine/adapter/scene/TetrisScene.h"
+#include "engine/adapter/scene/tetris/TetrisScene.h"
 
 namespace niketica::scene
 {

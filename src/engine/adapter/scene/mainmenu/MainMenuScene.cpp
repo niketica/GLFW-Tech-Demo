@@ -1,4 +1,4 @@
-#include "engine/adapter/scene/MainMenuScene.h"
+#include "engine/adapter/scene/mainmenu/MainMenuScene.h"
 
 namespace niketica::scene
 {
