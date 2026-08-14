@@ -12,6 +12,7 @@
 #include "engine/core/scene/IScene.h"
 #include "engine/core/systems/ISystemContext.h"
 #include "engine/adapter/systems/SystemContext.h"
+#include "engine/adapter/scene/tetris/Tetrominoes.h"
 
 namespace niketica::scene
 {
@@ -63,15 +64,6 @@ namespace niketica::scene
         entt::entity getEntityAtGridPosition(int x, int y);
 
         void clearGrid();
-
-        // TETROMINOS
-        const char block_line_1[4][4] =
-        {
-            { ' ', ' ', ' ', ' ' },
-            { 'X', 'X', 'X', 'X' },
-            { ' ', ' ', ' ', ' ' },
-            { ' ', ' ', ' ', ' ' },
-        };
 
     };
 }
