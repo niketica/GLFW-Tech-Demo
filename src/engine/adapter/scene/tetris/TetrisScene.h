@@ -132,6 +132,8 @@ namespace niketica::scene
 
         void moveTetrominoHorizontal();
         void moveTetrominoDown(float dt);
+        bool moveTetrominoDownAuto(float dt);
+        bool moveTetrominoDownManual();
 
         void colorTetrominoOnGrid();
         bool canMoveLeft();

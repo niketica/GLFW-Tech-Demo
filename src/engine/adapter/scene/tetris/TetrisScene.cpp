@@ -556,18 +556,40 @@ namespace niketica::scene
 
     void TetrisScene::moveTetrominoDown(float dt)
     {
+        bool autoMove = moveTetrominoDownAuto(dt);
+        bool manualMove = moveTetrominoDownManual();
+
+        if (autoMove || manualMove)
+        {
+            procesVerticalMovement();
+        }
+    }
+
+    bool TetrisScene::moveTetrominoDownAuto(float dt)
+    {
         currentTimer += dt;
         if (currentTimer < cooldownPeriod)
         {
-            return;
+            return false;
         }
         currentTimer = 0;
 
         auto viewTetromino = registry->view<Tetromino, GridPosition, BlockPositions>();
         auto& gridPosition = viewTetromino.get<GridPosition>(viewTetromino.front()).position;
         gridPosition.y--;
+        return true;
+    }
 
-        procesVerticalMovement();
+    bool TetrisScene::moveTetrominoDownManual()
+    {
+        auto viewTetromino = registry->view<Tetromino, GridPosition, BlockPositions>();
+        auto& tetromino = viewTetromino.get<Tetromino>(viewTetromino.front());
+
+        if (tetromino.direction != Direction::DOWN) return false;
+
+        auto& gridPosition = viewTetromino.get<GridPosition>(viewTetromino.front()).position;
+        gridPosition.y--;
+        return true;
     }
     
     void TetrisScene::createRandomTetromino()
