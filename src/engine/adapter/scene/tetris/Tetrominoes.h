@@ -6,10 +6,6 @@
 namespace niketica::tetris
 {
 
-    using MATRIX_2X2 = char[2][2];
-    using MATRIX_3X3 = char[3][3];
-    using MATRIX_4_4 = char[4][4];
-
     // I-Tetromino
     inline const glm::vec4 COLOR_I = { 1.0f, 0.0f, 0.0f, 1.0f };
     inline const char TETROMINO_I_1[4][4] =

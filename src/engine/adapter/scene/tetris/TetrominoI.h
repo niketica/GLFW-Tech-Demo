@@ -7,12 +7,26 @@ namespace niketica::tetris
 
     struct Tetromino_I : public ITetromino
     {
-        const glm::vec4& getColor() const override
+    public:
+        Tetromino_I()
         {
-            return COLOR_I;
+            color = COLOR_I;
+            setBlockPositions();
+        }
+    
+    private:
+        const MATRIX_2X2& getMatrix2x2() const override
+        {
+            throw std::invalid_argument("Tetromino::getMatrix2x2 - Not a valid matrix dimension.");
+
         }
 
-        const MATRIX_4_4& getMatrix() const
+        const MATRIX_3X3& getMatrix3x3() const override
+        {
+            throw std::invalid_argument("Tetromino::getMatrix3x3 - Not a valid matrix dimension.");
+        }
+
+        const MATRIX_4X4& getMatrix4x4() const override
         {
             switch (rotation)
             {
@@ -38,27 +52,14 @@ namespace niketica::tetris
             }
                 break;
             }
-            throw std::invalid_argument("Tetromino::getMatrix - No valid rotation.");
+            throw std::invalid_argument("Tetromino::getMatrix4x4 - No valid rotation.");
         }
 
-        std::vector<glm::ivec2> getBlockPositions() override
+        void setBlockPositions() override
         {
-            const auto& matrix = getMatrix();
-
-            std::vector<glm::ivec2> blockPositions;
-            for (int y=0; y<4; y++)
-            {
-                for (int x=0; x<4; x++)
-                {
-                    if (matrix[y][x] == 'X')
-                    {
-                        blockPositions.emplace_back(glm::ivec2{x,y});
-                    }
-                }
-            }
-
-            return blockPositions;
+            setBlockPositions4x4();
         }
+
     };
 
 }
