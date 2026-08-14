@@ -128,6 +128,8 @@ namespace niketica::scene
         void colorTetrominoOnGrid();
         bool canMoveLeft();
         bool canMoveRight();
+        bool shouldPushLeft();
+        bool shouldPushRight();
 
     };
 }

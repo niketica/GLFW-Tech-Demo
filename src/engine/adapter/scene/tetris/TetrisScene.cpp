@@ -276,8 +276,9 @@ namespace niketica::scene
 
     void TetrisScene::rotateTetromino()
     {
-        auto viewTetromino = registry->view<Tetromino>();
+        auto viewTetromino = registry->view<Tetromino, GridPosition>();
         auto& tetromino = viewTetromino.get<Tetromino>(viewTetromino.front());
+        auto& gridPosition = viewTetromino.get<GridPosition>(viewTetromino.front()).position;
 
         switch (tetromino.rotation)
         {
@@ -296,6 +297,16 @@ namespace niketica::scene
         }
 
         setBlockPositions();
+
+        while (shouldPushLeft())
+        {
+            gridPosition.x--;
+        }
+
+        while (shouldPushRight())
+        {
+            gridPosition.x++;
+        }
     }
     
     void TetrisScene::createTetrominoI()
@@ -500,7 +511,42 @@ namespace niketica::scene
         }
 
         return true;
+    }
 
+    bool TetrisScene::shouldPushLeft()
+    {
+        auto viewTetromino = registry->view<Tetromino, GridPosition, BlockPositions>();
+        const auto& gridPosition = viewTetromino.get<GridPosition>(viewTetromino.front()).position;
+        const auto& blockPositions = viewTetromino.get<BlockPositions>(viewTetromino.front()).blockPositions;
+
+        for (const auto& blockPosition : blockPositions)
+        {
+            int x = gridPosition.x + blockPosition.x;
+            if (x >= gridWidth)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    bool TetrisScene::shouldPushRight()
+    {
+        auto viewTetromino = registry->view<Tetromino, GridPosition, BlockPositions>();
+        const auto& gridPosition = viewTetromino.get<GridPosition>(viewTetromino.front()).position;
+        const auto& blockPositions = viewTetromino.get<BlockPositions>(viewTetromino.front()).blockPositions;
+
+        for (const auto& blockPosition : blockPositions)
+        {
+            int x = gridPosition.x + blockPosition.x;
+            if (x < 0)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
 }
