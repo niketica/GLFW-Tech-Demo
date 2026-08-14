@@ -51,7 +51,7 @@ namespace niketica::scene
             }
         }
 
-        createTetrominoL();
+        createRandomTetromino();
     }
 
     void TetrisScene::input()
@@ -566,6 +566,78 @@ namespace niketica::scene
         auto viewTetromino = registry->view<Tetromino, GridPosition, BlockPositions>();
         auto& gridPosition = viewTetromino.get<GridPosition>(viewTetromino.front()).position;
         gridPosition.y--;
+
+        procesVerticalMovement();
+    }
+    
+    void TetrisScene::createRandomTetromino()
+    {
+        int index = rand() % 7;
+        switch (index)
+        {
+        case 0:
+            createTetrominoI();
+            break;
+        case 1:
+            createTetrominoJ();
+            break;
+        case 2:
+            createTetrominoL();
+            break;
+        case 3:
+            createTetrominoO();
+            break;
+        case 4:
+            createTetrominoS();
+            break;
+        case 5:
+            createTetrominoT();
+            break;
+        case 6:
+            createTetrominoZ();
+            break;
+        }
+    }
+
+    void TetrisScene::destroyTetromino()
+    {
+        auto viewTetromino = registry->view<Tetromino>();
+        for (auto entity : viewTetromino)
+        {
+            registry->destroy(entity);
+        }
+    }
+
+    bool TetrisScene::isVerticalHit()
+    {
+        auto viewTetromino = registry->view<Tetromino, GridPosition, BlockPositions>();
+        const auto& gridPosition = viewTetromino.get<GridPosition>(viewTetromino.front()).position;
+        const auto& blockPositions = viewTetromino.get<BlockPositions>(viewTetromino.front()).blockPositions;
+
+        for (const auto& blockPosition : blockPositions)
+        {
+            int y = gridPosition.y + blockPosition.y;
+            if (y < 0)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    void TetrisScene::procesVerticalMovement()
+    {
+        if (!isVerticalHit()) return;
+
+        auto viewTetromino = registry->view<Tetromino, GridPosition, BlockPositions>();
+        auto& gridPosition = viewTetromino.get<GridPosition>(viewTetromino.front()).position;
+        const auto& blockPositions = viewTetromino.get<BlockPositions>(viewTetromino.front()).blockPositions;
+
+        gridPosition.y--;
+
+        // TODO move tetromino blocks to grid blocks.
+        destroyTetromino();
+        createRandomTetromino();
     }
 
 }

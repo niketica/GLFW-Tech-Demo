@@ -119,6 +119,8 @@ namespace niketica::scene
         MATRIX_4X4& getMatrix4x4(entt::entity entity);
         void rotateTetromino();
 
+        void createRandomTetromino();
+        void destroyTetromino();
         entt::entity createTetrominoBase();
         void createTetrominoI();
         void createTetrominoJ();
@@ -137,6 +139,8 @@ namespace niketica::scene
         bool shouldPushLeft();
         bool shouldPushRight();
 
+        void procesVerticalMovement();
+        bool isVerticalHit();
 
     };
 }
