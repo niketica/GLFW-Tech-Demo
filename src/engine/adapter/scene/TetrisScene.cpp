@@ -22,11 +22,9 @@ namespace niketica::scene
         snakeHeadPosition = { 5, 5 };
         fruitActive = false;
         gameActive = true;
-
-        float size = 64.0f;
         
         float windowWidth = 1920; // TODO Should be retrieved and updated dynamically
-        float totalGridWidth = size * gridWidth;
+        float totalGridWidth = blockSize * gridWidth;
         float containerX = (windowWidth * 0.5f) - (totalGridWidth * 0.5f);
         auto containerEntity = registry->create();
         niketica::component::Transform containerTransform;
@@ -39,18 +37,18 @@ namespace niketica::scene
             {
                 auto entity = createRectangleWithBorder
                 (
-                    { x * size, y * size, 0.0f },
-                    { size, size },
+                    { x * blockSize, y * blockSize, 0.0f },
+                    { blockSize, blockSize },
                     { 0.1f, 0.1f, 0.1f, 1.0f },
                     { 1.0f, 1.0f, 1.0f, 1.0f },
                     1.0f,
                     1.0f
                 );
                 niketica::component::LocalTransform local;
-                local.position.x = x * size;
-                local.position.y = y * size;
-                local.size.x = size;
-                local.size.y = size;
+                local.position.x = x * blockSize;
+                local.position.y = y * blockSize;
+                local.size.x = blockSize;
+                local.size.y = blockSize;
                 registry->emplace<niketica::component::LocalTransform>(entity, niketica::component::LocalTransform{ local });
                 registry->emplace<niketica::component::ParentTransform>(entity, niketica::component::ParentTransform{ containerEntity });
                 gridEntities.push_back(entity);

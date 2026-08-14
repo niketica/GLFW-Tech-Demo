@@ -44,8 +44,9 @@ namespace niketica::scene
         std::unique_ptr<niketica::systems::ISystemContext> systemContext;
         niketica::engine::EngineServices* engineServices;
 
-        const static int gridWidth = 17;
-        const static int gridHeight = 17;
+        const static int gridWidth = 10;
+        const static int gridHeight = 20;
+        float blockSize = 54.0f;
         std::vector<entt::entity> gridEntities;
 
         glm::ivec2 snakeHeadPosition{ 5, 5 };
