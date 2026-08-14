@@ -169,7 +169,7 @@ namespace niketica::scene
     {
         for (auto entity : gridEntities)
         {
-            if (!registry->any_of<niketica::component::FillColor>(entity)) continue; // Skip if the entity doesn't have a FillColor component
+            if (registry->any_of<SolidBlock>(entity) || !registry->any_of<niketica::component::FillColor>(entity)) continue;
             auto& fillColor = registry->get<niketica::component::FillColor>(entity);
             fillColor.color = { 0.1f, 0.1f, 0.1f, 1.0f };
         }
@@ -448,7 +448,8 @@ namespace niketica::scene
             if (x < 0 || x >= gridWidth || y < 0 || y >= gridHeight) continue;
 
             auto gridEntity = getEntityAtGridPosition(x, y);
-            if (!registry->any_of<niketica::component::FillColor>(gridEntity)) continue; // Skip if the entity doesn't have a FillColor component
+
+            if (registry->any_of<SolidBlock>(gridEntity) || !registry->any_of<niketica::component::FillColor>(gridEntity)) continue;
             auto& fillColor = registry->get<niketica::component::FillColor>(gridEntity);
             fillColor.color = { 0.8f, 0.1f, 0.1f, 1.0f };
         }
@@ -655,11 +656,30 @@ namespace niketica::scene
         auto& gridPosition = viewTetromino.get<GridPosition>(viewTetromino.front()).position;
         const auto& blockPositions = viewTetromino.get<BlockPositions>(viewTetromino.front()).blockPositions;
 
-        gridPosition.y--;
+        gridPosition.y++;
 
-        // TODO move tetromino blocks to grid blocks.
+        moveTetrominoBlocksToGrid();
         destroyTetromino();
         createRandomTetromino();
+    }
+
+    void TetrisScene::moveTetrominoBlocksToGrid()
+    {
+        auto viewTetromino = registry->view<Tetromino, GridPosition, BlockPositions, niketica::component::Color>();
+        const auto& gridPosition = viewTetromino.get<GridPosition>(viewTetromino.front()).position;
+        const auto& blockPositions = viewTetromino.get<BlockPositions>(viewTetromino.front()).blockPositions;
+        const auto& color = viewTetromino.get<niketica::component::Color>(viewTetromino.front()).value;
+
+        for (const auto& blockPosition : blockPositions)
+        {
+            int x = gridPosition.x + blockPosition.x;
+            int y = gridPosition.y + blockPosition.y;
+
+            auto grindBlockEntity = getEntityAtGridPosition(x, y);
+            registry->emplace<SolidBlock>(grindBlockEntity);
+            auto& fillColor = registry->get<niketica::component::FillColor>(grindBlockEntity);
+            fillColor.color = color;
+        }
     }
 
 }

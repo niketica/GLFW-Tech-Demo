@@ -85,10 +85,8 @@ namespace niketica::scene
         {
             glm::ivec2 position;
         };
-        struct Block
-        {
-            bool solid;
-        };
+        
+        struct SolidBlock{};
 
         entt::registry* registry;
         std::unique_ptr<niketica::systems::ISystemContext> systemContext;
@@ -143,6 +141,8 @@ namespace niketica::scene
 
         void procesVerticalMovement();
         bool isVerticalHit();
+
+        void moveTetrominoBlocksToGrid();
 
     };
 }
