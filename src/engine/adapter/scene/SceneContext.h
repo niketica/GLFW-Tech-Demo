@@ -11,6 +11,7 @@
 #include "engine/core/scene/IScene.h"
 #include "engine/adapter/scene/MainMenuScene.h"
 #include "engine/adapter/scene/SnakeScene.h"
+#include "engine/adapter/scene/TetrisScene.h"
 
 namespace niketica::scene
 {

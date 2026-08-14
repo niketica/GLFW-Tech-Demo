@@ -7,7 +7,8 @@ namespace niketica::component
     {
         TEST,
         MAIN_MENU,
-        SNAKE
+        SNAKE,
+        TETRIS
     };
 
     struct SceneSwitchInstruction

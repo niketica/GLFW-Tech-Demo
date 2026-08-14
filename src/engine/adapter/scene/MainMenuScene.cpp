@@ -151,6 +151,13 @@ namespace niketica::scene
                 registry->emplace<niketica::component::SceneSwitchInstruction>(registry->create(), sceneSwitch);
             }
                 break;
+            case ButtonType::DEMOS_TETRIS:
+            {
+                std::cout << "Demos Tetris activated" << std::endl;
+                auto sceneSwitch = niketica::component::SceneSwitchInstruction{ niketica::component::SceneType::TETRIS };
+                registry->emplace<niketica::component::SceneSwitchInstruction>(registry->create(), sceneSwitch);
+            }
+                break;
             }
         }
     }
@@ -349,6 +356,8 @@ namespace niketica::scene
 
         auto buttonSnake = createButton("Snake");
         registry->emplace<Button>(buttonSnake, Button{ ButtonType::DEMOS_SNAKE });
+        auto buttonTetris = createButton("Tetris");
+        registry->emplace<Button>(buttonTetris, Button{ ButtonType::DEMOS_TETRIS });
         auto buttonBack = createButton("Back");
         registry->emplace<Button>(buttonBack, Button{ ButtonType::DEMOS_BACK });
 
@@ -363,6 +372,7 @@ namespace niketica::scene
             .withAlignmentVertical(niketica::component::AlignmentVertical::CENTER)
             .withLayoutType(niketica::component::UILayoutType::VERTICAL)
             .addButton(buttonSnake)
+            .addButton(buttonTetris)
             .addButton(buttonBack)
             .build();
 

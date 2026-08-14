@@ -18,6 +18,7 @@ namespace niketica::scene
     {
         DEMOS,
         DEMOS_SNAKE,
+        DEMOS_TETRIS,
         DEMOS_BACK,
         OPTIONS,
         QUIT,

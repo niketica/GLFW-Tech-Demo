@@ -132,6 +132,7 @@ add_library(engine
     src/engine/adapter/scene/SceneContext.cpp
     src/engine/adapter/scene/MainMenuScene.cpp
     src/engine/adapter/scene/SnakeScene.cpp
+    src/engine/adapter/scene/TetrisScene.cpp
 )
 
 target_include_directories(engine PUBLIC
