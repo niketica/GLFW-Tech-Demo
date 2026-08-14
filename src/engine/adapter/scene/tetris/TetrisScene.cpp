@@ -66,17 +66,21 @@ namespace niketica::scene
             auto sceneSwitch = niketica::component::SceneSwitchInstruction{ niketica::component::SceneType::MAIN_MENU };
             registry->emplace<niketica::component::SceneSwitchInstruction>(registry->create(), sceneSwitch);
         }
+        
+        auto viewTetromino = registry->view<Tetromino>();
+        auto& tetromino = viewTetromino.get<Tetromino>(viewTetromino.front());
+        tetromino.direction = Direction::UNDEFINED;
         if (input.actions[niketica::component::Action::A].pressed)
         {
-            currentDirection = Direction::LEFT;
-        }
-        if (input.actions[niketica::component::Action::S].pressed)
-        {
-            currentDirection = Direction::DOWN;
+            tetromino.direction = Direction::LEFT;
         }
         if (input.actions[niketica::component::Action::D].pressed)
         {
-            currentDirection = Direction::RIGHT;
+            tetromino.direction = Direction::RIGHT;
+        }
+        if (input.actions[niketica::component::Action::S].pressed)
+        {
+            tetromino.direction = Direction::DOWN;
         }
         if (input.actions[niketica::component::Action::E].pressed)
         {
@@ -94,16 +98,26 @@ namespace niketica::scene
             clearGrid();
         }
 
-        auto viewTetromino = registry->view<Tetromino, BlockPositions>();
-        auto entity = viewTetromino.front();
-        const auto& blockPositions = viewTetromino.get<BlockPositions>(entity).blockPositions;
-        for (const auto& blockPosition : blockPositions)
+        auto viewTetromino = registry->view<Tetromino, GridPosition>();
+        const auto& tetromino = viewTetromino.get<Tetromino>(viewTetromino.front());
+
+        switch (tetromino.direction)
         {
-            auto gridEntity = getEntityAtGridPosition(blockPosition.x, blockPosition.y);
-            if (!registry->any_of<niketica::component::FillColor>(gridEntity)) continue; // Skip if the entity doesn't have a FillColor component
-            auto& fillColor = registry->get<niketica::component::FillColor>(gridEntity);
-            fillColor.color = { 0.8f, 0.1f, 0.1f, 1.0f };
+        case Direction::LEFT:
+        {
+            auto& position = viewTetromino.get<GridPosition>(viewTetromino.front()).position;
+            position.x--;
         }
+        break;
+        case Direction::RIGHT:
+        {
+            auto& position = viewTetromino.get<GridPosition>(viewTetromino.front()).position;
+            position.x++;
+        }
+        break;
+        }
+
+        colorTetrominoOnGrid();
     }
     
     void TetrisScene::render()
@@ -423,7 +437,23 @@ namespace niketica::scene
         auto entity = registry->create();
         registry->emplace<Tetromino>(entity);
         registry->emplace<BlockPositions>(entity);
+        registry->emplace<GridPosition>(entity);
         return entity;
+    }
+
+    void TetrisScene::colorTetrominoOnGrid()
+    {
+        auto viewTetromino = registry->view<Tetromino, BlockPositions, GridPosition>();
+        auto entity = viewTetromino.front();
+        const auto& blockPositions = viewTetromino.get<BlockPositions>(entity).blockPositions;
+        const auto& gridPosition = viewTetromino.get<GridPosition>(entity).position;
+        for (const auto& blockPosition : blockPositions)
+        {
+            auto gridEntity = getEntityAtGridPosition(gridPosition.x + blockPosition.x, gridPosition.y + blockPosition.y);
+            if (!registry->any_of<niketica::component::FillColor>(gridEntity)) continue; // Skip if the entity doesn't have a FillColor component
+            auto& fillColor = registry->get<niketica::component::FillColor>(gridEntity);
+            fillColor.color = { 0.8f, 0.1f, 0.1f, 1.0f };
+        }
     }
 
 }

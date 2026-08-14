@@ -57,6 +57,7 @@ namespace niketica::scene
         struct Tetromino
         {
             Rotation rotation = Rotation::_1;
+            Direction direction = Direction::UNDEFINED;
         };
         struct BlockPositions
         {
@@ -79,6 +80,10 @@ namespace niketica::scene
             MATRIX_4X4& matrix2;
             MATRIX_4X4& matrix3;
             MATRIX_4X4& matrix4;
+        };
+        struct GridPosition
+        {
+            glm::ivec2 position;
         };
 
         entt::registry* registry;
@@ -118,6 +123,8 @@ namespace niketica::scene
         void createTetrominoS();
         void createTetrominoT();
         void createTetrominoZ();
+
+        void colorTetrominoOnGrid();
 
     };
 }
