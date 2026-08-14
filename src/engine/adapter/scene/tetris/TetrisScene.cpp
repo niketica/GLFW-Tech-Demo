@@ -493,9 +493,15 @@ namespace niketica::scene
         for (const auto& blockPosition : blockPositions)
         {
             int x = gridPosition.x + blockPosition.x - 1;
+            int y = gridPosition.y + blockPosition.y;
             if (x < 0)
             {
                 return false;
+            }
+            else if (y < gridHeight)
+            {
+                auto gridEntity = getEntityAtGridPosition(x, y);
+                if (registry->any_of<SolidBlock>(gridEntity)) return false;
             }
         }
 
@@ -511,9 +517,15 @@ namespace niketica::scene
         for (const auto& blockPosition : blockPositions)
         {
             int x = gridPosition.x + blockPosition.x + 1;
+            int y = gridPosition.y + blockPosition.y;
             if (x >= gridWidth)
             {
                 return false;
+            }
+            else if (y < gridHeight)
+            {
+                auto gridEntity = getEntityAtGridPosition(x, y);
+                if (registry->any_of<SolidBlock>(gridEntity)) return false;
             }
         }
 
@@ -529,9 +541,15 @@ namespace niketica::scene
         for (const auto& blockPosition : blockPositions)
         {
             int x = gridPosition.x + blockPosition.x;
+            int y = gridPosition.y + blockPosition.y;
             if (x >= gridWidth)
             {
                 return true;
+            }
+            else if (y < gridHeight)
+            {
+                auto gridEntity = getEntityAtGridPosition(x, y);
+                if (registry->any_of<SolidBlock>(gridEntity)) return true;
             }
         }
 
@@ -547,9 +565,15 @@ namespace niketica::scene
         for (const auto& blockPosition : blockPositions)
         {
             int x = gridPosition.x + blockPosition.x;
+            int y = gridPosition.y + blockPosition.y;
             if (x < 0)
             {
                 return true;
+            }
+            else if (y < gridHeight)
+            {
+                auto gridEntity = getEntityAtGridPosition(x, y);
+                if (registry->any_of<SolidBlock>(gridEntity)) return true;
             }
         }
 
