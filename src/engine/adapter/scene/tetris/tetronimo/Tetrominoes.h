@@ -7,7 +7,7 @@ namespace niketica::tetris
 {
 
     // I-Tetromino
-    inline const glm::vec4 COLOR_I = { 1.0f, 0.0f, 0.0f, 1.0f };
+    inline const glm::vec4 COLOR_I = { 0.0f, 1.0f, 1.0f, 1.0f };
     inline const char TETROMINO_I_1[4][4] =
     {
         { ' ', ' ', ' ', ' ' },
@@ -38,7 +38,7 @@ namespace niketica::tetris
     };
 
     // J-Tetromino
-    inline const glm::vec4 COLOR_J = { 1.0f, 0.0f, 0.0f, 1.0f };
+    inline const glm::vec4 COLOR_J = { 0.0f, 0.0f, 1.0f, 1.0f };
     inline const char TETROMINO_J_1[3][3] =
     {
         { 'X', ' ', ' ' },
@@ -65,7 +65,7 @@ namespace niketica::tetris
     };
     
     // L-Tetromino
-    inline const glm::vec4 COLOR_L = { 1.0f, 0.0f, 0.0f, 1.0f };
+    inline const glm::vec4 COLOR_L = { 1.0f, 0.667f, 0.0f, 1.0f };
     inline const char TETROMINO_L_1[3][3] =
     {
         { ' ', ' ', 'X' },
@@ -92,7 +92,7 @@ namespace niketica::tetris
     };
     
     // O-Tetromino
-    inline const glm::vec4 COLOR_O = { 1.0f, 0.0f, 0.0f, 1.0f };
+    inline const glm::vec4 COLOR_O = { 1.0f, 1.0f, 0.0f, 1.0f };
     inline const char TETROMINO_O_1[2][2] =
     {
         { 'X', 'X' },
@@ -100,7 +100,7 @@ namespace niketica::tetris
     };
     
     // S-Tetromino
-    inline const glm::vec4 COLOR_S = { 1.0f, 0.0f, 0.0f, 1.0f };
+    inline const glm::vec4 COLOR_S = { 0.0f, 1.0f, 0.0f, 1.0f };
     inline const char TETROMINO_S_1[3][3] =
     {
         { ' ', 'X', 'X' },
@@ -127,7 +127,7 @@ namespace niketica::tetris
     };
     
     // T-Tetromino
-    inline const glm::vec4 COLOR_T = { 1.0f, 0.0f, 0.0f, 1.0f };
+    inline const glm::vec4 COLOR_T = { 0.6f, 0.0f, 1.0f, 1.0f };
     inline const char TETROMINO_T_1[3][3] =
     {
         { ' ', 'X', ' ' },

@@ -437,10 +437,11 @@ namespace niketica::scene
 
     void TetrisScene::colorTetrominoOnGrid()
     {
-        auto viewTetromino = registry->view<Tetromino, BlockPositions, GridPosition>();
+        auto viewTetromino = registry->view<Tetromino, BlockPositions, GridPosition, niketica::component::Color>();
         auto entity = viewTetromino.front();
         const auto& blockPositions = viewTetromino.get<BlockPositions>(entity).blockPositions;
         const auto& gridPosition = viewTetromino.get<GridPosition>(entity).position;
+        const auto& color = viewTetromino.get<niketica::component::Color>(entity).value;
         for (const auto& blockPosition : blockPositions)
         {
             int x = gridPosition.x + blockPosition.x;
@@ -451,7 +452,7 @@ namespace niketica::scene
 
             if (registry->any_of<SolidBlock>(gridEntity) || !registry->any_of<niketica::component::FillColor>(gridEntity)) continue;
             auto& fillColor = registry->get<niketica::component::FillColor>(gridEntity);
-            fillColor.color = { 0.8f, 0.1f, 0.1f, 1.0f };
+            fillColor.color = color;
         }
     }
     
@@ -645,9 +646,11 @@ namespace niketica::scene
             {
                 return true;
             }
-
-            auto grindBlockEntity = getEntityAtGridPosition(x, y);
-            if (registry->any_of<SolidBlock>(grindBlockEntity)) return true;
+            else if (y < gridHeight)
+            {
+                auto grindBlockEntity = getEntityAtGridPosition(x, y);
+                if (registry->any_of<SolidBlock>(grindBlockEntity)) return true;
+            }
         }
         return false;
     }
