@@ -110,6 +110,7 @@ namespace niketica::scene
         MATRIX_4X4& getMatrix4x4(entt::entity entity);
         void rotateTetromino();
 
+        entt::entity createTetrominoBase();
         void createTetrominoI();
         void createTetrominoJ();
         void createTetrominoL();

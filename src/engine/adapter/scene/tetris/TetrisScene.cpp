@@ -304,6 +304,8 @@ namespace niketica::scene
     
     void TetrisScene::createTetrominoI()
     {
+        auto entity = createTetrominoBase();
+
         auto matrices = Matrices4X4
         {
             niketica::tetris::TETROMINO_I_1,            
@@ -311,18 +313,16 @@ namespace niketica::scene
             niketica::tetris::TETROMINO_I_3,
             niketica::tetris::TETROMINO_I_4
         };
-        
-        auto tetromino = registry->create();
-        registry->emplace<Tetromino>(tetromino);
-        registry->emplace<niketica::component::Color>(tetromino, niketica::tetris::COLOR_I);
-        registry->emplace<BlockPositions>(tetromino);
-        registry->emplace<Matrices4X4>(tetromino, matrices);
+        registry->emplace<niketica::component::Color>(entity, niketica::tetris::COLOR_I);
+        registry->emplace<Matrices4X4>(entity, matrices);
 
         setBlockPositions();
     }
 
     void TetrisScene::createTetrominoJ()
     {
+        auto entity = createTetrominoBase();
+
         auto matrices = Matrices3X3
         {
             niketica::tetris::TETROMINO_J_1,            
@@ -330,18 +330,16 @@ namespace niketica::scene
             niketica::tetris::TETROMINO_J_3,
             niketica::tetris::TETROMINO_J_4
         };
-        
-        auto tetromino = registry->create();
-        registry->emplace<Tetromino>(tetromino);
-        registry->emplace<niketica::component::Color>(tetromino, niketica::tetris::COLOR_J);
-        registry->emplace<BlockPositions>(tetromino);
-        registry->emplace<Matrices3X3>(tetromino, matrices);
+        registry->emplace<niketica::component::Color>(entity, niketica::tetris::COLOR_J);
+        registry->emplace<Matrices3X3>(entity, matrices);
 
         setBlockPositions();
     }
     
     void TetrisScene::createTetrominoL()
     {
+        auto entity = createTetrominoBase();
+
         auto matrices = Matrices3X3
         {
             niketica::tetris::TETROMINO_L_1,            
@@ -349,34 +347,30 @@ namespace niketica::scene
             niketica::tetris::TETROMINO_L_3,
             niketica::tetris::TETROMINO_L_4
         };
-        
-        auto tetromino = registry->create();
-        registry->emplace<Tetromino>(tetromino);
-        registry->emplace<niketica::component::Color>(tetromino, niketica::tetris::COLOR_L);
-        registry->emplace<BlockPositions>(tetromino);
-        registry->emplace<Matrices3X3>(tetromino, matrices);
+        registry->emplace<niketica::component::Color>(entity, niketica::tetris::COLOR_L);
+        registry->emplace<Matrices3X3>(entity, matrices);
 
         setBlockPositions();        
     }
     
     void TetrisScene::createTetrominoO()
     {
+        auto entity = createTetrominoBase();
+
         auto matrices = Matrices2X2
         {
             niketica::tetris::TETROMINO_O_1
         };
-        
-        auto tetromino = registry->create();
-        registry->emplace<Tetromino>(tetromino);
-        registry->emplace<niketica::component::Color>(tetromino, niketica::tetris::COLOR_O);
-        registry->emplace<BlockPositions>(tetromino);
-        registry->emplace<Matrices2X2>(tetromino, matrices);
+        registry->emplace<niketica::component::Color>(entity, niketica::tetris::COLOR_O);
+        registry->emplace<Matrices2X2>(entity, matrices);
 
         setBlockPositions();        
     }
     
     void TetrisScene::createTetrominoS()
     {
+        auto entity = createTetrominoBase();
+
         auto matrices = Matrices3X3
         {
             niketica::tetris::TETROMINO_S_1,
@@ -384,18 +378,16 @@ namespace niketica::scene
             niketica::tetris::TETROMINO_S_3,
             niketica::tetris::TETROMINO_S_4
         };
-        
-        auto tetromino = registry->create();
-        registry->emplace<Tetromino>(tetromino);
-        registry->emplace<niketica::component::Color>(tetromino, niketica::tetris::COLOR_S);
-        registry->emplace<BlockPositions>(tetromino);
-        registry->emplace<Matrices3X3>(tetromino, matrices);
+        registry->emplace<niketica::component::Color>(entity, niketica::tetris::COLOR_S);
+        registry->emplace<Matrices3X3>(entity, matrices);
 
         setBlockPositions();
     }
     
     void TetrisScene::createTetrominoT()
     {
+        auto entity = createTetrominoBase();
+
         auto matrices = Matrices3X3
         {
             niketica::tetris::TETROMINO_T_1,
@@ -403,18 +395,16 @@ namespace niketica::scene
             niketica::tetris::TETROMINO_T_3,
             niketica::tetris::TETROMINO_T_4
         };
-        
-        auto tetromino = registry->create();
-        registry->emplace<Tetromino>(tetromino);
-        registry->emplace<niketica::component::Color>(tetromino, niketica::tetris::COLOR_T);
-        registry->emplace<BlockPositions>(tetromino);
-        registry->emplace<Matrices3X3>(tetromino, matrices);
+        registry->emplace<niketica::component::Color>(entity, niketica::tetris::COLOR_T);
+        registry->emplace<Matrices3X3>(entity, matrices);
 
         setBlockPositions();
     }
 
     void TetrisScene::createTetrominoZ()
     {
+        auto entity = createTetrominoBase();
+
         auto matrices = Matrices3X3
         {
             niketica::tetris::TETROMINO_Z_1,
@@ -422,14 +412,18 @@ namespace niketica::scene
             niketica::tetris::TETROMINO_Z_3,
             niketica::tetris::TETROMINO_Z_4
         };
-        
-        auto tetromino = registry->create();
-        registry->emplace<Tetromino>(tetromino);
-        registry->emplace<niketica::component::Color>(tetromino, niketica::tetris::COLOR_Z);
-        registry->emplace<BlockPositions>(tetromino);
-        registry->emplace<Matrices3X3>(tetromino, matrices);
+        registry->emplace<niketica::component::Color>(entity, niketica::tetris::COLOR_Z);
+        registry->emplace<Matrices3X3>(entity, matrices);
 
         setBlockPositions();
+    }
+    
+    entt::entity TetrisScene::createTetrominoBase()
+    {
+        auto entity = registry->create();
+        registry->emplace<Tetromino>(entity);
+        registry->emplace<BlockPositions>(entity);
+        return entity;
     }
 
 }
