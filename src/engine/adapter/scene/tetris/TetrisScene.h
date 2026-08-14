@@ -12,14 +12,14 @@
 #include "engine/core/scene/IScene.h"
 #include "engine/core/systems/ISystemContext.h"
 #include "engine/adapter/systems/SystemContext.h"
-#include "engine/adapter/scene/tetris/ITetromino.h"
-#include "engine/adapter/scene/tetris/TetrominoI.h"
-#include "engine/adapter/scene/tetris/TetrominoJ.h"
-#include "engine/adapter/scene/tetris/TetrominoL.h"
-#include "engine/adapter/scene/tetris/TetrominoO.h"
-#include "engine/adapter/scene/tetris/TetrominoS.h"
-#include "engine/adapter/scene/tetris/TetrominoT.h"
-#include "engine/adapter/scene/tetris/TetrominoZ.h"
+#include "engine/adapter/scene/tetris/tetronimo/ITetromino.h"
+#include "engine/adapter/scene/tetris/tetronimo/TetrominoI.h"
+#include "engine/adapter/scene/tetris/tetronimo/TetrominoJ.h"
+#include "engine/adapter/scene/tetris/tetronimo/TetrominoL.h"
+#include "engine/adapter/scene/tetris/tetronimo/TetrominoO.h"
+#include "engine/adapter/scene/tetris/tetronimo/TetrominoS.h"
+#include "engine/adapter/scene/tetris/tetronimo/TetrominoT.h"
+#include "engine/adapter/scene/tetris/tetronimo/TetrominoZ.h"
 
 namespace niketica::scene
 {

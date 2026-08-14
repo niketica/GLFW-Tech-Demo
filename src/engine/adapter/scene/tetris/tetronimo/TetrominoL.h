@@ -1,16 +1,16 @@
 #pragma once
 
-#include "engine/adapter/scene/tetris/ITetromino.h"
+#include "engine/adapter/scene/tetris/tetronimo/ITetromino.h"
 
 namespace niketica::tetris
 {
 
-    struct Tetromino_T : public ITetromino
+    struct Tetromino_L : public ITetromino
     {
     public:
-        Tetromino_T()
+        Tetromino_L()
         {
-            color = COLOR_T;
+            color = COLOR_L;
             setBlockPositions();
         }
     
@@ -27,23 +27,23 @@ namespace niketica::tetris
             {
             case Rotation::_1:
             {
-                return TETROMINO_T_1;
+                return TETROMINO_L_1;
             }
                 break;
             case Rotation::_2:
             {
-                return TETROMINO_T_2;                
+                return TETROMINO_L_2;                
             }
                 break;
             case Rotation::_3:
             {
-                return TETROMINO_T_3;
+                return TETROMINO_L_3;
                 
             }
                 break;
             case Rotation::_4:
             {
-                return TETROMINO_T_4;                
+                return TETROMINO_L_4;                
             }
                 break;
             }

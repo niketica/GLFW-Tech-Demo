@@ -3,7 +3,7 @@
 #include <vector>
 #include <glm/glm.hpp>
 
-#include "engine/adapter/scene/tetris/Tetrominoes.h"
+#include "engine/adapter/scene/tetris/tetronimo/Tetrominoes.h"
 
 namespace niketica::tetris
 {

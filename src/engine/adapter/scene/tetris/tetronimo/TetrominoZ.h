@@ -1,6 +1,6 @@
 #pragma once
 
-#include "engine/adapter/scene/tetris/ITetromino.h"
+#include "engine/adapter/scene/tetris/tetronimo/ITetromino.h"
 
 namespace niketica::tetris
 {
