@@ -49,11 +49,18 @@ Navigate to "Configure". Here you should be able to select either "debug" or "re
 Currently there is only a precompiled executable for Windows 11.
 Navigate to the distribution directory and download the zip file containing the executable.
 
-### Manual Compile
+### Manual Compile With Sample Assets
 Rename the sample_data.pak file to data.pak.
 Build a debug or release build.
 A libzlib.dll should be generated.
-Move data.pak and libzlib.dll to the directory where the progam executable file is.
+Move the data.pak and libzlib.dll to the directory where the progam executable file is.
+
+### Manual Compile With Custom Assets
+Place your custom assets in the assets directory.
+Build a debug or release build.
+Move the compressor.exe to the root directory if this project (so that it is in the same directory as the assets directory and the post_build.bat).
+Generate a data.pak file with the compressor.exe with the post_build.bat.
+Move the data.pak and libzlib.dll to the directory where the progam executable file is.
 
 ## Asset compression
 Individual asset files are not read directly from the path.
