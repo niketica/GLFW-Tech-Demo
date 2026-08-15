@@ -16,42 +16,47 @@ namespace niketica::scene
         systemContext = std::make_unique<niketica::systems::SystemContext>(registry, engineServices);
         systemContext->init();
 
-        gridEntities.clear();
-        gameActive = true;
+        niketica::tetris::GameState gameState;
+        gameState.gameActive = true;
+        registry->emplace<niketica::tetris::GameState>(registry->create(), gameState);
         
         float windowWidth = 1920; // TODO Should be retrieved and updated dynamically
-        float totalGridWidth = blockSize * gridWidth;
+        float totalGridWidth = gameState.blockSize * gameState.gridWidth;
         float containerX = (windowWidth * 0.5f) - (totalGridWidth * 0.5f);
         auto containerEntity = registry->create();
         niketica::component::Transform containerTransform;
         containerTransform.position.x = containerX;
         registry->emplace<niketica::component::Transform>(containerEntity, containerTransform);
         
-        for (int x = 0; x < gridWidth; ++x)
+        for (int x = 0; x < gameState.gridWidth; ++x)
         {
-            for (int y = 0; y < gridHeight; ++y)
+            for (int y = 0; y < gameState.gridHeight; ++y)
             {
                 auto entity = createRectangleWithBorder
                 (
-                    { x * blockSize, y * blockSize, 0.0f },
-                    { blockSize, blockSize },
+                    { x * gameState.blockSize, y * gameState.blockSize, 0.0f },
+                    { gameState.blockSize, gameState.blockSize },
                     { 0.1f, 0.1f, 0.1f, 1.0f },
                     { 1.0f, 1.0f, 1.0f, 1.0f },
                     1.0f,
                     1.0f
                 );
                 niketica::component::LocalTransform local;
-                local.position.x = x * blockSize;
-                local.position.y = y * blockSize;
-                local.size.x = blockSize;
-                local.size.y = blockSize;
+                local.position.x = x * gameState.blockSize;
+                local.position.y = y * gameState.blockSize;
+                local.size.x = gameState.blockSize;
+                local.size.y = gameState.blockSize;
                 registry->emplace<niketica::component::LocalTransform>(entity, niketica::component::LocalTransform{ local });
                 registry->emplace<niketica::component::ParentTransform>(entity, niketica::component::ParentTransform{ containerEntity });
-                gridEntities.push_back(entity);
+                registry->emplace<niketica::tetris::GridBlock>(entity);
+                registry->emplace<niketica::tetris::GridPosition>(entity, niketica::tetris::GridPosition{ {x, y} });
             }
         }
 
         createRandomTetromino();
+
+        auto verticalMovementSystem = std::make_unique<niketica::tetris::VerticalMovementSystem>(registry, engineServices);
+        systemContext->addSystem(std::move(verticalMovementSystem));
     }
 
     void TetrisScene::input()
@@ -67,20 +72,20 @@ namespace niketica::scene
             registry->emplace<niketica::component::SceneSwitchInstruction>(registry->create(), sceneSwitch);
         }
         
-        auto viewTetromino = registry->view<Tetromino>();
-        auto& tetromino = viewTetromino.get<Tetromino>(viewTetromino.front());
-        tetromino.direction = Direction::UNDEFINED;
+        auto viewTetromino = registry->view<niketica::tetris::Tetromino>();
+        auto& tetromino = viewTetromino.get<niketica::tetris::Tetromino>(viewTetromino.front());
+        tetromino.direction = niketica::tetris::Direction::UNDEFINED;
         if (input.actions[niketica::component::Action::A].pressed)
         {
-            tetromino.direction = Direction::LEFT;
+            tetromino.direction = niketica::tetris::Direction::LEFT;
         }
         if (input.actions[niketica::component::Action::D].pressed)
         {
-            tetromino.direction = Direction::RIGHT;
+            tetromino.direction = niketica::tetris::Direction::RIGHT;
         }
         if (input.actions[niketica::component::Action::S].pressed)
         {
-            tetromino.direction = Direction::DOWN;
+            tetromino.direction = niketica::tetris::Direction::DOWN;
         }
         if (input.actions[niketica::component::Action::E].pressed || input.actions[niketica::component::Action::R].pressed)
         {
@@ -93,12 +98,21 @@ namespace niketica::scene
     {
         systemContext->update(dt);
 
-        if (gameActive)
+        auto& gameState = getGameState();
+
+        if (gameState.gameActive)
         {
             clearGrid();
         }
 
-        moveTetrominoDown(dt);
+        if (gameState.verticalHitDetected)
+        {
+            gameState.verticalHitDetected = false;
+            moveTetrominoBlocksToGrid();
+            destroyTetromino();
+            createRandomTetromino();
+        }
+
         moveTetrominoHorizontal();
         colorTetrominoOnGrid();
     }
@@ -153,23 +167,12 @@ namespace niketica::scene
         return entity;
     }
 
-    entt::entity TetrisScene::getEntityAtGridPosition(int x, int y)
-    {
-        if (x < 0 || x >= gridWidth || y < 0 || y >= gridHeight)
-        {
-            std::cerr << "ERROR::TetrisScene::getEntityAtGridPosition - Grid position out of bounds: (" << x << ", " << y << ")" << std::endl;
-            return entt::null; // Return null entity if out of bounds
-        }
-
-        int index = x * gridHeight + y;
-        return gridEntities[index];
-    }
-
     void TetrisScene::clearGrid()
     {
-        for (auto entity : gridEntities)
+        auto viewGridBlocks = registry->view<niketica::tetris::GridBlock>();
+        for (auto entity : viewGridBlocks)
         {
-            if (registry->any_of<SolidBlock>(entity) || !registry->any_of<niketica::component::FillColor>(entity)) continue;
+            if (registry->any_of<niketica::tetris::SolidBlock>(entity) || !registry->any_of<niketica::component::FillColor>(entity)) continue;
             auto& fillColor = registry->get<niketica::component::FillColor>(entity);
             fillColor.color = { 0.1f, 0.1f, 0.1f, 1.0f };
         }
@@ -177,12 +180,12 @@ namespace niketica::scene
 
     void TetrisScene::setBlockPositions()
     {
-        auto viewTetromino = registry->view<Tetromino, BlockPositions>();
+        auto viewTetromino = registry->view<niketica::tetris::Tetromino, niketica::tetris::BlockPositions>();
         auto entity = viewTetromino.front();
 
-       auto& blockPositions = viewTetromino.get<BlockPositions>(entity).blockPositions;
+       auto& blockPositions = viewTetromino.get<niketica::tetris::BlockPositions>(entity).blockPositions;
 
-        if (registry->any_of<Matrices2X2>(entity))
+        if (registry->any_of<niketica::tetris::Matrices2X2>(entity))
         {
             auto& matrix = getMatrix2x2(entity);
             blockPositions.clear();
@@ -197,7 +200,7 @@ namespace niketica::scene
                 }
             }
         }
-        else if (registry->any_of<Matrices3X3>(entity))
+        else if (registry->any_of<niketica::tetris::Matrices3X3>(entity))
         {
             auto& matrix = getMatrix3x3(entity);
             blockPositions.clear();
@@ -212,7 +215,7 @@ namespace niketica::scene
                 }
             }
         }
-        else if (registry->any_of<Matrices4X4>(entity))
+        else if (registry->any_of<niketica::tetris::Matrices4X4>(entity))
         {
             auto& matrix = getMatrix4x4(entity);
             blockPositions.clear();
@@ -229,47 +232,47 @@ namespace niketica::scene
         }
     }
 
-    TetrisScene::MATRIX_2X2& TetrisScene::getMatrix2x2(entt::entity entity)
+    niketica::tetris::MATRIX_2X2& TetrisScene::getMatrix2x2(entt::entity entity)
     {
-        auto matrices = registry->get<Matrices2X2>(entity);
+        auto matrices = registry->get<niketica::tetris::Matrices2X2>(entity);
         return matrices.matrix;
     }
 
-    TetrisScene::MATRIX_3X3& TetrisScene::getMatrix3x3(entt::entity entity)
+    niketica::tetris::MATRIX_3X3& TetrisScene::getMatrix3x3(entt::entity entity)
     {
-        auto viewTetromino = registry->view<Tetromino, BlockPositions>();
-        const auto& tetromino = viewTetromino.get<Tetromino>(entity);
-        auto matrices = registry->get<Matrices3X3>(entity);
+        auto viewTetromino = registry->view<niketica::tetris::Tetromino, niketica::tetris::BlockPositions>();
+        const auto& tetromino = viewTetromino.get<niketica::tetris::Tetromino>(entity);
+        auto matrices = registry->get<niketica::tetris::Matrices3X3>(entity);
 
         switch (tetromino.rotation)
         {
-        case Rotation::_1:
+        case niketica::tetris::Rotation::_1:
             return matrices.matrix1;
-        case Rotation::_2:
+        case niketica::tetris::Rotation::_2:
             return matrices.matrix2;
-        case Rotation::_3:
+        case niketica::tetris::Rotation::_3:
             return matrices.matrix3;
-        case Rotation::_4:
+        case niketica::tetris::Rotation::_4:
             return matrices.matrix4;
         }
         throw std::invalid_argument("TetrisScene::getMatrix3x3 - No valid rotation for tetromino.");
     }
 
-    TetrisScene::MATRIX_4X4& TetrisScene::getMatrix4x4(entt::entity entity)
+    niketica::tetris::MATRIX_4X4& TetrisScene::getMatrix4x4(entt::entity entity)
     {
-        auto viewTetromino = registry->view<Tetromino, BlockPositions>();
-        const auto& tetromino = viewTetromino.get<Tetromino>(entity);
-        auto matrices = registry->get<Matrices4X4>(entity);
+        auto viewTetromino = registry->view<niketica::tetris::Tetromino, niketica::tetris::BlockPositions>();
+        const auto& tetromino = viewTetromino.get<niketica::tetris::Tetromino>(entity);
+        auto matrices = registry->get<niketica::tetris::Matrices4X4>(entity);
 
         switch (tetromino.rotation)
         {
-        case Rotation::_1:
+        case niketica::tetris::Rotation::_1:
             return matrices.matrix1;
-        case Rotation::_2:
+        case niketica::tetris::Rotation::_2:
             return matrices.matrix2;
-        case Rotation::_3:
+        case niketica::tetris::Rotation::_3:
             return matrices.matrix3;
-        case Rotation::_4:
+        case niketica::tetris::Rotation::_4:
             return matrices.matrix4;
         }
         throw std::invalid_argument("TetrisScene::getMatrix4x4 - No valid rotation for tetromino.");
@@ -277,23 +280,23 @@ namespace niketica::scene
 
     void TetrisScene::rotateTetromino()
     {
-        auto viewTetromino = registry->view<Tetromino, GridPosition>();
-        auto& tetromino = viewTetromino.get<Tetromino>(viewTetromino.front());
-        auto& gridPosition = viewTetromino.get<GridPosition>(viewTetromino.front()).position;
+        auto viewTetromino = registry->view<niketica::tetris::Tetromino, niketica::tetris::GridPosition>();
+        auto& tetromino = viewTetromino.get<niketica::tetris::Tetromino>(viewTetromino.front());
+        auto& gridPosition = viewTetromino.get<niketica::tetris::GridPosition>(viewTetromino.front()).position;
 
         switch (tetromino.rotation)
         {
-        case Rotation::_1:
-            tetromino.rotation = Rotation::_2;
+        case niketica::tetris::Rotation::_1:
+            tetromino.rotation = niketica::tetris::Rotation::_2;
             break;
-        case Rotation::_2:
-            tetromino.rotation = Rotation::_3;
+        case niketica::tetris::Rotation::_2:
+            tetromino.rotation = niketica::tetris::Rotation::_3;
             break;
-        case Rotation::_3:
-            tetromino.rotation = Rotation::_4;
+        case niketica::tetris::Rotation::_3:
+            tetromino.rotation = niketica::tetris::Rotation::_4;
             break;
-        case Rotation::_4:
-            tetromino.rotation = Rotation::_1;
+        case niketica::tetris::Rotation::_4:
+            tetromino.rotation = niketica::tetris::Rotation::_1;
             break;
         }
 
@@ -314,7 +317,7 @@ namespace niketica::scene
     {
         auto entity = createTetrominoBase();
 
-        auto matrices = Matrices4X4
+        auto matrices = niketica::tetris::Matrices4X4
         {
             niketica::tetris::TETROMINO_I_1,            
             niketica::tetris::TETROMINO_I_2,            
@@ -322,7 +325,7 @@ namespace niketica::scene
             niketica::tetris::TETROMINO_I_4
         };
         registry->emplace<niketica::component::Color>(entity, niketica::tetris::COLOR_I);
-        registry->emplace<Matrices4X4>(entity, matrices);
+        registry->emplace<niketica::tetris::Matrices4X4>(entity, matrices);
 
         setBlockPositions();
     }
@@ -331,7 +334,7 @@ namespace niketica::scene
     {
         auto entity = createTetrominoBase();
 
-        auto matrices = Matrices3X3
+        auto matrices = niketica::tetris::Matrices3X3
         {
             niketica::tetris::TETROMINO_J_1,            
             niketica::tetris::TETROMINO_J_2,            
@@ -339,7 +342,7 @@ namespace niketica::scene
             niketica::tetris::TETROMINO_J_4
         };
         registry->emplace<niketica::component::Color>(entity, niketica::tetris::COLOR_J);
-        registry->emplace<Matrices3X3>(entity, matrices);
+        registry->emplace<niketica::tetris::Matrices3X3>(entity, matrices);
 
         setBlockPositions();
     }
@@ -348,7 +351,7 @@ namespace niketica::scene
     {
         auto entity = createTetrominoBase();
 
-        auto matrices = Matrices3X3
+        auto matrices = niketica::tetris::Matrices3X3
         {
             niketica::tetris::TETROMINO_L_1,            
             niketica::tetris::TETROMINO_L_2,            
@@ -356,7 +359,7 @@ namespace niketica::scene
             niketica::tetris::TETROMINO_L_4
         };
         registry->emplace<niketica::component::Color>(entity, niketica::tetris::COLOR_L);
-        registry->emplace<Matrices3X3>(entity, matrices);
+        registry->emplace<niketica::tetris::Matrices3X3>(entity, matrices);
 
         setBlockPositions();        
     }
@@ -365,12 +368,12 @@ namespace niketica::scene
     {
         auto entity = createTetrominoBase();
 
-        auto matrices = Matrices2X2
+        auto matrices = niketica::tetris::Matrices2X2
         {
             niketica::tetris::TETROMINO_O_1
         };
         registry->emplace<niketica::component::Color>(entity, niketica::tetris::COLOR_O);
-        registry->emplace<Matrices2X2>(entity, matrices);
+        registry->emplace<niketica::tetris::Matrices2X2>(entity, matrices);
 
         setBlockPositions();        
     }
@@ -379,7 +382,7 @@ namespace niketica::scene
     {
         auto entity = createTetrominoBase();
 
-        auto matrices = Matrices3X3
+        auto matrices = niketica::tetris::Matrices3X3
         {
             niketica::tetris::TETROMINO_S_1,
             niketica::tetris::TETROMINO_S_2,
@@ -387,7 +390,7 @@ namespace niketica::scene
             niketica::tetris::TETROMINO_S_4
         };
         registry->emplace<niketica::component::Color>(entity, niketica::tetris::COLOR_S);
-        registry->emplace<Matrices3X3>(entity, matrices);
+        registry->emplace<niketica::tetris::Matrices3X3>(entity, matrices);
 
         setBlockPositions();
     }
@@ -396,7 +399,7 @@ namespace niketica::scene
     {
         auto entity = createTetrominoBase();
 
-        auto matrices = Matrices3X3
+        auto matrices = niketica::tetris::Matrices3X3
         {
             niketica::tetris::TETROMINO_T_1,
             niketica::tetris::TETROMINO_T_2,
@@ -404,7 +407,7 @@ namespace niketica::scene
             niketica::tetris::TETROMINO_T_4
         };
         registry->emplace<niketica::component::Color>(entity, niketica::tetris::COLOR_T);
-        registry->emplace<Matrices3X3>(entity, matrices);
+        registry->emplace<niketica::tetris::Matrices3X3>(entity, matrices);
 
         setBlockPositions();
     }
@@ -413,7 +416,7 @@ namespace niketica::scene
     {
         auto entity = createTetrominoBase();
 
-        auto matrices = Matrices3X3
+        auto matrices = niketica::tetris::Matrices3X3
         {
             niketica::tetris::TETROMINO_Z_1,
             niketica::tetris::TETROMINO_Z_2,
@@ -421,7 +424,7 @@ namespace niketica::scene
             niketica::tetris::TETROMINO_Z_4
         };
         registry->emplace<niketica::component::Color>(entity, niketica::tetris::COLOR_Z);
-        registry->emplace<Matrices3X3>(entity, matrices);
+        registry->emplace<niketica::tetris::Matrices3X3>(entity, matrices);
 
         setBlockPositions();
     }
@@ -429,28 +432,30 @@ namespace niketica::scene
     entt::entity TetrisScene::createTetrominoBase()
     {
         auto entity = registry->create();
-        registry->emplace<Tetromino>(entity);
-        registry->emplace<BlockPositions>(entity);
-        registry->emplace<GridPosition>(entity, GridPosition{{4,20}});
+        registry->emplace<niketica::tetris::Tetromino>(entity);
+        registry->emplace<niketica::tetris::BlockPositions>(entity);
+        registry->emplace<niketica::tetris::GridPosition>(entity, niketica::tetris::GridPosition{{4,20}});
         return entity;
     }
 
     void TetrisScene::colorTetrominoOnGrid()
     {
-        auto viewTetromino = registry->view<Tetromino, BlockPositions, GridPosition, niketica::component::Color>();
+        const auto& gameState = getGameState();
+
+        auto viewTetromino = registry->view<niketica::tetris::Tetromino, niketica::tetris::BlockPositions, niketica::tetris::GridPosition, niketica::component::Color>();
         auto entity = viewTetromino.front();
-        const auto& blockPositions = viewTetromino.get<BlockPositions>(entity).blockPositions;
-        const auto& gridPosition = viewTetromino.get<GridPosition>(entity).position;
+        const auto& blockPositions = viewTetromino.get<niketica::tetris::BlockPositions>(entity).blockPositions;
+        const auto& gridPosition = viewTetromino.get<niketica::tetris::GridPosition>(entity).position;
         const auto& color = viewTetromino.get<niketica::component::Color>(entity).value;
         for (const auto& blockPosition : blockPositions)
         {
             int x = gridPosition.x + blockPosition.x;
             int y = gridPosition.y + blockPosition.y;
-            if (x < 0 || x >= gridWidth || y < 0 || y >= gridHeight) continue;
+            if (x < 0 || x >= gameState.gridWidth || y < 0 || y >= gameState.gridHeight) continue;
 
-            auto gridEntity = getEntityAtGridPosition(x, y);
+            auto gridEntity = getEntityAtGridPositionTEMP(x, y);
 
-            if (registry->any_of<SolidBlock>(gridEntity) || !registry->any_of<niketica::component::FillColor>(gridEntity)) continue;
+            if (registry->any_of<niketica::tetris::SolidBlock>(gridEntity) || !registry->any_of<niketica::component::FillColor>(gridEntity)) continue;
             auto& fillColor = registry->get<niketica::component::FillColor>(gridEntity);
             fillColor.color = color;
         }
@@ -458,25 +463,25 @@ namespace niketica::scene
     
     void TetrisScene::moveTetrominoHorizontal()
     {
-        auto viewTetromino = registry->view<Tetromino, GridPosition>();
-        const auto& tetromino = viewTetromino.get<Tetromino>(viewTetromino.front());
+        auto viewTetromino = registry->view<niketica::tetris::Tetromino, niketica::tetris::GridPosition>();
+        const auto& tetromino = viewTetromino.get<niketica::tetris::Tetromino>(viewTetromino.front());
 
         switch (tetromino.direction)
         {
-        case Direction::LEFT:
+        case niketica::tetris::Direction::LEFT:
         {
             if (canMoveLeft())
             {
-                auto& position = viewTetromino.get<GridPosition>(viewTetromino.front()).position;
+                auto& position = viewTetromino.get<niketica::tetris::GridPosition>(viewTetromino.front()).position;
                 position.x--;
             }
         }
         break;
-        case Direction::RIGHT:
+        case niketica::tetris::Direction::RIGHT:
         {
             if (canMoveRight())
             {
-                auto& position = viewTetromino.get<GridPosition>(viewTetromino.front()).position;
+                auto& position = viewTetromino.get<niketica::tetris::GridPosition>(viewTetromino.front()).position;
                 position.x++;
             }
         }
@@ -486,9 +491,11 @@ namespace niketica::scene
 
     bool TetrisScene::canMoveLeft()
     {
-        auto viewTetromino = registry->view<Tetromino, GridPosition, BlockPositions>();
-        const auto& gridPosition = viewTetromino.get<GridPosition>(viewTetromino.front()).position;
-        const auto& blockPositions = viewTetromino.get<BlockPositions>(viewTetromino.front()).blockPositions;
+        const auto& gameState = getGameState();
+
+        auto viewTetromino = registry->view<niketica::tetris::Tetromino, niketica::tetris::GridPosition, niketica::tetris::BlockPositions>();
+        const auto& gridPosition = viewTetromino.get<niketica::tetris::GridPosition>(viewTetromino.front()).position;
+        const auto& blockPositions = viewTetromino.get<niketica::tetris::BlockPositions>(viewTetromino.front()).blockPositions;
 
         for (const auto& blockPosition : blockPositions)
         {
@@ -498,10 +505,10 @@ namespace niketica::scene
             {
                 return false;
             }
-            else if (y < gridHeight)
+            else if (y < gameState.gridHeight)
             {
-                auto gridEntity = getEntityAtGridPosition(x, y);
-                if (registry->any_of<SolidBlock>(gridEntity)) return false;
+                auto gridEntity = getEntityAtGridPositionTEMP(x, y);
+                if (registry->any_of<niketica::tetris::SolidBlock>(gridEntity)) return false;
             }
         }
 
@@ -510,22 +517,24 @@ namespace niketica::scene
 
     bool TetrisScene::canMoveRight()
     {
-        auto viewTetromino = registry->view<Tetromino, GridPosition, BlockPositions>();
-        const auto& gridPosition = viewTetromino.get<GridPosition>(viewTetromino.front()).position;
-        const auto& blockPositions = viewTetromino.get<BlockPositions>(viewTetromino.front()).blockPositions;
+        const auto& gameState = getGameState();
+
+        auto viewTetromino = registry->view<niketica::tetris::Tetromino, niketica::tetris::GridPosition, niketica::tetris::BlockPositions>();
+        const auto& gridPosition = viewTetromino.get<niketica::tetris::GridPosition>(viewTetromino.front()).position;
+        const auto& blockPositions = viewTetromino.get<niketica::tetris::BlockPositions>(viewTetromino.front()).blockPositions;
 
         for (const auto& blockPosition : blockPositions)
         {
             int x = gridPosition.x + blockPosition.x + 1;
             int y = gridPosition.y + blockPosition.y;
-            if (x >= gridWidth)
+            if (x >= gameState.gridWidth)
             {
                 return false;
             }
-            else if (y < gridHeight)
+            else if (y < gameState.gridHeight)
             {
-                auto gridEntity = getEntityAtGridPosition(x, y);
-                if (registry->any_of<SolidBlock>(gridEntity)) return false;
+                auto gridEntity = getEntityAtGridPositionTEMP(x, y);
+                if (registry->any_of<niketica::tetris::SolidBlock>(gridEntity)) return false;
             }
         }
 
@@ -534,22 +543,24 @@ namespace niketica::scene
 
     bool TetrisScene::shouldPushLeft()
     {
-        auto viewTetromino = registry->view<Tetromino, GridPosition, BlockPositions>();
-        const auto& gridPosition = viewTetromino.get<GridPosition>(viewTetromino.front()).position;
-        const auto& blockPositions = viewTetromino.get<BlockPositions>(viewTetromino.front()).blockPositions;
+        const auto& gameState = getGameState();
+
+        auto viewTetromino = registry->view<niketica::tetris::Tetromino, niketica::tetris::GridPosition, niketica::tetris::BlockPositions>();
+        const auto& gridPosition = viewTetromino.get<niketica::tetris::GridPosition>(viewTetromino.front()).position;
+        const auto& blockPositions = viewTetromino.get<niketica::tetris::BlockPositions>(viewTetromino.front()).blockPositions;
 
         for (const auto& blockPosition : blockPositions)
         {
             int x = gridPosition.x + blockPosition.x;
             int y = gridPosition.y + blockPosition.y;
-            if (x >= gridWidth)
+            if (x >= gameState.gridWidth)
             {
                 return true;
             }
-            else if (y < gridHeight)
+            else if (y < gameState.gridHeight)
             {
-                auto gridEntity = getEntityAtGridPosition(x, y);
-                if (registry->any_of<SolidBlock>(gridEntity)) return true;
+                auto gridEntity = getEntityAtGridPositionTEMP(x, y);
+                if (registry->any_of<niketica::tetris::SolidBlock>(gridEntity)) return true;
             }
         }
 
@@ -558,9 +569,11 @@ namespace niketica::scene
 
     bool TetrisScene::shouldPushRight()
     {
-        auto viewTetromino = registry->view<Tetromino, GridPosition, BlockPositions>();
-        const auto& gridPosition = viewTetromino.get<GridPosition>(viewTetromino.front()).position;
-        const auto& blockPositions = viewTetromino.get<BlockPositions>(viewTetromino.front()).blockPositions;
+        const auto& gameState = getGameState();
+
+        auto viewTetromino = registry->view<niketica::tetris::Tetromino, niketica::tetris::GridPosition, niketica::tetris::BlockPositions>();
+        const auto& gridPosition = viewTetromino.get<niketica::tetris::GridPosition>(viewTetromino.front()).position;
+        const auto& blockPositions = viewTetromino.get<niketica::tetris::BlockPositions>(viewTetromino.front()).blockPositions;
 
         for (const auto& blockPosition : blockPositions)
         {
@@ -570,52 +583,14 @@ namespace niketica::scene
             {
                 return true;
             }
-            else if (y < gridHeight)
+            else if (y < gameState.gridHeight)
             {
-                auto gridEntity = getEntityAtGridPosition(x, y);
-                if (registry->any_of<SolidBlock>(gridEntity)) return true;
+                auto gridEntity = getEntityAtGridPositionTEMP(x, y);
+                if (registry->any_of<niketica::tetris::SolidBlock>(gridEntity)) return true;
             }
         }
 
         return false;
-    }
-
-    void TetrisScene::moveTetrominoDown(float dt)
-    {
-        bool autoMove = moveTetrominoDownAuto(dt);
-        bool manualMove = moveTetrominoDownManual();
-
-        if (autoMove || manualMove)
-        {
-            procesVerticalMovement();
-        }
-    }
-
-    bool TetrisScene::moveTetrominoDownAuto(float dt)
-    {
-        currentTimer += dt;
-        if (currentTimer < cooldownPeriod)
-        {
-            return false;
-        }
-        currentTimer = 0;
-
-        auto viewTetromino = registry->view<Tetromino, GridPosition, BlockPositions>();
-        auto& gridPosition = viewTetromino.get<GridPosition>(viewTetromino.front()).position;
-        gridPosition.y--;
-        return true;
-    }
-
-    bool TetrisScene::moveTetrominoDownManual()
-    {
-        auto viewTetromino = registry->view<Tetromino, GridPosition, BlockPositions>();
-        auto& tetromino = viewTetromino.get<Tetromino>(viewTetromino.front());
-
-        if (tetromino.direction != Direction::DOWN) return false;
-
-        auto& gridPosition = viewTetromino.get<GridPosition>(viewTetromino.front()).position;
-        gridPosition.y--;
-        return true;
     }
     
     void TetrisScene::createRandomTetromino()
@@ -649,56 +624,18 @@ namespace niketica::scene
 
     void TetrisScene::destroyTetromino()
     {
-        auto viewTetromino = registry->view<Tetromino>();
+        auto viewTetromino = registry->view<niketica::tetris::Tetromino>();
         for (auto entity : viewTetromino)
         {
             registry->destroy(entity);
         }
     }
 
-    bool TetrisScene::isVerticalHit()
-    {
-        auto viewTetromino = registry->view<Tetromino, GridPosition, BlockPositions>();
-        const auto& gridPosition = viewTetromino.get<GridPosition>(viewTetromino.front()).position;
-        const auto& blockPositions = viewTetromino.get<BlockPositions>(viewTetromino.front()).blockPositions;
-
-        for (const auto& blockPosition : blockPositions)
-        {
-            int x = gridPosition.x + blockPosition.x;
-            int y = gridPosition.y + blockPosition.y;
-            if (y < 0)
-            {
-                return true;
-            }
-            else if (y < gridHeight)
-            {
-                auto grindBlockEntity = getEntityAtGridPosition(x, y);
-                if (registry->any_of<SolidBlock>(grindBlockEntity)) return true;
-            }
-        }
-        return false;
-    }
-
-    void TetrisScene::procesVerticalMovement()
-    {
-        if (!isVerticalHit()) return;
-
-        auto viewTetromino = registry->view<Tetromino, GridPosition, BlockPositions>();
-        auto& gridPosition = viewTetromino.get<GridPosition>(viewTetromino.front()).position;
-        const auto& blockPositions = viewTetromino.get<BlockPositions>(viewTetromino.front()).blockPositions;
-
-        gridPosition.y++;
-
-        moveTetrominoBlocksToGrid();
-        destroyTetromino();
-        createRandomTetromino();
-    }
-
     void TetrisScene::moveTetrominoBlocksToGrid()
     {
-        auto viewTetromino = registry->view<Tetromino, GridPosition, BlockPositions, niketica::component::Color>();
-        const auto& gridPosition = viewTetromino.get<GridPosition>(viewTetromino.front()).position;
-        const auto& blockPositions = viewTetromino.get<BlockPositions>(viewTetromino.front()).blockPositions;
+        auto viewTetromino = registry->view<niketica::tetris::Tetromino, niketica::tetris::GridPosition, niketica::tetris::BlockPositions, niketica::component::Color>();
+        const auto& gridPosition = viewTetromino.get<niketica::tetris::GridPosition>(viewTetromino.front()).position;
+        const auto& blockPositions = viewTetromino.get<niketica::tetris::BlockPositions>(viewTetromino.front()).blockPositions;
         const auto& color = viewTetromino.get<niketica::component::Color>(viewTetromino.front()).value;
 
         for (const auto& blockPosition : blockPositions)
@@ -706,11 +643,34 @@ namespace niketica::scene
             int x = gridPosition.x + blockPosition.x;
             int y = gridPosition.y + blockPosition.y;
 
-            auto grindBlockEntity = getEntityAtGridPosition(x, y);
-            registry->emplace<SolidBlock>(grindBlockEntity);
+            auto grindBlockEntity = getEntityAtGridPositionTEMP(x, y);
+            registry->emplace<niketica::tetris::SolidBlock>(grindBlockEntity);
             auto& fillColor = registry->get<niketica::component::FillColor>(grindBlockEntity);
             fillColor.color = color;
         }
+    }
+
+    niketica::tetris::GameState& TetrisScene::getGameState()
+    {
+        auto viewGameState = registry->view<niketica::tetris::GameState>();
+        return viewGameState.get<niketica::tetris::GameState>(viewGameState.front());
+    }
+
+    entt::entity TetrisScene::getEntityAtGridPositionTEMP(int x, int y)
+    {
+        auto viewGridBlock = registry->view<niketica::tetris::GridBlock, niketica::tetris::GridPosition>();
+        for (auto entity : viewGridBlock)
+        {
+            const auto& gridPosition = viewGridBlock.get<niketica::tetris::GridPosition>(entity).position;
+
+            if (gridPosition.x == x && gridPosition.y == y)
+            {
+                return entity;
+            }
+        }
+
+        std::cerr << "ERROR::TetrisScene::getEntityAtGridPositionTEMP - Grid block not found at: (" << x << ", " << y << ")" << std::endl;
+        return entt::null; // Return null entity if out of bounds
     }
 
 }

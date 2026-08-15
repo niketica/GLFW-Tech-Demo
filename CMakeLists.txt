@@ -126,7 +126,7 @@ add_library(engine
     src/engine/adapter/renderer/geometry/RectangleBorderlessRenderer.cpp
     src/engine/adapter/sound/SoundBackendMiniaudio.cpp
 
-    # systems
+    # common systems
     src/systems/common/WorldTransformSystem.cpp
     src/systems/input/InputSystem.cpp
     src/systems/sound/SoundSystem.cpp
@@ -143,6 +143,7 @@ add_library(engine
     src/scene/mainmenu/MainMenuScene.cpp
     src/scene/snake/SnakeScene.cpp
     src/scene/tetris/TetrisScene.cpp
+    src/scene/tetris/systems/VerticalMovementSystem.cpp
 )
 
 target_include_directories(engine PUBLIC

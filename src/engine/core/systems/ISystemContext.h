@@ -44,6 +44,11 @@ namespace niketica::systems
             }
         }
 
+        void addSystem(std::unique_ptr<ISystem> system)
+        {
+            systems.emplace_back(std::move(system));
+        }
+
     protected:
         entt::registry* registry;
         niketica::engine::EngineServices* engineServices;
