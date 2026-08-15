@@ -51,7 +51,9 @@ Navigate to the distribution directory and download the zip file containing the 
 
 ### Manual Compile
 Rename the sample_data.pak file to data.pak.
-Build a debug or release build, then move the data.pak to the directory where the progam exe file is.
+Build a debug or release build.
+A libzlib.dll should be generated.
+Move data.pak and libzlib.dll to the directory where the progam executable file is.
 
 ## Asset compression
 Individual asset files are not read directly from the path.
