@@ -1,4 +1,4 @@
-#include "engine/adapter/scene/snake/SnakeScene.h"
+#include "scene/snake/SnakeScene.h"
 
 namespace niketica::scene
 {

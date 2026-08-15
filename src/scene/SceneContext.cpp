@@ -1,4 +1,4 @@
-#include "engine/adapter/scene/SceneContext.h"
+#include "scene/SceneContext.h"
 
 namespace niketica::scene
 {

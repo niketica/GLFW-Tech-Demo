@@ -9,9 +9,9 @@
 #include "engine/core/EngineServices.h"
 #include "engine/core/scene/ISceneContext.h"
 #include "engine/core/scene/IScene.h"
-#include "engine/adapter/scene/mainmenu/MainMenuScene.h"
-#include "engine/adapter/scene/snake/SnakeScene.h"
-#include "engine/adapter/scene/tetris/TetrisScene.h"
+#include "scene/mainmenu/MainMenuScene.h"
+#include "scene/snake/SnakeScene.h"
+#include "scene/tetris/TetrisScene.h"
 
 namespace niketica::scene
 {
