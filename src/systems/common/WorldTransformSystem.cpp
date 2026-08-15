@@ -1,4 +1,4 @@
-#include "engine/adapter/systems/common/WorldTransformSystem.h"
+#include "systems/common/WorldTransformSystem.h"
 
 namespace niketica::systems
 {

@@ -1,4 +1,4 @@
-#include "engine/adapter/systems/renderer/TextRendererSystem.h"
+#include "systems/renderer/TextRendererSystem.h"
 
 namespace niketica::systems
 {

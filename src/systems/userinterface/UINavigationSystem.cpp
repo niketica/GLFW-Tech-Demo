@@ -1,4 +1,4 @@
-#include "engine/adapter/systems/userinterface/UINavigationSystem.h"
+#include "systems/userinterface/UINavigationSystem.h"
 
 namespace niketica::systems
 {

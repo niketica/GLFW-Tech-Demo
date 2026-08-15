@@ -1,4 +1,4 @@
-#include "engine/adapter/systems/SystemContext.h"
+#include "systems/SystemContext.h"
 
 namespace niketica::systems
 {

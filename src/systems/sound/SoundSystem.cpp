@@ -1,4 +1,4 @@
-#include "engine/adapter/systems/sound/SoundSystem.h"
+#include "systems/sound/SoundSystem.h"
 
 namespace niketica::systems
 {

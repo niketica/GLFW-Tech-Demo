@@ -1,4 +1,4 @@
-#include "engine/adapter/systems/renderer/RectangleRenderSystem.h"
+#include "systems/renderer/RectangleRenderSystem.h"
 
 namespace niketica::systems
 {

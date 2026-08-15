@@ -99,15 +99,21 @@ add_library(engine
     # glad
     vendor/glad/src/glad.c
     
-    # src/engine
+    # common
     src/engine/core/Engine.cpp
+
+    # builders
     src/engine/builder/userinterface/UITextLabelBuilder.cpp
     src/engine/builder/userinterface/UIButtonBuilder.cpp
     src/engine/builder/userinterface/UIPanelBuilder.cpp
+
+    # asset handling
     src/engine/adapter/asset/FileLoader.cpp
     src/engine/adapter/asset/IAssetLoader.cpp
     src/engine/adapter/asset/PakReader.cpp
     src/engine/adapter/asset/EncryptionUtil.cpp
+
+    # rendering
     src/engine/adapter/renderer/Shader.cpp
     src/engine/adapter/renderer/TextureLoader.cpp
     src/engine/adapter/renderer/SpriteInstancedRenderer.cpp
@@ -119,16 +125,20 @@ add_library(engine
     src/engine/adapter/renderer/geometry/RectangleBorderRenderer.cpp
     src/engine/adapter/renderer/geometry/RectangleBorderlessRenderer.cpp
     src/engine/adapter/sound/SoundBackendMiniaudio.cpp
-    src/engine/adapter/systems/common/WorldTransformSystem.cpp
-    src/engine/adapter/systems/input/InputSystem.cpp
-    src/engine/adapter/systems/sound/SoundSystem.cpp
-    src/engine/adapter/systems/renderer/SpriteRendererSystem.cpp
-    src/engine/adapter/systems/renderer/RectangleRenderSystem.cpp
-    src/engine/adapter/systems/renderer/TextRendererSystem.cpp
-    src/engine/adapter/systems/renderer/ResolutionSystem.cpp
-    src/engine/adapter/systems/userinterface/UILayoutSystem.cpp
-    src/engine/adapter/systems/userinterface/UINavigationSystem.cpp
-    src/engine/adapter/systems/SystemContext.cpp
+
+    # systems
+    src/systems/common/WorldTransformSystem.cpp
+    src/systems/input/InputSystem.cpp
+    src/systems/sound/SoundSystem.cpp
+    src/systems/renderer/SpriteRendererSystem.cpp
+    src/systems/renderer/RectangleRenderSystem.cpp
+    src/systems/renderer/TextRendererSystem.cpp
+    src/systems/renderer/ResolutionSystem.cpp
+    src/systems/userinterface/UILayoutSystem.cpp
+    src/systems/userinterface/UINavigationSystem.cpp
+    src/systems/SystemContext.cpp
+
+    # scenes
     src/scene/SceneContext.cpp
     src/scene/mainmenu/MainMenuScene.cpp
     src/scene/snake/SnakeScene.cpp

@@ -1,4 +1,4 @@
-#include "engine/adapter/systems/input/InputSystem.h"
+#include "systems/input/InputSystem.h"
 
 namespace niketica::systems
 {

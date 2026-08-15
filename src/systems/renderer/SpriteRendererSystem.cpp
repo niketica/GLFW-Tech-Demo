@@ -1,4 +1,4 @@
-#include "engine/adapter/systems/renderer/SpriteRendererSystem.h"
+#include "systems/renderer/SpriteRendererSystem.h"
 
 namespace niketica::systems
 {

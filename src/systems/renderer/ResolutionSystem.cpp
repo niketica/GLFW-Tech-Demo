@@ -1,4 +1,4 @@
-#include "engine/adapter/systems/renderer/ResolutionSystem.h"
+#include "systems/renderer/ResolutionSystem.h"
 
 namespace niketica::systems
 {
