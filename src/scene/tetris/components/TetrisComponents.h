@@ -84,5 +84,7 @@ namespace niketica::tetris
     struct CreateRandomTetromino {};
     struct DestroyTetromino {};
     struct RotateTetromino {};
+    struct CreateGrid {};
+    struct MoveTetrominoBlocksToGrid {};
 
 }

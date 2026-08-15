@@ -148,6 +148,7 @@ add_library(engine
     src/scene/tetris/systems/HorizontalMovementSystem.cpp
     src/scene/tetris/systems/VerticalMovementSystem.cpp
     src/scene/tetris/systems/RotationSystem.cpp
+    src/scene/tetris/systems/GridSystem.cpp
 )
 
 target_include_directories(engine PUBLIC

@@ -19,6 +19,7 @@
 #include "scene/tetris/systems/HorizontalMovementSystem.h"
 #include "scene/tetris/systems/VerticalMovementSystem.h"
 #include "scene/tetris/systems/RotationSystem.h"
+#include "scene/tetris/systems/GridSystem.h"
 #include "scene/tetris/util/TetrisUtil.h"
 
 namespace niketica::scene
@@ -44,13 +45,6 @@ namespace niketica::scene
         niketica::engine::EngineServices* engineServices;
 
         void init();
-        entt::entity createRectangleWithBorder(const glm::vec3& position, const glm::vec2& size, const glm::vec4& fillColor, const glm::vec4& borderColor, float borderThickness, float fill);
-        entt::entity createRectangleBorderless(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color);
-        entt::entity getEntityAtGridPosition(int x, int y);
-
-        void clearGrid();
-        void colorTetrominoOnGrid();
-        void moveTetrominoBlocksToGrid();
 
     };
 }
