@@ -5,9 +5,15 @@ namespace niketica::tetris
 
     void GridSystem::update(float dt)
     {
+        // Initial
         createGrid();
-        clearGrid();
+
+        // During gameplay
         moveTetrominoBlocksToGrid();
+        clearGridLines();
+
+        // Visual update
+        clearGrid();
         colorTetrominoOnGrid();
     }
 
@@ -156,6 +162,61 @@ namespace niketica::tetris
             registry->emplace<niketica::tetris::SolidBlock>(grindBlockEntity);
             auto& fillColor = registry->get<niketica::component::FillColor>(grindBlockEntity);
             fillColor.color = color;
+        }
+    }
+    
+    void GridSystem::clearGridLines()
+    {
+        const auto& gameState = getGameState(registry);
+        for (int y=gameState.gridHeight - 1; y--; y>=0)
+        {
+            clearGridLine(y);
+        }
+    }
+
+    void GridSystem::clearGridLine(int y)
+    {
+        const auto& gameState = getGameState(registry);
+        int solidBlockCount = 0;
+        for (int x=0; x<gameState.gridWidth; x++)
+        {
+            const auto entity = getEntityAtGridPosition(registry, x, y);
+            if (registry->any_of<SolidBlock>(entity))
+            {
+                solidBlockCount++;
+            }
+        }
+
+        if (solidBlockCount == gameState.gridWidth)
+        {
+            moveUpperGridLinesDown(y+1);
+        }
+    }
+    
+    void GridSystem::moveUpperGridLinesDown(int startY)
+    {
+        const auto& gameState = getGameState(registry);
+        for (int y=startY; y<gameState.gridHeight; y++)
+        {
+            for (int x=0; x<gameState.gridWidth; x++)
+            {
+                const auto entityUpper = getEntityAtGridPosition(registry, x, y);
+                const auto entityLower = getEntityAtGridPosition(registry, x, y-1);
+
+                auto& colorLower = registry->get<niketica::component::FillColor>(entityLower);
+                registry->remove<SolidBlock>(entityLower);
+
+                if (registry->any_of<SolidBlock>(entityUpper))
+                {
+                    const auto& colorUpper = registry->get<niketica::component::FillColor>(entityUpper);
+                    colorLower.color = colorUpper.color;
+                    registry->emplace<SolidBlock>(entityLower);
+                }
+                else
+                {
+                    colorLower.color = { 0.1f, 0.1f, 0.1f, 1.0f };
+                }
+            }
         }
     }
     

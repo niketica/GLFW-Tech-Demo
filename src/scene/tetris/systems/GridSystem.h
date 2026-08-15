@@ -30,6 +30,10 @@ namespace niketica::tetris
         void colorTetrominoOnGrid();
         void moveTetrominoBlocksToGrid();
 
+        void clearGridLines();
+        void clearGridLine(int y);
+        void moveUpperGridLinesDown(int y);
+
     };
 
 }
