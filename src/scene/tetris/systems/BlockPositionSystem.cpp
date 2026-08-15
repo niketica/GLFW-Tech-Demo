@@ -137,7 +137,7 @@ namespace niketica::tetris
 
     bool BlockPositionSystem::shouldPushLeft()
     {
-        const auto& gameState = getGameState();
+        const auto& gameState = getGameState(registry);
 
         auto viewTetromino = registry->view<niketica::tetris::Tetromino, niketica::tetris::GridPosition, niketica::tetris::BlockPositions>();
         const auto& gridPosition = viewTetromino.get<niketica::tetris::GridPosition>(viewTetromino.front()).position;
@@ -153,7 +153,7 @@ namespace niketica::tetris
             }
             else if (y < gameState.gridHeight)
             {
-                auto gridEntity = getEntityAtGridPosition(x, y);
+                auto gridEntity = getEntityAtGridPosition(registry, x, y);
                 if (registry->any_of<niketica::tetris::SolidBlock>(gridEntity)) return true;
             }
         }
@@ -163,7 +163,7 @@ namespace niketica::tetris
 
     bool BlockPositionSystem::shouldPushRight()
     {
-        const auto& gameState = getGameState();
+        const auto& gameState = getGameState(registry);
 
         auto viewTetromino = registry->view<niketica::tetris::Tetromino, niketica::tetris::GridPosition, niketica::tetris::BlockPositions>();
         const auto& gridPosition = viewTetromino.get<niketica::tetris::GridPosition>(viewTetromino.front()).position;
@@ -179,35 +179,12 @@ namespace niketica::tetris
             }
             else if (y < gameState.gridHeight)
             {
-                auto gridEntity = getEntityAtGridPosition(x, y);
+                auto gridEntity = getEntityAtGridPosition(registry, x, y);
                 if (registry->any_of<niketica::tetris::SolidBlock>(gridEntity)) return true;
             }
         }
 
         return false;
-    }
-
-    niketica::tetris::GameState& BlockPositionSystem::getGameState()
-    {
-        auto viewGameState = registry->view<niketica::tetris::GameState>();
-        return viewGameState.get<niketica::tetris::GameState>(viewGameState.front());
-    }
-
-    entt::entity BlockPositionSystem::getEntityAtGridPosition(int x, int y)
-    {
-        auto viewGridBlock = registry->view<niketica::tetris::GridBlock, niketica::tetris::GridPosition>();
-        for (auto entity : viewGridBlock)
-        {
-            const auto& gridPosition = viewGridBlock.get<niketica::tetris::GridPosition>(entity).position;
-
-            if (gridPosition.x == x && gridPosition.y == y)
-            {
-                return entity;
-            }
-        }
-
-        std::cerr << "ERROR::TetrisScene::getEntityAtGridPosition - Grid block not found at: (" << x << ", " << y << ")" << std::endl;
-        return entt::null; // Return null entity if out of bounds
     }
     
 }

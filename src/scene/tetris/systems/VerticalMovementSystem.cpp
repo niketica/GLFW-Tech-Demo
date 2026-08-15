@@ -21,7 +21,7 @@ namespace niketica::tetris
 
     bool VerticalMovementSystem::moveTetrominoDownAuto(float dt)
     {
-        auto& gameState = getGameState();
+        auto& gameState = getGameState(registry);
         gameState.currentTimer += dt;
         if (gameState.currentTimer < gameState.cooldownPeriod)
         {
@@ -38,7 +38,7 @@ namespace niketica::tetris
     bool VerticalMovementSystem::moveTetrominoDownManual()
     {
         auto viewTetromino = registry->view<niketica::tetris::Tetromino, niketica::tetris::GridPosition, niketica::tetris::BlockPositions>();
-        auto& tetromino = viewTetromino.get<niketica::tetris::Tetromino>(viewTetromino.front());
+        const auto& tetromino = viewTetromino.get<niketica::tetris::Tetromino>(viewTetromino.front());
 
         if (tetromino.direction != niketica::tetris::Direction::DOWN) return false;
 
@@ -49,7 +49,7 @@ namespace niketica::tetris
 
     void VerticalMovementSystem::procesVerticalMovement()
     {
-        auto& gameState = getGameState();
+        auto& gameState = getGameState(registry);
         gameState.verticalHitDetected = false;
 
         if (!isVerticalHit()) return;
@@ -63,19 +63,13 @@ namespace niketica::tetris
         gameState.verticalHitDetected = true;
     }
 
-    niketica::tetris::GameState& VerticalMovementSystem::getGameState()
-    {
-        auto viewGameState = registry->view<niketica::tetris::GameState>();
-        return viewGameState.get<niketica::tetris::GameState>(viewGameState.front());
-    }
-
     bool VerticalMovementSystem::isVerticalHit()
     {
         auto viewTetromino = registry->view<niketica::tetris::Tetromino, niketica::tetris::GridPosition, niketica::tetris::BlockPositions>();
         const auto& gridPosition = viewTetromino.get<niketica::tetris::GridPosition>(viewTetromino.front()).position;
         const auto& blockPositions = viewTetromino.get<niketica::tetris::BlockPositions>(viewTetromino.front()).blockPositions;
 
-        auto& gameState = getGameState();
+        const auto& gameState = getGameState(registry);
 
         for (const auto& blockPosition : blockPositions)
         {
@@ -87,28 +81,11 @@ namespace niketica::tetris
             }
             else if (y < gameState.gridHeight)
             {
-                auto grindBlockEntity = getEntityAtGridPosition(x, y);
+                auto grindBlockEntity = getEntityAtGridPosition(registry, x, y);
                 if (registry->any_of<niketica::tetris::SolidBlock>(grindBlockEntity)) return true;
             }
         }
         return false;
-    }
-
-    entt::entity VerticalMovementSystem::getEntityAtGridPosition(int x, int y)
-    {
-        auto viewGridBlock = registry->view<niketica::tetris::GridBlock, niketica::tetris::GridPosition>();
-        for (auto entity : viewGridBlock)
-        {
-            const auto& gridPosition = viewGridBlock.get<niketica::tetris::GridPosition>(entity).position;
-
-            if (gridPosition.x == x && gridPosition.y == y)
-            {
-                return entity;
-            }
-        }
-
-        std::cerr << "ERROR::TetrisScene::getEntityAtGridPosition - Grid block not found at: (" << x << ", " << y << ")" << std::endl;
-        return entt::null; // Return null entity if out of bounds
     }
     
 }

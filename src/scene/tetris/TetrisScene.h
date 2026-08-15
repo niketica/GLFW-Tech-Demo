@@ -19,6 +19,7 @@
 #include "scene/tetris/systems/HorizontalMovementSystem.h"
 #include "scene/tetris/systems/VerticalMovementSystem.h"
 #include "scene/tetris/systems/RotationSystem.h"
+#include "scene/tetris/util/TetrisUtil.h"
 
 namespace niketica::scene
 {
@@ -50,10 +51,6 @@ namespace niketica::scene
         void clearGrid();
         void colorTetrominoOnGrid();
         void moveTetrominoBlocksToGrid();
-
-        niketica::tetris::GameState& getGameState();
-
-        entt::entity getEntityAtGridPositionTEMP(int x, int y);
 
     };
 }

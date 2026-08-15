@@ -6,6 +6,7 @@
 #include "engine/core/systems/ISystem.h"
 #include "engine/core/EngineServices.h"
 #include "scene/tetris/components/TetrisComponents.h"
+#include "scene/tetris/util/TetrisUtil.h"
 
 namespace niketica::tetris
 {
@@ -24,9 +25,6 @@ namespace niketica::tetris
         void moveTetrominoHorizontal();
         bool canMoveLeft();
         bool canMoveRight();
-
-        niketica::tetris::GameState& getGameState();
-        entt::entity getEntityAtGridPosition(int x, int y);
 
     };
 
