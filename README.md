@@ -45,6 +45,11 @@ To change between debug and release configuration, go to the CMake extension too
 Navigate to "Configure". Here you should be able to select either "debug" or "release".
 
 ## Quick start
+### Precompiled Executable
+Currently there is only a precompiled executable for Windows 11.
+Navigate to the distribution directory and download the zip file containing the executable.
+
+### Manual Compile
 Rename the sample_data.pak file to data.pak.
 Build a debug or release build, then move the data.pak to the directory where the progam exe file is.
 
