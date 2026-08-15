@@ -58,7 +58,7 @@ Move the data.pak and libzlib.dll to the directory where the progam executable f
 ### Manual Compile With Custom Assets
 Place your custom assets in the assets directory.
 Build a debug or release build.
-Move the compressor.exe to the root directory if this project (so that it is in the same directory as the assets directory and the post_build.bat).
+Move the compressor.exe to the root directory of this project (so that it is in the same directory as the assets directory and the post_build.bat).
 Generate a data.pak file with the compressor.exe with the post_build.bat.
 Move the data.pak and libzlib.dll to the directory where the progam executable file is.
 
