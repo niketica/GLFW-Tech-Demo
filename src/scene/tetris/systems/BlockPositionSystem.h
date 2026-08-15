@@ -27,6 +27,13 @@ namespace niketica::tetris
         niketica::tetris::MATRIX_3X3& getMatrix3x3(entt::entity entity);
         niketica::tetris::MATRIX_4X4& getMatrix4x4(entt::entity entity);
 
+        void procesPushLeftRight();
+        bool shouldPushLeft();
+        bool shouldPushRight();
+
+        niketica::tetris::GameState& getGameState();
+        entt::entity getEntityAtGridPosition(int x, int y);
+
     };
 
 }

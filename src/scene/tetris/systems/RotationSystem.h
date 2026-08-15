@@ -22,11 +22,6 @@ namespace niketica::tetris
 
     private:
         void rotateTetromino();
-        bool shouldPushLeft();
-        bool shouldPushRight();
-
-        niketica::tetris::GameState& getGameState();
-        entt::entity getEntityAtGridPosition(int x, int y);
 
     };
 
