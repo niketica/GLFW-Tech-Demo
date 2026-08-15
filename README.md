@@ -31,6 +31,10 @@ The component directory contains all ECS components and is the backbone of the a
 Interfaces are used to separate the core logic from the inner workings of the engine. Adapters are used to handle specific logic, such as rendering or sound.
 <br/>
 <br/>
+Common systems and components are in placed in the root directory.
+Some scenes can contain directories with scene-specific systems and components which should not be used anywhere else.
+<br/>
+<br/>
 This hierarchy works for now but I will later work on a better structure and see to it that the separation of logic is enforced better. Probably.
 
 ## Setup in Visual Studio Code
