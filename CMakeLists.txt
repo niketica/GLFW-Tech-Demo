@@ -143,6 +143,8 @@ add_library(engine
     src/scene/mainmenu/MainMenuScene.cpp
     src/scene/snake/SnakeScene.cpp
     src/scene/tetris/TetrisScene.cpp
+    src/scene/tetris/systems/BlockPositionSystem.cpp
+    src/scene/tetris/systems/TetrominoCreationSystem.cpp
     src/scene/tetris/systems/VerticalMovementSystem.cpp
 )
 

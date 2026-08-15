@@ -12,8 +12,10 @@
 #include "engine/core/scene/IScene.h"
 #include "engine/core/systems/ISystemContext.h"
 #include "systems/SystemContext.h"
-#include "scene/tetris/tetronimo/Tetrominoes.h"
+#include "scene/tetris/components/Tetrominoes.h"
 #include "scene/tetris/components/TetrisComponents.h"
+#include "scene/tetris/systems/TetrominoCreationSystem.h"
+#include "scene/tetris/systems/BlockPositionSystem.h"
 #include "scene/tetris/systems/VerticalMovementSystem.h"
 
 namespace niketica::scene
@@ -44,23 +46,7 @@ namespace niketica::scene
         entt::entity getEntityAtGridPosition(int x, int y);
 
         void clearGrid();
-
-        void setBlockPositions();
-        niketica::tetris::MATRIX_2X2& getMatrix2x2(entt::entity entity);
-        niketica::tetris::MATRIX_3X3& getMatrix3x3(entt::entity entity);
-        niketica::tetris::MATRIX_4X4& getMatrix4x4(entt::entity entity);
         void rotateTetromino();
-
-        void createRandomTetromino();
-        void destroyTetromino();
-        entt::entity createTetrominoBase();
-        void createTetrominoI();
-        void createTetrominoJ();
-        void createTetrominoL();
-        void createTetrominoO();
-        void createTetrominoS();
-        void createTetrominoT();
-        void createTetrominoZ();
 
         void moveTetrominoHorizontal();
 

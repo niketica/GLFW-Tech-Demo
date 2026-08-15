@@ -80,4 +80,8 @@ namespace niketica::tetris
 
     struct GridBlock {};
 
+    struct SetBlockPositions {};
+    struct CreateRandomTetromino {};
+    struct DestroyTetromino {};
+
 }
