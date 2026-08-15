@@ -83,5 +83,6 @@ namespace niketica::tetris
     struct SetBlockPositions {};
     struct CreateRandomTetromino {};
     struct DestroyTetromino {};
+    struct RotateTetromino {};
 
 }

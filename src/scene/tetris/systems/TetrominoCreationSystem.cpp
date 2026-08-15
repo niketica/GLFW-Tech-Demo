@@ -12,8 +12,8 @@ namespace niketica::tetris
     void TetrominoCreationSystem::procesCreate()
     {
         bool componentFound = false;
-        auto viewSetBlockPositions = registry->view<niketica::tetris::CreateRandomTetromino>();
-        for (auto entity : viewSetBlockPositions)
+        auto view = registry->view<niketica::tetris::CreateRandomTetromino>();
+        for (auto entity : view)
         {
             componentFound = true;
             registry->destroy(entity);
@@ -28,8 +28,8 @@ namespace niketica::tetris
     void TetrominoCreationSystem::procesDestroy()
     {
         bool componentFound = false;
-        auto viewSetBlockPositions = registry->view<niketica::tetris::DestroyTetromino>();
-        for (auto entity : viewSetBlockPositions)
+        auto view = registry->view<niketica::tetris::DestroyTetromino>();
+        for (auto entity : view)
         {
             componentFound = true;
             registry->destroy(entity);

@@ -16,7 +16,9 @@
 #include "scene/tetris/components/TetrisComponents.h"
 #include "scene/tetris/systems/TetrominoCreationSystem.h"
 #include "scene/tetris/systems/BlockPositionSystem.h"
+#include "scene/tetris/systems/HorizontalMovementSystem.h"
 #include "scene/tetris/systems/VerticalMovementSystem.h"
+#include "scene/tetris/systems/RotationSystem.h"
 
 namespace niketica::scene
 {
@@ -46,16 +48,7 @@ namespace niketica::scene
         entt::entity getEntityAtGridPosition(int x, int y);
 
         void clearGrid();
-        void rotateTetromino();
-
-        void moveTetrominoHorizontal();
-
         void colorTetrominoOnGrid();
-        bool canMoveLeft();
-        bool canMoveRight();
-        bool shouldPushLeft();
-        bool shouldPushRight();
-
         void moveTetrominoBlocksToGrid();
 
         niketica::tetris::GameState& getGameState();

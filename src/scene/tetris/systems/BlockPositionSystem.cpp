@@ -6,8 +6,8 @@ namespace niketica::tetris
     void BlockPositionSystem::update(float dt)
     {
         bool componentFound = false;
-        auto viewSetBlockPositions = registry->view<niketica::tetris::SetBlockPositions>();
-        for (auto entity : viewSetBlockPositions)
+        auto view = registry->view<niketica::tetris::SetBlockPositions>();
+        for (auto entity : view)
         {
             componentFound = true;
             registry->destroy(entity);

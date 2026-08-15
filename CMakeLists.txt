@@ -145,7 +145,9 @@ add_library(engine
     src/scene/tetris/TetrisScene.cpp
     src/scene/tetris/systems/BlockPositionSystem.cpp
     src/scene/tetris/systems/TetrominoCreationSystem.cpp
+    src/scene/tetris/systems/HorizontalMovementSystem.cpp
     src/scene/tetris/systems/VerticalMovementSystem.cpp
+    src/scene/tetris/systems/RotationSystem.cpp
 )
 
 target_include_directories(engine PUBLIC
