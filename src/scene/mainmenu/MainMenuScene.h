@@ -9,7 +9,7 @@
 #include "engine/core/EngineServices.h"
 #include "engine/core/scene/IScene.h"
 #include "engine/core/systems/ISystemContext.h"
-#include "engine/adapter/systems/SystemContext.h"
+#include "systems/SystemContext.h"
 
 namespace niketica::scene
 {
