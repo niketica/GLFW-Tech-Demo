@@ -24,8 +24,8 @@ The hierarchy of the directory structure is shown below. The order determines ac
     - adapter
         - asset
         - ....
-        - systems
-        - scene
+- systems
+- scene
 <br/>
 The component directory contains all ECS components and is the backbone of the architecture. The implementation inside the core directory forms the basis for hexagonal design.
 Interfaces are used to separate the core logic from the inner workings of the engine. Adapters are used to handle specific logic, such as rendering or sound.
