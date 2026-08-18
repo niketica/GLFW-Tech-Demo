@@ -12,6 +12,7 @@
 #include "scene/mainmenu/MainMenuScene.h"
 #include "scene/snake/SnakeScene.h"
 #include "scene/tetris/TetrisScene.h"
+#include "scene/uisamples/UISamplesScene.h"
 
 namespace niketica::scene
 {

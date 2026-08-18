@@ -19,6 +19,7 @@ namespace niketica::scene
         DEMOS,
         DEMOS_SNAKE,
         DEMOS_TETRIS,
+        DEMOS_UI_SAMPLES,
         DEMOS_BACK,
         OPTIONS,
         QUIT,
@@ -77,6 +78,8 @@ namespace niketica::scene
         void updateWindowSize(const int width, const int height);
         void updateResolution(const int width, const int height);
         void updateWindowMode(niketica::component::WindowMode mode);
+
+        entt::entity createDropdown();
 
     };
 }

@@ -38,7 +38,7 @@ namespace niketica::scene
 
         niketica::builder::UITextLabelBuilder textLabelBuilder = { registry, engineServices };
         textLabelBuilder
-            .withText("User Interface Demo")
+            .withText("Main Menu")
             .withFontSize(48.0f)
             .withFontType(niketica::component::FontType::OPEN_SANS_REGULAR)
             .withColor(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f))
@@ -155,6 +155,13 @@ namespace niketica::scene
             {
                 std::cout << "Demos Tetris activated" << std::endl;
                 auto sceneSwitch = niketica::component::SceneSwitchInstruction{ niketica::component::SceneType::TETRIS };
+                registry->emplace<niketica::component::SceneSwitchInstruction>(registry->create(), sceneSwitch);
+            }
+                break;
+            case ButtonType::DEMOS_UI_SAMPLES:
+            {
+                std::cout << "Demos UI Samples activated" << std::endl;
+                auto sceneSwitch = niketica::component::SceneSwitchInstruction{ niketica::component::SceneType::UI_SAMPLES };
                 registry->emplace<niketica::component::SceneSwitchInstruction>(registry->create(), sceneSwitch);
             }
                 break;
@@ -358,6 +365,8 @@ namespace niketica::scene
         registry->emplace<Button>(buttonSnake, Button{ ButtonType::DEMOS_SNAKE });
         auto buttonTetris = createButton("Tetris");
         registry->emplace<Button>(buttonTetris, Button{ ButtonType::DEMOS_TETRIS });
+        auto buttonUISamples = createButton("UI Samples");
+        registry->emplace<Button>(buttonUISamples, Button{ ButtonType::DEMOS_UI_SAMPLES });
         auto buttonBack = createButton("Back");
         registry->emplace<Button>(buttonBack, Button{ ButtonType::DEMOS_BACK });
 
@@ -373,12 +382,23 @@ namespace niketica::scene
             .withLayoutType(niketica::component::UILayoutType::VERTICAL)
             .addButton(buttonSnake)
             .addButton(buttonTetris)
+            .addButton(buttonUISamples)
             .addButton(buttonBack)
             .build();
 
         registry->emplace<niketica::component::UIActive>(panel);
         registry->emplace<niketica::component::UIFocus>(panel);
         
+    }
+
+    entt::entity MainMenuScene::createDropdown()
+    {
+        auto entity = registry->create();
+        
+        registry->emplace<niketica::component::LocalTransform>(entity);
+        registry->emplace<niketica::component::Transform>(entity);
+
+        return entity;
     }
 
 }

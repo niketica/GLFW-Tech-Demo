@@ -12,6 +12,7 @@ namespace niketica::scene
         sceneMap.emplace(niketica::component::SceneType::MAIN_MENU, std::make_unique<MainMenuScene>(registry, engineServices));
         sceneMap.emplace(niketica::component::SceneType::SNAKE, std::make_unique<SnakeScene>(registry, engineServices));
         sceneMap.emplace(niketica::component::SceneType::TETRIS, std::make_unique<TetrisScene>(registry, engineServices));
+        sceneMap.emplace(niketica::component::SceneType::UI_SAMPLES, std::make_unique<UISamplesScene>(registry, engineServices));
         setCurrentScene(niketica::component::SceneType::MAIN_MENU);
     }
 
