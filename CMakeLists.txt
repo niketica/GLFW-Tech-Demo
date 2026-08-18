@@ -106,6 +106,7 @@ add_library(engine
     src/engine/builder/userinterface/UITextLabelBuilder.cpp
     src/engine/builder/userinterface/UIButtonBuilder.cpp
     src/engine/builder/userinterface/UIPanelBuilder.cpp
+    src/engine/builder/userinterface/UIRectangleBuilder.cpp
 
     # asset handling
     src/engine/adapter/asset/FileLoader.cpp

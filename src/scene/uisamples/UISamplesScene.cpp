@@ -24,9 +24,34 @@ namespace niketica::scene
             .withText("User Interface Sample")
             .withFontSize(48.0f)
             .withFontType(niketica::component::FontType::OPEN_SANS_REGULAR)
-            .withColor(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f))
+            .withColor(glm::vec4{1.0f, 0.0f, 0.0f, 1.0f})
             .withPosition(glm::vec2{ 100.0f, (float)windowComponent.height - 100.0f })
             .withAnchor({ niketica::component::AlignmentHorizontal::LEFT, niketica::component::AlignmentVertical::TOP, { 100.0f, -100.0f } })
+            .build();
+        
+        niketica::builder::UIRectangleBuilder rectBuilder = { registry, engineServices };
+        rectBuilder
+            .withPosition(glm::vec3{100.0f, 20.0f, 0.0f})
+            .withSize(glm::vec2{200.0f, 100.0f})
+            .withFillColor(glm::vec4{0.8f, 0.6f, 0.0f, 1.0f})
+            .build();
+        
+        rectBuilder = { registry, engineServices };
+        rectBuilder
+            .withPosition(glm::vec3{400.0f, 400.0f, 0.0f})
+            .withSize(glm::vec2{400.0f, 400.0f})
+            .withFillColor(glm::vec4{0.8f, 0.6f, 0.8f, 1.0f})
+            .withBorderColor(glm::vec4{0.8f, 0.2f, 0.0f, 1.0f})
+            .withBorderThickness(10.0f)
+            .build();
+        
+        rectBuilder = { registry, engineServices };
+        rectBuilder
+            .withPosition(glm::vec3{600.0f, 200.0f, 0.0f})
+            .withSize(glm::vec2{1200.0f, 300.0f})
+            .withoutFill()
+            .withBorderColor(glm::vec4{0.0f, 0.2f, 0.8f, 1.0f})
+            .withBorderThickness(10.0f)
             .build();
     }
 

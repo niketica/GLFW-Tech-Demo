@@ -13,6 +13,7 @@
 #include "engine/core/systems/ISystemContext.h"
 #include "systems/SystemContext.h"
 #include "engine/builder/userinterface/UITextLabelBuilder.h"
+#include "engine/builder/userinterface/UIRectangleBuilder.h"
 
 namespace niketica::scene
 {
