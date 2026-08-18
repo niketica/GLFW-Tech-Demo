@@ -10,12 +10,14 @@ namespace niketica::systems
 
         if (isGlobalLayoutDirty())
         {
-            updateUIText(renderSettings);
-            updateUINineSlice(renderSettings);
+            updateUIPositionAndSize(renderSettings);            
             updateAllContainers(renderSettings);
         }
+        else
+        {
+            updateDirtyContainers(renderSettings);
+        }
 
-        updateDirtyContainers(renderSettings);
     }
 
     void UILayoutSystem::updateAllContainers(const niketica::component::RenderSettings& renderSettings)
@@ -291,37 +293,14 @@ namespace niketica::systems
         }
     }
 
-    void UILayoutSystem::updateUIText(const niketica::component::RenderSettings& renderSettings)
+    void UILayoutSystem::updateUIPositionAndSize(const niketica::component::RenderSettings& renderSettings)
     {
-        auto viewUIStuff = registry->view<niketica::component::UIAnchor, niketica::component::UISize, niketica::component::LocalTransform, niketica::component::Text>();
+        auto viewUIStuff = registry->view<niketica::component::UIAnchor, niketica::component::UISize, niketica::component::LocalTransform>();
         for (auto entity : viewUIStuff)
         {
             const auto& anchor = viewUIStuff.get<niketica::component::UIAnchor>(entity);
             const auto& size = viewUIStuff.get<niketica::component::UISize>(entity);
             auto& local = viewUIStuff.get<niketica::component::LocalTransform>(entity);
-            auto& text = viewUIStuff.get<niketica::component::Text>(entity);
-
-            const auto& uiReferenceResolution = renderSettings.uiReferenceResolution;
-            float scaleX = uiReferenceResolution.x / niketica::config::ORIGINAL_WIDTH;
-            float scaleY = uiReferenceResolution.y / niketica::config::ORIGINAL_HEIGHT;
-
-            auto calculatedPosition = calculatePosition({ uiReferenceResolution.x, uiReferenceResolution.y }, { scaleX, scaleY }, anchor);
-            auto calculatedSize = calculateSize({ scaleX, scaleY }, size);
-
-            text.fontSize = (int)calculatedSize.y;
-            local.position = { calculatedPosition.x, calculatedPosition.y, 0.0f };
-            local.size = { calculatedSize.x, calculatedSize.y, 0.0f };
-        }
-    }
-
-    void UILayoutSystem::updateUINineSlice(const niketica::component::RenderSettings& renderSettings)
-    {
-        auto viewNineSlice = registry->view<niketica::component::UIAnchor, niketica::component::UISize, niketica::component::LocalTransform, niketica::component::NineSlice>();
-        for (auto entity : viewNineSlice)
-        {
-            const auto& anchor = viewNineSlice.get<niketica::component::UIAnchor>(entity);
-            const auto& size = viewNineSlice.get<niketica::component::UISize>(entity);
-            auto& local = viewNineSlice.get<niketica::component::LocalTransform>(entity);
 
             const auto& uiReferenceResolution = renderSettings.uiReferenceResolution;
             float scaleX = uiReferenceResolution.x / niketica::config::ORIGINAL_WIDTH;
@@ -332,6 +311,12 @@ namespace niketica::systems
 
             local.position = { calculatedPosition.x, calculatedPosition.y, 0.0f };
             local.size = { calculatedSize.x, calculatedSize.y, 0.0f };
+
+            if (registry->any_of<niketica::component::Text>(entity))
+            {
+                auto& text = registry->get<niketica::component::Text>(entity);
+                text.fontSize = (int)calculatedSize.y;
+            }
         }
     }
 
