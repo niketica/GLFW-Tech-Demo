@@ -31,13 +31,6 @@ namespace niketica::scene
         
         niketica::builder::UIRectangleBuilder rectBuilder = { registry, engineServices };
         rectBuilder
-            .withPosition(glm::vec3{100.0f, 20.0f, 0.0f})
-            .withSize(glm::vec2{200.0f, 100.0f})
-            .withFillColor(glm::vec4{0.8f, 0.6f, 0.0f, 1.0f})
-            .build();
-        
-        rectBuilder = { registry, engineServices };
-        rectBuilder
             .withPosition(glm::vec3{400.0f, 400.0f, 0.0f})
             .withSize(glm::vec2{400.0f, 400.0f})
             .withFillColor(glm::vec4{0.8f, 0.6f, 0.8f, 1.0f})
@@ -53,6 +46,8 @@ namespace niketica::scene
             .withBorderColor(glm::vec4{0.0f, 0.2f, 0.8f, 1.0f})
             .withBorderThickness(10.0f)
             .build();
+
+        createInfoBox();
     }
 
     void UISamplesScene::input()
@@ -89,6 +84,21 @@ namespace niketica::scene
     {        
         systemContext.release();
         init();
+    }
+
+    void UISamplesScene::createInfoBox()
+    {
+        auto fillColor = niketica::util::colorFromHexRGB("204523");
+        auto borderColor = niketica::util::colorFromHexRGB("162E18");
+
+        niketica::builder::UIRectangleBuilder rectBuilder = { registry, engineServices };
+        rectBuilder
+            .withPosition(glm::vec3{100.0f, 20.0f, 0.0f})
+            .withSize(glm::vec2{400.0f, 300.0f})
+            .withFillColor(fillColor)
+            .withBorderColor(borderColor)
+            .withBorderThickness(10.0f)
+            .build();
     }
 
 }
