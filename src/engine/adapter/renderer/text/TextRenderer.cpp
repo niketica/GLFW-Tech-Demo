@@ -62,13 +62,12 @@ namespace niketica::renderer
     void TextRenderer::startFrame()
     {
         vertexOffset = 0;
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     }
 
     void TextRenderer::begin(const glm::mat4& projection, const niketica::component::FontType& font, uint32_t pixelSize)
-    {
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        
+    {        
         vertexCount = 0;
 
         shader->use();

@@ -29,25 +29,27 @@ namespace niketica::scene
             .withAnchor({ niketica::component::AlignmentHorizontal::LEFT, niketica::component::AlignmentVertical::TOP, { 100.0f, -100.0f } })
             .build();
         
-        niketica::builder::UIRectangleBuilder rectBuilder = { registry, engineServices };
-        rectBuilder
-            .withPosition(glm::vec3{400.0f, 400.0f, 0.0f})
-            .withSize(glm::vec2{400.0f, 400.0f})
-            .withFillColor(glm::vec4{0.8f, 0.6f, 0.8f, 1.0f})
-            .withBorderColor(glm::vec4{0.8f, 0.2f, 0.0f, 1.0f})
-            .withBorderThickness(10.0f)
-            .build();
+        // niketica::builder::UIRectangleBuilder rectBuilder = { registry, engineServices };
+        // rectBuilder
+        //     .withPosition(glm::vec3{400.0f, 400.0f, 0.0f})
+        //     .withSize(glm::vec2{400.0f, 400.0f})
+        //     .withFillColor(glm::vec4{0.8f, 0.6f, 0.8f, 1.0f})
+        //     .withBorderColor(glm::vec4{0.8f, 0.2f, 0.0f, 1.0f})
+        //     .withBorderThickness(10.0f)
+        //     .build();
         
-        rectBuilder = { registry, engineServices };
-        rectBuilder
-            .withPosition(glm::vec3{600.0f, 200.0f, 0.0f})
-            .withSize(glm::vec2{1200.0f, 300.0f})
-            .withoutFill()
-            .withBorderColor(glm::vec4{0.0f, 0.2f, 0.8f, 1.0f})
-            .withBorderThickness(10.0f)
-            .build();
+        // rectBuilder = { registry, engineServices };
+        // rectBuilder
+        //     .withPosition(glm::vec3{600.0f, 200.0f, 0.0f})
+        //     .withSize(glm::vec2{1200.0f, 300.0f})
+        //     .withoutFill()
+        //     .withBorderColor(glm::vec4{0.0f, 0.2f, 0.8f, 1.0f})
+        //     .withBorderThickness(10.0f)
+        //     .build();
 
         createInfoBox();
+
+        registry->emplace<niketica::component::UIGlobalLayoutDirty>(registry->create());
     }
 
     void UISamplesScene::input()
@@ -72,12 +74,7 @@ namespace niketica::scene
     
     void UISamplesScene::render()
     {
-        // For now just assume there is always exactly 1 active camera.
-        auto viewCamera = registry->view<niketica::component::Camera, niketica::component::ActiveCamera>();
-        const auto &camera = viewCamera.get<niketica::component::Camera>(viewCamera.front());
-
         systemContext->render();
-        engineServices->getRenderContext()->getRectangleRenderer()->render(camera.projection, camera.view);
     }
     
     void UISamplesScene::reset()
@@ -91,14 +88,57 @@ namespace niketica::scene
         auto fillColor = niketica::util::colorFromHexRGB("204523");
         auto borderColor = niketica::util::colorFromHexRGB("162E18");
 
+        float boxWidth = 400.0f;
+        float boxHeight = 300.0f;
+
         niketica::builder::UIRectangleBuilder rectBuilder = { registry, engineServices };
-        rectBuilder
+        auto containerBox = rectBuilder
             .withPosition(glm::vec3{100.0f, 20.0f, 0.0f})
             .withSize(glm::vec2{400.0f, 300.0f})
             .withFillColor(fillColor)
             .withBorderColor(borderColor)
-            .withBorderThickness(10.0f)
+            .withBorderThickness(4.0f)
             .build();
+
+        auto textColor = niketica::util::colorFromHexRGB("000000");
+
+        niketica::builder::UITextLabelBuilder textLabelBuilder = { registry, engineServices };
+        auto textInfo = textLabelBuilder
+            .withText("This is an info box.")
+            .withFontSize(20.0f)
+            .withFontType(niketica::component::FontType::COURIER_PRIME_CODE)
+            .withColor(textColor)
+            .withPosition(glm::vec2{ 0.0f, 0.0f })
+            //.withAnchor({ niketica::component::AlignmentHorizontal::LEFT, niketica::component::AlignmentVertical::TOP, { 100.0f, -100.0f } })
+            .build();
+        
+        niketica::component::UIAlignment aligment;
+        aligment.horizontal = niketica::component::AlignmentHorizontal::CENTER;
+        aligment.vertical = niketica::component::AlignmentVertical::CENTER;
+
+        niketica::component::ParentTransform parentTransform = { containerBox };
+        registry->emplace<niketica::component::ParentTransform>(textInfo, parentTransform);
+        registry->emplace<niketica::component::UIAlignment>(textInfo, aligment);
+
+        niketica::component::UIChildren containerChildren;
+        containerChildren.children.emplace_back(textInfo);
+
+        niketica::component::UILayout layout;
+        niketica::component::UIPadding padding;
+        niketica::component::UIContentPadding contentPadding;
+        niketica::component::UISpacing spacing;
+        layout.type = niketica::component::UILayoutType::VERTICAL;
+        registry->emplace<niketica::component::UIChildren>(containerBox, containerChildren);
+        registry->emplace<niketica::component::UIAlignment>(containerBox, aligment);
+        registry->emplace<niketica::component::UILayout>(containerBox, layout);
+        registry->emplace<niketica::component::UIPadding>(containerBox, padding);
+        registry->emplace<niketica::component::UIContentPadding>(containerBox, contentPadding);
+        registry->emplace<niketica::component::UISpacing>(containerBox, spacing);
+
+        // registry->emplace<niketica::component::UILayout>(textInfo, layout);
+        // registry->emplace<niketica::component::UIPadding>(textInfo, padding);
+        // registry->emplace<niketica::component::UISpacing>(textInfo, spacing);
+        
     }
 
 }

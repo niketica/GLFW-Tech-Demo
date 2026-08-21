@@ -54,7 +54,7 @@ namespace niketica::builder
         
         entt::entity UIRectangleBuilder::build()
         {
-            auto transform = niketica::component::Transform
+            auto local = niketica::component::LocalTransform
             {
                 position,
                 { size.x, size.y, 0.0f },
@@ -63,7 +63,8 @@ namespace niketica::builder
             
             auto entity = registry->create();
             registry->emplace<niketica::component::Rectangle>(entity);
-            registry->emplace<niketica::component::Transform>(entity, transform);
+            registry->emplace<niketica::component::LocalTransform>(entity, local);
+            registry->emplace<niketica::component::Transform>(entity);
 
             if (addFill)
             {

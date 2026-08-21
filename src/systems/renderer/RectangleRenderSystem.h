@@ -17,7 +17,7 @@ namespace niketica::systems
 
         void input() override {}
         void update(float dt) override;
-        void render() override {};
+        void render() override;
 
     };
 

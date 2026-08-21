@@ -35,8 +35,6 @@ namespace niketica::engine
         float row = 2.0f;
         float col = 2.0f;
 
-        glm::vec3 clearColor = glm::vec3(0.2f, 0.3f, 0.3f);
-
         std::unique_ptr<EngineServices> engineServices;
         std::unique_ptr<entt::registry> registry;
         std::unique_ptr<niketica::scene::ISceneContext> sceneContext;

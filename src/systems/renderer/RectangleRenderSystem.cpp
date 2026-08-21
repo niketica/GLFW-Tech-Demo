@@ -59,4 +59,12 @@ namespace niketica::systems
         }
     }
 
+    void RectangleRenderSystem::render()
+    {
+        // For now just assume there is always exactly 1 active camera.
+        auto viewCamera = registry->view<niketica::component::Camera, niketica::component::ActiveCamera>();
+        const auto &camera = viewCamera.get<niketica::component::Camera>(viewCamera.front());
+        engineServices->getRenderContext()->getRectangleRenderer()->render(camera.projection, camera.view);        
+    }
+
 }
