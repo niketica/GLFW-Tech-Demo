@@ -85,102 +85,26 @@ namespace niketica::scene
 
     void UISamplesScene::createInfoBox()
     {
-        auto fillColor = niketica::util::colorFromHexRGB("204523");
-        auto borderColor = niketica::util::colorFromHexRGB("09140A");
-
-        float boxWidth = 400.0f;
-        float boxHeight = 300.0f;
-
-        niketica::builder::UIRectangleBuilder rectBuilder = { registry, engineServices };
-        auto containerBox = rectBuilder
-            // .withPosition(glm::vec3{100.0f, 20.0f, 0.0f})
-            .withSize(glm::vec2{boxWidth, boxHeight})
-            .withFillColor(fillColor)
-            .withBorderColor(borderColor)
-            .withBorderThickness(4.0f)
-            .build();
-        
-        niketica::component::UIAlignment aligment;
-        aligment.horizontal = niketica::component::AlignmentHorizontal::CENTER;
-        aligment.vertical = niketica::component::AlignmentVertical::CENTER;
-
-        niketica::component::UILayout layout;
-        layout.type = niketica::component::UILayoutType::VERTICAL;
-        niketica::component::UIPadding padding;
-        niketica::component::UIContentPadding contentPadding;
-        niketica::component::UISpacing spacing;
-        spacing.spacing = 16.0f;
-        
-        registry->emplace<niketica::component::UIAlignment>(containerBox, aligment);
-        registry->emplace<niketica::component::UILayout>(containerBox, layout);
-        registry->emplace<niketica::component::UIPadding>(containerBox, padding);
-        registry->emplace<niketica::component::UIContentPadding>(containerBox, contentPadding);
-        registry->emplace<niketica::component::UISpacing>(containerBox, spacing);
-
+        auto containerBox = createContainerRect("204523", "09140A", glm::vec2{400.0f, 300.0f}, 16.0f);
         auto textInfo = createTextLabel("This is an info box.", 20.0f);
-
-        niketica::component::ParentTransform parentTransform = { containerBox };
-        registry->emplace<niketica::component::ParentTransform>(textInfo, parentTransform);
-        registry->emplace<niketica::component::UIAlignment>(textInfo, aligment);
-
         auto okButton = createButton("OK");
-        niketica::component::ParentTransform parentTransform2 = { containerBox };
-        registry->emplace<niketica::component::ParentTransform>(okButton, parentTransform2);
-
-        // ADD CONTAINER CHILDREN
-        niketica::component::UIChildren containerChildren;
-        containerChildren.children.emplace_back(textInfo);
-        containerChildren.children.emplace_back(okButton);
-        registry->emplace<niketica::component::UIChildren>(containerBox, containerChildren);
+        addChildToContainer(containerBox, textInfo);
+        addChildToContainer(containerBox, okButton);
     }
 
     entt::entity UISamplesScene::createButton(const char* text)
     {
-        auto fillColor = niketica::util::colorFromHexRGB("152E18");
-        auto borderColor = niketica::util::colorFromHexRGB("09140A");
-
-        niketica::component::UIAlignment aligment;
-        aligment.horizontal = niketica::component::AlignmentHorizontal::CENTER;
-        aligment.vertical = niketica::component::AlignmentVertical::CENTER;
-
-        niketica::component::UILayout layout;
-        layout.type = niketica::component::UILayoutType::VERTICAL;
-        niketica::component::UIPadding padding;
-        niketica::component::UIContentPadding contentPadding;
-        niketica::component::UISpacing spacing;
-
-        niketica::builder::UIRectangleBuilder rectBuilder = { registry, engineServices };
-        auto okButton = rectBuilder
-            .withSize(glm::vec2{40.0f, 30.0f})
-            .withFillColor(fillColor)
-            .withBorderColor(borderColor)
-            .withBorderThickness(4.0f)
-            .build();
-
-        registry->emplace<niketica::component::UIAlignment>(okButton, aligment);
-        registry->emplace<niketica::component::UILayout>(okButton, layout);
-        registry->emplace<niketica::component::UIPadding>(okButton, padding);
-        registry->emplace<niketica::component::UIContentPadding>(okButton, contentPadding);
-        registry->emplace<niketica::component::UISpacing>(okButton, spacing);
-
+        auto okButton = createContainerRect("152E18", "09140A", glm::vec2{40.0f, 30.0f});
         auto textOkButton = createTextLabel("OK", 20.0f);
-
-        niketica::component::ParentTransform parentTransform3 = { okButton };
-        registry->emplace<niketica::component::ParentTransform>(textOkButton, parentTransform3);
-        registry->emplace<niketica::component::UIAlignment>(textOkButton, aligment);
-
-        niketica::component::UIChildren containerChildren;
-        containerChildren.children.emplace_back(textOkButton);
-        registry->emplace<niketica::component::UIChildren>(okButton, containerChildren);
-
+        addChildToContainer(okButton, textOkButton);
         return okButton;
     }
 
     entt::entity UISamplesScene::createTextLabel(const char* text, float fontSize)
     {
         auto textColor = niketica::util::colorFromHexRGB("000000");
+
         niketica::builder::UITextLabelBuilder textLabelBuilder = { registry, engineServices };
-        textLabelBuilder = { registry, engineServices };
         auto entity = textLabelBuilder
             .withText(text)
             .withFontSize(fontSize)
@@ -188,7 +112,64 @@ namespace niketica::scene
             .withColor(textColor)
             .withPosition(glm::vec2{ 0.0f, 0.0f })
             .build();
+            
+        niketica::component::UIAlignment aligment;
+        aligment.horizontal = niketica::component::AlignmentHorizontal::CENTER;
+        aligment.vertical = niketica::component::AlignmentVertical::CENTER;
+        registry->emplace<niketica::component::UIAlignment>(entity, aligment);
+
         return entity;
+    }
+
+    entt::entity UISamplesScene::createContainerRect(const char* fillColor, const char* borderColor, const glm::vec2 size, float spacing)
+    {
+        auto fillColorVec4 = niketica::util::colorFromHexRGB(fillColor);
+        auto borderColorVec4 = niketica::util::colorFromHexRGB(borderColor);
+
+        niketica::component::UIAlignment aligment;
+        aligment.horizontal = niketica::component::AlignmentHorizontal::CENTER;
+        aligment.vertical = niketica::component::AlignmentVertical::CENTER;
+
+        niketica::component::UILayout layout;
+        layout.type = niketica::component::UILayoutType::VERTICAL;
+        niketica::component::UIPadding padding;
+        niketica::component::UIContentPadding contentPadding;
+        niketica::component::UISpacing spacingCmpnt;
+        spacingCmpnt.spacing = spacing;
+
+        niketica::builder::UIRectangleBuilder rectBuilder = { registry, engineServices };
+        auto entity = rectBuilder
+            .withSize(size)
+            .withFillColor(fillColorVec4)
+            .withBorderColor(borderColorVec4)
+            .withBorderThickness(4.0f)
+            .build();
+
+        registry->emplace<niketica::component::UIAlignment>(entity, aligment);
+        registry->emplace<niketica::component::UILayout>(entity, layout);
+        registry->emplace<niketica::component::UIPadding>(entity, padding);
+        registry->emplace<niketica::component::UIContentPadding>(entity, contentPadding);
+        registry->emplace<niketica::component::UISpacing>(entity, spacingCmpnt);
+
+        return entity;
+    }
+
+    void UISamplesScene::addChildToContainer(entt::entity container, entt::entity child)
+    {
+        niketica::component::ParentTransform parentTransform = { container };
+        registry->emplace<niketica::component::ParentTransform>(child, parentTransform);
+
+        if (registry->any_of<niketica::component::UIChildren>(container))
+        {
+            auto& children = registry->get<niketica::component::UIChildren>(container).children;
+            children.emplace_back(child);
+        }
+        else
+        {
+            niketica::component::UIChildren containerChildren;
+            containerChildren.children.emplace_back(child);
+            registry->emplace<niketica::component::UIChildren>(container, containerChildren);
+        }
     }
 
 }
