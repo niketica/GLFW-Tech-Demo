@@ -40,6 +40,8 @@ namespace niketica::scene
 
         void init();
         void createInfoBox();
+        entt::entity createButton(const char* text);
+        entt::entity createTextLabel(const char* text, float fontSize);
 
     };
 }
