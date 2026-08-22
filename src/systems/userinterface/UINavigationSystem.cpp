@@ -13,34 +13,26 @@ namespace niketica::systems
         auto viewFocus = registry->view<niketica::component::UIFocus>();
         auto& focus = viewFocus.get<niketica::component::UIFocus>(viewFocus.front());
 
-        auto viewUIActive = registry->view<niketica::component::UIActive, niketica::component::UIChildren>();
-        for (auto entity : viewUIActive)
+        auto viewActiveFocusables = registry->view<niketica::component::UIActive>();
+        for (auto entity : viewActiveFocusables)
         {
-            const auto& children = registry->get<niketica::component::UIChildren>(entity).children;
-            if (children.empty())
-            {
-                continue;
-            }
-
             bool focusChanged = false;
 
             focusChanged |= handleKeyboardNavigation(
                 dt,
                 input,
                 repeatConfig,
-                focus,
-                children);
+                focus);
 
             focusChanged |= handleMouseHover(
                 input,
-                focus,
-                children);
+                focus);
 
-            handleActivation(input, focus, children);
+            handleActivation(input, focus);
 
             if (focusChanged)
             {
-                updateFocusedVisuals(entity, focus, children);
+                updateFocusedVisuals(entity, focus);
             }
         }
     }
@@ -50,20 +42,19 @@ namespace niketica::systems
         float deltaTime,
         component::InputComponent& input,
         const component::InputRepeatConfig& repeatConfig,
-        component::UIFocus& focus,
-        const std::vector<entt::entity>& children
+        component::UIFocus& focus
     )
     {
         int previousIndex = focus.index;
 
         if (moveMenuUp(deltaTime, input, repeatConfig))
         {
-            focus.index = (focus.index + children.size() - 1) % children.size();
+            focus.index = (focus.index + focus.focusables.size() - 1) % focus.focusables.size();
             playMoveSound();
         }
         else if (moveMenuDown(deltaTime, input, repeatConfig))
         {
-            focus.index = (focus.index + 1) % children.size();
+            focus.index = (focus.index + 1) % focus.focusables.size();
             playMoveSound();
         }
 
@@ -73,8 +64,7 @@ namespace niketica::systems
     bool UINavigationSystem::handleMouseHover
     (
         component::InputComponent& input,
-        component::UIFocus& focus,
-        const std::vector<entt::entity>& children
+        component::UIFocus& focus
     )
     {
         if (input.mousePos == lastMousePos)
@@ -84,9 +74,9 @@ namespace niketica::systems
         lastMousePos = input.mousePos;
 
         int previousIndex = focus.index;
-        for (size_t i = 0; i < children.size(); ++i)
+        for (size_t i = 0; i < focus.focusables.size(); ++i)
         {
-            auto entity = children[i];
+            auto entity = focus.focusables.at(i);
             auto& transform = registry->get<component::Transform>(entity);
 
             if (isMouseInsideButton(input.mousePos, transform))
@@ -208,13 +198,12 @@ namespace niketica::systems
     void UINavigationSystem::updateFocusedVisuals
     (
         entt::entity panel,
-        const component::UIFocus& focus,
-        const std::vector<entt::entity>& children
+        const component::UIFocus& focus
     )
     {
-        for (size_t i = 0; i < children.size(); ++i)
+        for (size_t i = 0; i < focus.focusables.size(); ++i)
         {
-            auto entity = children[i];
+            auto entity = focus.focusables.at(i);
 
             if (!registry->all_of<niketica::component::NineSlice>(entity))
             {
@@ -243,23 +232,22 @@ namespace niketica::systems
     void UINavigationSystem::handleActivation
     (
         component::InputComponent& input,
-        component::UIFocus& focus,
-        const std::vector<entt::entity>& children
+        component::UIFocus& focus
     )
     {
         entt::entity activated = entt::null;
 
         if (menuItemConfirmed(input))
         {
-            activated = children[focus.index];
+            activated = focus.focusables.at(focus.index);
         }
         else if (input.actions[component::Action::MOUSE_LEFT].released)
         {
-            activated = findClickedButton(input.mousePos, children);
+            activated = findClickedButton(input.mousePos, focus.focusables);
 
             if (activated != entt::null)
             {
-                focus.index = findButtonIndex(activated, children);
+                focus.index = findButtonIndex(activated, focus.focusables);
             }
         }
 

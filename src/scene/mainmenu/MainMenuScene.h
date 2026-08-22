@@ -4,6 +4,7 @@
 #include <entt/entt.hpp>
 
 #include "component/Components.h"
+#include "engine/util/UserInterfaceUtil.h"
 #include "engine/builder/userinterface/UITextLabelBuilder.h"
 #include "engine/builder/userinterface/UIPanelBuilder.h"
 #include "engine/core/EngineServices.h"

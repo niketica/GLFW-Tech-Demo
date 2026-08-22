@@ -129,6 +129,7 @@ namespace niketica::component
     struct UIFocus
     {
         int index = 0;
+        std::vector<entt::entity> focusables;
     };
 
     struct UIActive {};

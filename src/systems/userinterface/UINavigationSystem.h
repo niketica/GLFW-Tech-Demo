@@ -30,15 +30,13 @@ namespace niketica::systems
             float deltaTime,
             component::InputComponent& input,
             const component::InputRepeatConfig& repeatConfig,
-            component::UIFocus& focus,
-            const std::vector<entt::entity>& children
+            component::UIFocus& focus
         );
 
         bool handleMouseHover
         (
             component::InputComponent& input,
-            component::UIFocus& focus,
-            const std::vector<entt::entity>& children
+            component::UIFocus& focus
         );
         
         bool shouldFireRepeated
@@ -60,15 +58,13 @@ namespace niketica::systems
         void updateFocusedVisuals
         (
             entt::entity panel,
-            const component::UIFocus& focus,
-            const std::vector<entt::entity>& children
+            const component::UIFocus& focus
         );
 
         void handleActivation
         (
             component::InputComponent& input,
-            component::UIFocus& focus,
-            const std::vector<entt::entity>& children
+            component::UIFocus& focus
         );
         int findButtonIndex(entt::entity button, const std::vector<entt::entity>& children);
         entt::entity findClickedButton(const glm::vec2& mousePos, const std::vector<entt::entity>& children);
