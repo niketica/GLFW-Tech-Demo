@@ -45,5 +45,8 @@ namespace niketica::scene
         entt::entity createContainerRect(const char* fillColor, const char* borderColor, const glm::vec2 size, float spacing = 0.0f);
         void addChildToContainer(entt::entity container, entt::entity child);
 
+        glm::vec2 getSizeWithPadding(glm::vec2 size, float padding) const;
+        void setPadding(entt::entity entity, const float value);
+
     };
 }

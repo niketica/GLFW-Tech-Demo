@@ -143,8 +143,8 @@ namespace niketica::component
 
     struct UISize
     {
-        UISizeMode widthMode;
-        UISizeMode heightMode;
+        UISizeMode widthMode = UISizeMode::PIXELS;
+        UISizeMode heightMode = UISizeMode::PIXELS;
         float width;
         float height;
     };

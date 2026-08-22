@@ -47,7 +47,14 @@ namespace niketica::scene
         //     .withBorderThickness(10.0f)
         //     .build();
 
-        createInfoBox();
+        //createInfoBox();
+        auto buttonInfo = createButton("Create Info Box");
+        const auto& size = registry->get_or_emplace<niketica::component::UISize>(buttonInfo);
+        auto& anchor = registry->get_or_emplace<niketica::component::UIAnchor>(buttonInfo);
+        anchor.horizontal = niketica::component::AlignmentHorizontal::LEFT;
+        anchor.vertical = niketica::component::AlignmentVertical::TOP;
+        anchor.offset.x = 100.0f;
+        anchor.offset.y = -200.0f - size.height;
 
         registry->emplace<niketica::component::UIGlobalLayoutDirty>(registry->create());
     }
@@ -94,10 +101,15 @@ namespace niketica::scene
 
     entt::entity UISamplesScene::createButton(const char* text)
     {
-        auto okButton = createContainerRect("152E18", "09140A", glm::vec2{40.0f, 30.0f});
-        auto textOkButton = createTextLabel("OK", 20.0f);
-        addChildToContainer(okButton, textOkButton);
-        return okButton;
+        auto textLabel = createTextLabel(text, 20.0f);
+        const auto& textSize = registry->get_or_emplace<niketica::component::LocalTransform>(textLabel).size;
+
+        float padding = 20.0f;
+        auto buttonSize = getSizeWithPadding(textSize, padding);
+        auto button = createContainerRect("152E18", "09140A", buttonSize);
+        setPadding(button, padding);
+        addChildToContainer(button, textLabel);
+        return button;
     }
 
     entt::entity UISamplesScene::createTextLabel(const char* text, float fontSize)
@@ -136,6 +148,9 @@ namespace niketica::scene
         niketica::component::UIContentPadding contentPadding;
         niketica::component::UISpacing spacingCmpnt;
         spacingCmpnt.spacing = spacing;
+        niketica::component::UISize uiSize;
+        uiSize.width = size.x;
+        uiSize.height = size.y;
 
         niketica::builder::UIRectangleBuilder rectBuilder = { registry, engineServices };
         auto entity = rectBuilder
@@ -150,6 +165,7 @@ namespace niketica::scene
         registry->emplace<niketica::component::UIPadding>(entity, padding);
         registry->emplace<niketica::component::UIContentPadding>(entity, contentPadding);
         registry->emplace<niketica::component::UISpacing>(entity, spacingCmpnt);
+        registry->emplace<niketica::component::UISize>(entity, uiSize);
 
         return entity;
     }
@@ -172,4 +188,18 @@ namespace niketica::scene
         }
     }
 
+    void UISamplesScene::setPadding(entt::entity entity, const float value)
+    {
+        auto& padding = registry->get_or_emplace<niketica::component::UIContentPadding>(entity);
+        padding.top = value;
+        padding.bottom = value;
+        padding.left = value;
+        padding.right = value;
+    }
+
+    glm::vec2 UISamplesScene::getSizeWithPadding(glm::vec2 size, float padding) const
+    {
+        return glm::vec2{ size.x + padding, size.y + padding };
+    }
+    
 }

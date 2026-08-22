@@ -47,7 +47,6 @@ namespace niketica::scene
             .build();
 
         createMainMenuPanel();
-        createTestPanel2();
     }
 
     void MainMenuScene::input()
@@ -208,6 +207,12 @@ namespace niketica::scene
             .addButton(buttonQuit)
             .build();
 
+        auto& anchor = registry->get_or_emplace<niketica::component::UIAnchor>(panel);
+        anchor.horizontal = niketica::component::AlignmentHorizontal::CENTER;
+        anchor.vertical = niketica::component::AlignmentVertical::CENTER;
+        anchor.offset.x = panelWidth * -0.5f;
+        anchor.offset.y = panelHeight * -0.5f;
+
         registry->emplace<niketica::component::UIActive>(panel);
         registry->emplace<niketica::component::UIFocus>(panel);
     }
@@ -260,31 +265,14 @@ namespace niketica::scene
             .addButton(buttonBack)
             .build();
 
+        auto& anchor = registry->get_or_emplace<niketica::component::UIAnchor>(panel);
+        anchor.horizontal = niketica::component::AlignmentHorizontal::CENTER;
+        anchor.vertical = niketica::component::AlignmentVertical::CENTER;
+        anchor.offset.x = panelWidth * -0.5f;
+        anchor.offset.y = panelHeight * -0.5f;
+
         registry->emplace<niketica::component::UIActive>(panel);
         registry->emplace<niketica::component::UIFocus>(panel);
-    }
-
-    void MainMenuScene::createTestPanel2()
-    {
-        auto windowView = registry->view<niketica::component::Window>();
-        const auto &windowComponent = windowView.get<niketica::component::Window>(windowView.front());
-        
-        niketica::builder::UIPanelBuilder panelBuilder2 = { registry, engineServices };
-        panelBuilder2
-            .withPosition({600.0f,100.0f})
-            .withSize({windowComponent.width,200.0f})
-            .withPadding(20.0f)
-            .withFontColor({ 1.0f, 1.0f, 0.0f, 1.0f })
-            .withFontSize(20.0f)
-            .withAlignmentHorizontal(niketica::component::AlignmentHorizontal::CENTER)
-            .withAlignmentVertical(niketica::component::AlignmentVertical::BOTTOM)
-            .withLayoutType(niketica::component::UILayoutType::HORIZONTAL)
-            .addTextLabel(createTextLabel("A"))
-            .addTextLabel(createTextLabel("B"))
-            .addButton("", { 74.0f, 74.0f})
-            .addButton("", { 74.0f, 74.0f})
-            .addButton("", { 74.0f, 74.0f})
-            .build();
     }
     
     entt::entity MainMenuScene::createTextLabel(const std::string& text)
@@ -385,6 +373,12 @@ namespace niketica::scene
             .addButton(buttonUISamples)
             .addButton(buttonBack)
             .build();
+
+        auto& anchor = registry->get_or_emplace<niketica::component::UIAnchor>(panel);
+        anchor.horizontal = niketica::component::AlignmentHorizontal::CENTER;
+        anchor.vertical = niketica::component::AlignmentVertical::CENTER;
+        anchor.offset.x = panelWidth * -0.5f;
+        anchor.offset.y = panelHeight * -0.5f;
 
         registry->emplace<niketica::component::UIActive>(panel);
         registry->emplace<niketica::component::UIFocus>(panel);

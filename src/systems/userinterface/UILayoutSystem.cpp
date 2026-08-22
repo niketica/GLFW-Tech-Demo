@@ -26,7 +26,6 @@ namespace niketica::systems
         for (auto container : viewContainers)
         {
             registry->remove<niketica::component::UIContainerLayoutDirty>(container);
-            updatePositionContainer(container, renderSettings);
             updateLayoutContainer(container);
         }
     }
@@ -37,8 +36,8 @@ namespace niketica::systems
         for (auto container : viewLayoutDirty)
         {
             registry->remove<niketica::component::UIContainerLayoutDirty>(container);
-            updatePositionContainer(container, renderSettings);
-            updateLayoutContainer(container);        
+            updateUIPositionAndSize(renderSettings, container);
+            updateLayoutContainer(container);
         }
     }
 
@@ -52,43 +51,6 @@ namespace niketica::systems
             isDirty = true;
         }
         return isDirty;
-    }
-
-    void UILayoutSystem::updatePositionContainer(entt::entity container, const niketica::component::RenderSettings& renderSettings)
-    {
-        const auto& alignment = registry->get<niketica::component::UIAlignment>(container);
-        auto& transform = registry->get<niketica::component::LocalTransform>(container);
-        auto& position = transform.position;
-        const auto& size = transform.size;
-
-        float virtualWidth = renderSettings.uiReferenceResolution.x;
-        float virtualHeight = renderSettings.uiReferenceResolution.y;
-
-        switch (alignment.horizontal)
-        {
-        case niketica::component::AlignmentHorizontal::CENTER:
-            position.x = (virtualWidth * 0.5f) - (size.x * 0.5f);
-            break;
-        case niketica::component::AlignmentHorizontal::LEFT:
-            position.x = 0.0f;
-            break;
-        case niketica::component::AlignmentHorizontal::RIGHT:
-            position.x = virtualWidth - size.x;
-            break;
-        }
-
-        switch (alignment.vertical)
-        {
-        case niketica::component::AlignmentVertical::CENTER:
-            position.y = (virtualHeight * 0.5f) - (size.y * 0.5f);
-            break;
-        case niketica::component::AlignmentVertical::TOP:
-            position.y = virtualHeight - size.y;
-            break;
-        case niketica::component::AlignmentVertical::BOTTOM:
-            position.y = 0.0f;
-            break;
-        }
     }
 
     void UILayoutSystem::updateLayoutContainer(entt::entity container)
@@ -298,25 +260,30 @@ namespace niketica::systems
         auto viewUIStuff = registry->view<niketica::component::UIAnchor, niketica::component::UISize, niketica::component::LocalTransform>();
         for (auto entity : viewUIStuff)
         {
-            const auto& anchor = viewUIStuff.get<niketica::component::UIAnchor>(entity);
-            const auto& size = viewUIStuff.get<niketica::component::UISize>(entity);
-            auto& local = viewUIStuff.get<niketica::component::LocalTransform>(entity);
+            updateUIPositionAndSize(renderSettings, entity);
+        }
+    }
 
-            const auto& uiReferenceResolution = renderSettings.uiReferenceResolution;
-            float scaleX = uiReferenceResolution.x / niketica::config::ORIGINAL_WIDTH;
-            float scaleY = uiReferenceResolution.y / niketica::config::ORIGINAL_HEIGHT;
+    void UILayoutSystem::updateUIPositionAndSize(const niketica::component::RenderSettings& renderSettings, entt::entity entity)
+    {
+        const auto& anchor = registry->get<niketica::component::UIAnchor>(entity);
+        const auto& size = registry->get<niketica::component::UISize>(entity);
+        auto& local = registry->get<niketica::component::LocalTransform>(entity);
 
-            auto calculatedPosition = calculatePosition({ uiReferenceResolution.x, uiReferenceResolution.y }, { scaleX, scaleY }, anchor);
-            auto calculatedSize = calculateSize({ scaleX, scaleY }, size);
+        const auto& uiReferenceResolution = renderSettings.uiReferenceResolution;
+        float scaleX = uiReferenceResolution.x / niketica::config::ORIGINAL_WIDTH;
+        float scaleY = uiReferenceResolution.y / niketica::config::ORIGINAL_HEIGHT;
 
-            local.position = { calculatedPosition.x, calculatedPosition.y, 0.0f };
-            local.size = { calculatedSize.x, calculatedSize.y, 0.0f };
+        auto calculatedPosition = calculatePosition({ uiReferenceResolution.x, uiReferenceResolution.y }, { scaleX, scaleY }, anchor);
+        auto calculatedSize = calculateSize({ scaleX, scaleY }, size);
 
-            if (registry->any_of<niketica::component::Text>(entity))
-            {
-                auto& text = registry->get<niketica::component::Text>(entity);
-                text.fontSize = (int)calculatedSize.y;
-            }
+        local.position = { calculatedPosition.x, calculatedPosition.y, 0.0f };
+        local.size = { calculatedSize.x, calculatedSize.y, 0.0f };
+
+        if (registry->any_of<niketica::component::Text>(entity))
+        {
+            auto& text = registry->get<niketica::component::Text>(entity);
+            text.fontSize = (int)calculatedSize.y;
         }
     }
 

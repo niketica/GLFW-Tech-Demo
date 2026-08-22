@@ -22,7 +22,6 @@ namespace niketica::systems
         void render() override {};
 
     private:
-        void updatePositionContainer(entt::entity container, const niketica::component::RenderSettings& renderSettings);
         void updateLayoutContainer(entt::entity container);
 
         // Layout Vertical 
@@ -40,6 +39,7 @@ namespace niketica::systems
         void alignChildrenVertically(const niketica::component::UIChildren& children, const float containerPosZ, const float containerSizeY, const niketica::component::UIContentPadding padding);
 
         void updateUIPositionAndSize(const niketica::component::RenderSettings& renderSettings);
+        void updateUIPositionAndSize(const niketica::component::RenderSettings& renderSettings, entt::entity entity);
 
         glm::vec2 calculatePosition(const glm::vec2& resolution, const glm::vec2& scale, const niketica::component::UIAnchor& anchor) const;
         glm::vec2 calculateSize(const glm::vec2& scale, const niketica::component::UISize& size) const;

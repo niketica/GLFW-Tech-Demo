@@ -68,7 +68,6 @@ namespace niketica::scene
         void init();
         void createMainMenuPanel();
         void createOptionsMenuPanel();
-        void createTestPanel2();
         void createDemosPanel();
         entt::entity createTextLabel(const std::string& text);
         entt::entity createButton(const std::string& text);
