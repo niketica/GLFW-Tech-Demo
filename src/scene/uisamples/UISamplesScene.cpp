@@ -51,6 +51,7 @@ namespace niketica::scene
         //createInfoBox();
         createInfoButton();
         createTestButton();
+        setFocusOnMainButtons();
 
         registry->emplace<niketica::component::UIGlobalLayoutDirty>(registry->create());
     }
@@ -91,6 +92,13 @@ namespace niketica::scene
                     createInfoBox();
                 }
                     break;
+                case ButtonType::INFO_BOX_OK:
+                {
+                    auto root = getContainerRoot(entity);
+                    destroyContainer(root);
+                    setFocusOnMainButtons();
+                }
+                    break;
                 }
             }
         }
@@ -109,39 +117,49 @@ namespace niketica::scene
     
     void UISamplesScene::createInfoButton()
     {
-        auto button = createButton("Create Info Box");
-        const auto& size = registry->get_or_emplace<niketica::component::UISize>(button);
-        auto& anchor = registry->get_or_emplace<niketica::component::UIAnchor>(button);
+        buttonCreateInfoBox = createButton("Create Info Box");
+        const auto& size = registry->get_or_emplace<niketica::component::UISize>(buttonCreateInfoBox);
+        auto& anchor = registry->get_or_emplace<niketica::component::UIAnchor>(buttonCreateInfoBox);
         anchor.horizontal = niketica::component::AlignmentHorizontal::LEFT;
         anchor.vertical = niketica::component::AlignmentVertical::TOP;
         anchor.offset.x = 100.0f;
         anchor.offset.y = -200.0f - size.height;
 
-        niketica::util::addFocusable(registry, button);
-
-        registry->emplace<ButtonScene>(button, ButtonScene{ ButtonType::CREATE_INFO_BOX });
+        registry->emplace<ButtonScene>(buttonCreateInfoBox, ButtonScene{ ButtonType::CREATE_INFO_BOX });
     }
 
     void UISamplesScene::createTestButton()
     {
-        auto button = createButton("Test Button");
-        const auto& size = registry->get_or_emplace<niketica::component::UISize>(button);
-        auto& anchor = registry->get_or_emplace<niketica::component::UIAnchor>(button);
+        buttonTest = createButton("Test Button");
+        const auto& size = registry->get_or_emplace<niketica::component::UISize>(buttonTest);
+        auto& anchor = registry->get_or_emplace<niketica::component::UIAnchor>(buttonTest);
         anchor.horizontal = niketica::component::AlignmentHorizontal::LEFT;
         anchor.vertical = niketica::component::AlignmentVertical::TOP;
         anchor.offset.x = 100.0f;
         anchor.offset.y = -300.0f - size.height;
-
-        niketica::util::addFocusable(registry, button);
     }
 
     void UISamplesScene::createInfoBox()
     {
-        auto containerBox = createContainerRect("204523", "09140A", glm::vec2{400.0f, 300.0f}, 16.0f);
+        float width = 400.0f;
+        float height = 300.0f;
+        auto containerBox = createContainerRect("204523", "09140A", glm::vec2{width, height}, 16.0f);
         auto textInfo = createTextLabel("This is an info box.", 20.0f);
         auto okButton = createButton("OK");
         addChildToContainer(containerBox, textInfo);
         addChildToContainer(containerBox, okButton);
+
+        auto& anchor = registry->get_or_emplace<niketica::component::UIAnchor>(containerBox);
+        anchor.horizontal = niketica::component::AlignmentHorizontal::CENTER;
+        anchor.vertical = niketica::component::AlignmentVertical::CENTER;
+        anchor.offset.x = width * -0.5f;
+        anchor.offset.y = height * -0.5f;
+        registry->emplace<niketica::component::UIContainerLayoutDirty>(containerBox);
+
+        niketica::util::clearFocusables(registry);
+        niketica::util::addFocusable(registry, okButton);
+
+        registry->emplace<ButtonScene>(okButton, ButtonScene{ ButtonType::INFO_BOX_OK });
     }
 
     entt::entity UISamplesScene::createButton(const char* text)
@@ -251,4 +269,31 @@ namespace niketica::scene
         return glm::vec2{ size.x + padding, size.y + padding };
     }
     
+    entt::entity UISamplesScene::getContainerRoot(entt::entity entity)
+    {
+        if (registry->all_of<niketica::component::ParentTransform>(entity))
+        {
+            const auto& parent = registry->get<niketica::component::ParentTransform>(entity).parent;
+            return getContainerRoot(parent);
+        }
+        return entity;
+    }
+    
+    void UISamplesScene::destroyContainer(entt::entity entity)
+    {
+        if (registry->all_of<niketica::component::UIChildren>(entity))
+        {
+            const auto& children = registry->get<niketica::component::UIChildren>(entity).children;
+            for (auto child : children)
+            {
+                destroyContainer(child);
+            }
+        }
+        registry->destroy(entity);
+    }
+
+    void UISamplesScene::setFocusOnMainButtons()
+    {
+        niketica::util::setFocusables(registry, {buttonCreateInfoBox, buttonTest});
+    }
 }

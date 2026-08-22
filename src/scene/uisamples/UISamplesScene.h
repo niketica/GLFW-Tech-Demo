@@ -28,7 +28,7 @@ namespace niketica::scene
         {
             UNDEFINED,
             CREATE_INFO_BOX,
-            DESTROY_CONTAINER
+            INFO_BOX_OK
         };
 
         struct ButtonScene
@@ -52,6 +52,9 @@ namespace niketica::scene
         std::unique_ptr<niketica::systems::ISystemContext> systemContext;
         niketica::engine::EngineServices* engineServices;
 
+        entt::entity buttonCreateInfoBox;
+        entt::entity buttonTest;
+
         void init();
         void createInfoButton();
         void createTestButton();
@@ -64,6 +67,11 @@ namespace niketica::scene
 
         glm::vec2 getSizeWithPadding(glm::vec2 size, float padding) const;
         void setPadding(entt::entity entity, const float value);
+
+        entt::entity getContainerRoot(entt::entity entity);
+        void destroyContainer(entt::entity entity);
+
+        void setFocusOnMainButtons();
 
     };
 }
