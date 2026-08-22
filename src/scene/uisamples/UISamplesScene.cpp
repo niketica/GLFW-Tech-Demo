@@ -73,6 +73,13 @@ namespace niketica::scene
     void UISamplesScene::update(float dt)
     {
         systemContext->update(dt);
+
+        auto viewButtonActivated = registry->view<niketica::component::ButtonActivated>();
+        for (auto entity : viewButtonActivated)
+        {
+            registry->remove<niketica::component::ButtonActivated>(entity);
+            std::cout << "INFO::UISamplesScene::update - Button activated!" << std::endl;
+        }
     }
     
     void UISamplesScene::render()

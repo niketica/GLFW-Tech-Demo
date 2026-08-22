@@ -15,22 +15,36 @@ namespace niketica::systems
 
         bool focusChanged = false;
 
-        focusChanged |= handleKeyboardNavigation(
-            dt,
-            input,
-            repeatConfig,
-            focus);
-
-        focusChanged |= handleMouseHover(
-            input,
-            focus);
-
-        handleActivation(input, focus);
+        if (input.mousePos == lastMousePos)
+        {
+            focusChanged = handleKeyboardNavigation
+            (
+                dt,
+                input,
+                repeatConfig,
+                focus
+            );
+        }
+        else
+        {
+            focusChanged = true;
+            bool mouseInsideButton = handleMouseHover(input, focus);
+            if (!mouseInsideButton)
+            {
+                focus.index = -1;
+            }
+        }
 
         if (focusChanged)
         {
             updateFocusedVisuals(focus);
         }
+
+        if (focus.index >= 0)
+        {
+            handleActivation(input, focus);
+        }
+
     }
 
     bool UINavigationSystem::handleKeyboardNavigation
@@ -63,33 +77,31 @@ namespace niketica::systems
         component::UIFocus& focus
     )
     {
-        if (input.mousePos == lastMousePos)
-        {
-            return false;
-        }
+        bool mouseHighlightButton = false;
         lastMousePos = input.mousePos;
 
         int previousIndex = focus.index;
         for (size_t i = 0; i < focus.focusables.size(); ++i)
         {
             auto entity = focus.focusables.at(i);
-            auto& transform = registry->get<component::Transform>(entity);
+            const auto& transform = registry->get<component::Transform>(entity);
 
             if (isMouseInsideButton(input.mousePos, transform))
             {
+                mouseHighlightButton = true;
                 focus.index = static_cast<int>(i);
 
                 if (previousIndex != focus.index)
                 {
                     playMoveSound();
-                    return true;
+                    return mouseHighlightButton;
                 }
 
                 break;
             }
         }
 
-        return false;
+        return mouseHighlightButton;
     }
 
     bool UINavigationSystem::shouldFireRepeated
