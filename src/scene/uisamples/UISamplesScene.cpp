@@ -79,6 +79,20 @@ namespace niketica::scene
         {
             registry->remove<niketica::component::ButtonActivated>(entity);
             std::cout << "INFO::UISamplesScene::update - Button activated!" << std::endl;
+
+            if (registry->all_of<ButtonScene>(entity))
+            {
+                const auto& buttonType = registry->get<ButtonScene>(entity).type;
+
+                switch (buttonType)
+                {
+                case ButtonType::CREATE_INFO_BOX:
+                {
+                    createInfoBox();
+                }
+                    break;
+                }
+            }
         }
     }
     
@@ -104,6 +118,8 @@ namespace niketica::scene
         anchor.offset.y = -200.0f - size.height;
 
         niketica::util::addFocusable(registry, button);
+
+        registry->emplace<ButtonScene>(button, ButtonScene{ ButtonType::CREATE_INFO_BOX });
     }
 
     void UISamplesScene::createTestButton()

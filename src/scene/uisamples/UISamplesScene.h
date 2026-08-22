@@ -23,6 +23,19 @@ namespace niketica::scene
     class UISamplesScene : public IScene
     {
     public:
+        
+        enum class ButtonType
+        {
+            UNDEFINED,
+            CREATE_INFO_BOX,
+            DESTROY_CONTAINER
+        };
+
+        struct ButtonScene
+        {
+            ButtonType type = ButtonType::UNDEFINED;
+        };
+
         UISamplesScene(
             entt::registry* registry,
             niketica::engine::EngineServices* engineServices
@@ -34,7 +47,7 @@ namespace niketica::scene
         void render() override;
         void reset() override;
     
-    private:        
+    private:
         entt::registry* registry;
         std::unique_ptr<niketica::systems::ISystemContext> systemContext;
         niketica::engine::EngineServices* engineServices;
