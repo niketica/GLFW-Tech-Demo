@@ -72,6 +72,7 @@ namespace niketica::scene
         void destroyContainer(entt::entity entity);
 
         void setFocusOnMainButtons();
+        void removeFocusOnMainButtons();
 
     };
 }

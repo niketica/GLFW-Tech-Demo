@@ -90,6 +90,7 @@ namespace niketica::scene
                 case ButtonType::CREATE_INFO_BOX:
                 {
                     createInfoBox();
+                    removeFocusOnMainButtons();
                 }
                     break;
                 case ButtonType::INFO_BOX_OK:
@@ -296,4 +297,12 @@ namespace niketica::scene
     {
         niketica::util::setFocusables(registry, {buttonCreateInfoBox, buttonTest});
     }
+
+    void UISamplesScene::removeFocusOnMainButtons()
+    {
+        niketica::util::updateFocusedVisualsContainer(registry, false, buttonCreateInfoBox);
+        niketica::util::updateFocusedVisualsContainer(registry, false, buttonTest);
+    }
+
+    
 }

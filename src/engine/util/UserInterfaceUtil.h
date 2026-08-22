@@ -30,4 +30,50 @@ namespace niketica::util
         focusables.emplace_back(newFocusable);
     }
 
+    static inline void updateFocusedVisualsContainer(entt::registry* registry, const bool focus, entt::entity entity)
+    {
+        if (registry->all_of<niketica::component::UINormalColor, niketica::component::UIHighlightColor>(entity))
+        {
+            if (focus)
+            {
+                const auto& highlightColor = registry->get<niketica::component::UIHighlightColor>(entity).color;
+                
+                if (registry->all_of<niketica::component::Color>(entity))
+                {
+                    auto& color = registry->get<niketica::component::Color>(entity).value;
+                    color = highlightColor;
+                }
+                if (registry->all_of<niketica::component::Text>(entity))
+                {
+                    auto& text = registry->get<niketica::component::Text>(entity);
+                    text.color = highlightColor;
+                }
+            }
+            else
+            {
+                const auto& normalColor = registry->get<niketica::component::UINormalColor>(entity).color;
+                
+                if (registry->all_of<niketica::component::Color>(entity))
+                {
+                    auto& color = registry->get<niketica::component::Color>(entity).value;
+                    color = normalColor;
+                }
+                if (registry->all_of<niketica::component::Text>(entity))
+                {
+                    auto& text = registry->get<niketica::component::Text>(entity);
+                    text.color = normalColor;
+                }
+            }
+        }
+
+        if (registry->all_of<niketica::component::UIChildren>(entity))
+        {
+            const auto& children = registry->get<niketica::component::UIChildren>(entity).children;
+            for (auto child : children)
+            {
+                updateFocusedVisualsContainer(registry, focus, child);
+            }
+        }
+    }
+
 }
