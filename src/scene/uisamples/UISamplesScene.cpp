@@ -50,7 +50,7 @@ namespace niketica::scene
         niketica::util::clearFocusables(registry);
         //createInfoBox();
         createInfoButton();
-        createTestButton();
+        createTempButton();
         setFocusOnMainButtons();
 
         registry->emplace<niketica::component::UIGlobalLayoutDirty>(registry->create());
@@ -93,6 +93,12 @@ namespace niketica::scene
                     removeFocusOnMainButtons();
                 }
                     break;
+                case ButtonType::CREATE_TEMP_BOX:
+                {
+                    createTempBox();
+                    removeFocusOnMainButtons();
+                }
+                    break;
                 case ButtonType::INFO_BOX_OK:
                 {
                     auto root = getContainerRoot(entity);
@@ -101,6 +107,18 @@ namespace niketica::scene
                 }
                     break;
                 }
+            }
+        }
+
+        auto viewTTL = registry->view<niketica::component::TimeToLive>();
+        for (auto entity : viewTTL)
+        {
+            auto& ttl = registry->get<niketica::component::TimeToLive>(entity);
+            ttl.currentLiveTime += dt;
+            if (ttl.currentLiveTime >= ttl.timeToLive)
+            {
+                destroyContainer(entity);
+                setFocusOnMainButtons();
             }
         }
     }
@@ -129,15 +147,17 @@ namespace niketica::scene
         registry->emplace<ButtonScene>(buttonCreateInfoBox, ButtonScene{ ButtonType::CREATE_INFO_BOX });
     }
 
-    void UISamplesScene::createTestButton()
+    void UISamplesScene::createTempButton()
     {
-        buttonTest = createButton("Test Button");
+        buttonTest = createButton("Create Temporary Box");
         const auto& size = registry->get_or_emplace<niketica::component::UISize>(buttonTest);
         auto& anchor = registry->get_or_emplace<niketica::component::UIAnchor>(buttonTest);
         anchor.horizontal = niketica::component::AlignmentHorizontal::LEFT;
         anchor.vertical = niketica::component::AlignmentVertical::TOP;
         anchor.offset.x = 100.0f;
         anchor.offset.y = -300.0f - size.height;
+
+        registry->emplace<ButtonScene>(buttonTest, ButtonScene{ ButtonType::CREATE_TEMP_BOX });
     }
 
     void UISamplesScene::createInfoBox()
@@ -161,6 +181,25 @@ namespace niketica::scene
         niketica::util::addFocusable(registry, okButton);
 
         registry->emplace<ButtonScene>(okButton, ButtonScene{ ButtonType::INFO_BOX_OK });
+    }
+
+    void UISamplesScene::createTempBox()
+    {
+        float width = 400.0f;
+        float height = 300.0f;
+        auto containerBox = createContainerRect("204523", "09140A", glm::vec2{width, height}, 16.0f);
+        auto textInfo = createTextLabel("This is a temporary box and will close automatically.", 20.0f);
+        addChildToContainer(containerBox, textInfo);
+
+        auto& anchor = registry->get_or_emplace<niketica::component::UIAnchor>(containerBox);
+        anchor.horizontal = niketica::component::AlignmentHorizontal::CENTER;
+        anchor.vertical = niketica::component::AlignmentVertical::CENTER;
+        anchor.offset.x = width * -0.5f;
+        anchor.offset.y = height * -0.5f;
+        registry->emplace<niketica::component::UIContainerLayoutDirty>(containerBox);
+
+        niketica::util::clearFocusables(registry);
+        registry->emplace<niketica::component::TimeToLive>(containerBox, niketica::component::TimeToLive{ 3.0f });
     }
 
     entt::entity UISamplesScene::createButton(const char* text)

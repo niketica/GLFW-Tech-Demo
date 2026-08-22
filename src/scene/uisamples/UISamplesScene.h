@@ -28,6 +28,7 @@ namespace niketica::scene
         {
             UNDEFINED,
             CREATE_INFO_BOX,
+            CREATE_TEMP_BOX,
             INFO_BOX_OK
         };
 
@@ -57,8 +58,9 @@ namespace niketica::scene
 
         void init();
         void createInfoButton();
-        void createTestButton();
+        void createTempButton();
         void createInfoBox();
+        void createTempBox();
 
         entt::entity createButton(const char* text);
         entt::entity createTextLabel(const char* text, float fontSize);
