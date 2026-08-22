@@ -39,7 +39,9 @@ namespace niketica::scene
         niketica::engine::EngineServices* engineServices;
 
         void init();
+        void createInfoButton();
         void createInfoBox();
+
         entt::entity createButton(const char* text);
         entt::entity createTextLabel(const char* text, float fontSize);
         entt::entity createContainerRect(const char* fillColor, const char* borderColor, const glm::vec2 size, float spacing = 0.0f);

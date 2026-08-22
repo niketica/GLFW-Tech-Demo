@@ -61,13 +61,17 @@ namespace niketica::engine
         registry->emplace<niketica::component::Persistent>(cameraEntity);
         registry->emplace<niketica::component::Camera>(cameraEntity, camera);
         registry->emplace<niketica::component::ActiveCamera>(cameraEntity);
-        
-        sceneContext->setRegistry(registry.get());
-        sceneContext->initScenes();
 
         auto engineConfigEntity = registry->create();
         registry->emplace<niketica::component::Persistent>(engineConfigEntity);
         registry->emplace<niketica::component::EngineConfig>(engineConfigEntity);
+        
+        auto userInterface = registry->create();
+        registry->emplace<niketica::component::Persistent>(userInterface);
+        registry->emplace<niketica::component::UIFocus>(userInterface);
+        
+        sceneContext->setRegistry(registry.get());
+        sceneContext->initScenes();
 
         updateViewport();
 

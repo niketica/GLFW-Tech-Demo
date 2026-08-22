@@ -9,7 +9,11 @@ namespace niketica::systems
         auto& input = inputView.get<niketica::component::InputComponent>(inputView.front());
         const auto& repeatConfig = inputView.get<niketica::component::InputRepeatConfig>(inputView.front());
 
-        auto viewUIActive = registry->view<niketica::component::UIActive, niketica::component::UIChildren, niketica::component::UIFocus>();
+        // There should always be exactly one UIFocus component.
+        auto viewFocus = registry->view<niketica::component::UIFocus>();
+        auto& focus = viewFocus.get<niketica::component::UIFocus>(viewFocus.front());
+
+        auto viewUIActive = registry->view<niketica::component::UIActive, niketica::component::UIChildren>();
         for (auto entity : viewUIActive)
         {
             const auto& children = registry->get<niketica::component::UIChildren>(entity).children;
@@ -17,7 +21,6 @@ namespace niketica::systems
             {
                 continue;
             }
-            auto& focus = registry->get<niketica::component::UIFocus>(entity);
 
             bool focusChanged = false;
 

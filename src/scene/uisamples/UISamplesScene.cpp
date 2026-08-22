@@ -48,13 +48,7 @@ namespace niketica::scene
         //     .build();
 
         //createInfoBox();
-        auto buttonInfo = createButton("Create Info Box");
-        const auto& size = registry->get_or_emplace<niketica::component::UISize>(buttonInfo);
-        auto& anchor = registry->get_or_emplace<niketica::component::UIAnchor>(buttonInfo);
-        anchor.horizontal = niketica::component::AlignmentHorizontal::LEFT;
-        anchor.vertical = niketica::component::AlignmentVertical::TOP;
-        anchor.offset.x = 100.0f;
-        anchor.offset.y = -200.0f - size.height;
+        createInfoButton();
 
         registry->emplace<niketica::component::UIGlobalLayoutDirty>(registry->create());
     }
@@ -88,6 +82,17 @@ namespace niketica::scene
     {        
         systemContext.release();
         init();
+    }
+    
+    void UISamplesScene::createInfoButton()
+    {
+        auto button = createButton("Create Info Box");
+        const auto& size = registry->get_or_emplace<niketica::component::UISize>(button);
+        auto& anchor = registry->get_or_emplace<niketica::component::UIAnchor>(button);
+        anchor.horizontal = niketica::component::AlignmentHorizontal::LEFT;
+        anchor.vertical = niketica::component::AlignmentVertical::TOP;
+        anchor.offset.x = 100.0f;
+        anchor.offset.y = -200.0f - size.height;
     }
 
     void UISamplesScene::createInfoBox()

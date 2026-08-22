@@ -214,7 +214,6 @@ namespace niketica::scene
         anchor.offset.y = panelHeight * -0.5f;
 
         registry->emplace<niketica::component::UIActive>(panel);
-        registry->emplace<niketica::component::UIFocus>(panel);
     }
 
     void MainMenuScene::createOptionsMenuPanel()
@@ -272,7 +271,6 @@ namespace niketica::scene
         anchor.offset.y = panelHeight * -0.5f;
 
         registry->emplace<niketica::component::UIActive>(panel);
-        registry->emplace<niketica::component::UIFocus>(panel);
     }
     
     entt::entity MainMenuScene::createTextLabel(const std::string& text)
@@ -381,7 +379,6 @@ namespace niketica::scene
         anchor.offset.y = panelHeight * -0.5f;
 
         registry->emplace<niketica::component::UIActive>(panel);
-        registry->emplace<niketica::component::UIFocus>(panel);
         
     }
 
