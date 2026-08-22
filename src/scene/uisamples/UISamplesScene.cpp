@@ -47,8 +47,10 @@ namespace niketica::scene
         //     .withBorderThickness(10.0f)
         //     .build();
 
+        niketica::util::clearFocusables(registry);
         //createInfoBox();
         createInfoButton();
+        createTestButton();
 
         registry->emplace<niketica::component::UIGlobalLayoutDirty>(registry->create());
     }
@@ -93,6 +95,21 @@ namespace niketica::scene
         anchor.vertical = niketica::component::AlignmentVertical::TOP;
         anchor.offset.x = 100.0f;
         anchor.offset.y = -200.0f - size.height;
+
+        niketica::util::addFocusable(registry, button);
+    }
+
+    void UISamplesScene::createTestButton()
+    {
+        auto button = createButton("Test Button");
+        const auto& size = registry->get_or_emplace<niketica::component::UISize>(button);
+        auto& anchor = registry->get_or_emplace<niketica::component::UIAnchor>(button);
+        anchor.horizontal = niketica::component::AlignmentHorizontal::LEFT;
+        anchor.vertical = niketica::component::AlignmentVertical::TOP;
+        anchor.offset.x = 100.0f;
+        anchor.offset.y = -300.0f - size.height;
+
+        niketica::util::addFocusable(registry, button);
     }
 
     void UISamplesScene::createInfoBox()
@@ -119,16 +136,20 @@ namespace niketica::scene
 
     entt::entity UISamplesScene::createTextLabel(const char* text, float fontSize)
     {
-        auto textColor = niketica::util::colorFromHexRGB("000000");
+        auto textNormalColor = niketica::util::colorFromHexRGB("000000");
+        auto textHighlightColor = niketica::util::colorFromHexRGB("FFFFFF");
 
         niketica::builder::UITextLabelBuilder textLabelBuilder = { registry, engineServices };
         auto entity = textLabelBuilder
             .withText(text)
             .withFontSize(fontSize)
             .withFontType(niketica::component::FontType::COURIER_PRIME_CODE)
-            .withColor(textColor)
+            .withColor(textNormalColor)
             .withPosition(glm::vec2{ 0.0f, 0.0f })
             .build();
+
+        registry->emplace<niketica::component::UINormalColor>(entity, niketica::component::UINormalColor{ textNormalColor });
+        registry->emplace<niketica::component::UIHighlightColor>(entity, niketica::component::UIHighlightColor{ textHighlightColor });
             
         niketica::component::UIAlignment aligment;
         aligment.horizontal = niketica::component::AlignmentHorizontal::CENTER;

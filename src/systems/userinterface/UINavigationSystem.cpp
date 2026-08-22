@@ -13,27 +13,23 @@ namespace niketica::systems
         auto viewFocus = registry->view<niketica::component::UIFocus>();
         auto& focus = viewFocus.get<niketica::component::UIFocus>(viewFocus.front());
 
-        auto viewActiveFocusables = registry->view<niketica::component::UIActive>();
-        for (auto entity : viewActiveFocusables)
+        bool focusChanged = false;
+
+        focusChanged |= handleKeyboardNavigation(
+            dt,
+            input,
+            repeatConfig,
+            focus);
+
+        focusChanged |= handleMouseHover(
+            input,
+            focus);
+
+        handleActivation(input, focus);
+
+        if (focusChanged)
         {
-            bool focusChanged = false;
-
-            focusChanged |= handleKeyboardNavigation(
-                dt,
-                input,
-                repeatConfig,
-                focus);
-
-            focusChanged |= handleMouseHover(
-                input,
-                focus);
-
-            handleActivation(input, focus);
-
-            if (focusChanged)
-            {
-                updateFocusedVisuals(entity, focus);
-            }
+            updateFocusedVisuals(focus);
         }
     }
 
@@ -197,7 +193,15 @@ namespace niketica::systems
     
     void UINavigationSystem::updateFocusedVisuals
     (
-        entt::entity panel,
+        const component::UIFocus& focus
+    )
+    {
+        updateFocusedVisualsNineSlice(focus);
+        updateFocusedVisualsContainer(focus);
+    }
+    
+    void UINavigationSystem::updateFocusedVisualsNineSlice
+    (
         const component::UIFocus& focus
     )
     {
@@ -226,6 +230,61 @@ namespace niketica::systems
 
             // auto& style = registry->get<niketica::component::ButtonStyle>(panel);
             nineSlice = (i == focus.index) ? niketica::config::NINE_SLICE_BUTTON_FOCUSED : niketica::config::NINE_SLICE_BUTTON_NORMAL;
+        }
+    }
+    
+    void UINavigationSystem::updateFocusedVisualsContainer(const component::UIFocus& focus)
+    {
+        for (size_t i = 0; i < focus.focusables.size(); ++i)
+        {
+            auto entity = focus.focusables.at(i);
+            updateFocusedVisualsContainer(i == focus.index, entity);
+        }
+    }
+    
+    void UINavigationSystem::updateFocusedVisualsContainer(const bool focus, entt::entity entity)
+    {
+        if (registry->all_of<niketica::component::UINormalColor, niketica::component::UIHighlightColor>(entity))
+        {
+            if (focus)
+            {
+                const auto& highlightColor = registry->get<niketica::component::UIHighlightColor>(entity).color;
+                
+                if (registry->all_of<niketica::component::Color>(entity))
+                {
+                    auto& color = registry->get<niketica::component::Color>(entity).value;
+                    color = highlightColor;
+                }
+                if (registry->all_of<niketica::component::Text>(entity))
+                {
+                    auto& text = registry->get<niketica::component::Text>(entity);
+                    text.color = highlightColor;
+                }
+            }
+            else
+            {
+                const auto& normalColor = registry->get<niketica::component::UINormalColor>(entity).color;
+                
+                if (registry->all_of<niketica::component::Color>(entity))
+                {
+                    auto& color = registry->get<niketica::component::Color>(entity).value;
+                    color = normalColor;
+                }
+                if (registry->all_of<niketica::component::Text>(entity))
+                {
+                    auto& text = registry->get<niketica::component::Text>(entity);
+                    text.color = normalColor;
+                }
+            }
+        }
+
+        if (registry->all_of<niketica::component::UIChildren>(entity))
+        {
+            const auto& children = registry->get<niketica::component::UIChildren>(entity).children;
+            for (auto child : children)
+            {
+                updateFocusedVisualsContainer(focus, child);
+            }
         }
     }
 

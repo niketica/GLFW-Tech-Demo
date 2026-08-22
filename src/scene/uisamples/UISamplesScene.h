@@ -12,6 +12,7 @@
 #include "engine/core/scene/IScene.h"
 #include "engine/core/systems/ISystemContext.h"
 #include "engine/util/ColorUtil.h"
+#include "engine/util/UserInterfaceUtil.h"
 #include "systems/SystemContext.h"
 #include "engine/builder/userinterface/UITextLabelBuilder.h"
 #include "engine/builder/userinterface/UIRectangleBuilder.h"
@@ -40,6 +41,7 @@ namespace niketica::scene
 
         void init();
         void createInfoButton();
+        void createTestButton();
         void createInfoBox();
 
         entt::entity createButton(const char* text);

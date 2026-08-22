@@ -55,11 +55,10 @@ namespace niketica::systems
         void playMoveSound();
         void playConfirmSound();
 
-        void updateFocusedVisuals
-        (
-            entt::entity panel,
-            const component::UIFocus& focus
-        );
+        void updateFocusedVisuals(const component::UIFocus& focus);
+        void updateFocusedVisualsNineSlice(const component::UIFocus& focus);
+        void updateFocusedVisualsContainer(const component::UIFocus& focus);
+        void updateFocusedVisualsContainer(const bool focus, entt::entity entity);
 
         void handleActivation
         (

@@ -159,4 +159,14 @@ namespace niketica::component
 
     struct ResolutionDirty {}; // Indicates that the resolution needs to be updated
 
+    struct UIHighlightColor
+    {
+        glm::vec4 color;
+    };
+
+    struct UINormalColor
+    {
+        glm::vec4 color;
+    };
+
 }
