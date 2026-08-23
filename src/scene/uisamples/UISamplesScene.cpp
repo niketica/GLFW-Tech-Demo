@@ -80,13 +80,13 @@ namespace niketica::scene
                     break;
                 case ButtonType::CREATE_CONFIRM_BOX:
                 {
-                    auto box = createConfirmBox();
-                    registry->emplace<ButtonScene>(box.buttonConfirm, ButtonScene{ ButtonType::CONFIRM_BOX_CONFIRM });
-                    registry->emplace<ButtonScene>(box.buttonCancel, ButtonScene{ ButtonType::CONFIRM_BOX_CANCEL });
+                    auto panel = createConfirmationPanel("This is a confirmation box.\nClick Confirm or Cancel to close it.");
+                    registry->emplace<ButtonScene>(panel.buttonConfirm, ButtonScene{ ButtonType::CONFIRM_BOX_CONFIRM });
+                    registry->emplace<ButtonScene>(panel.buttonCancel, ButtonScene{ ButtonType::CONFIRM_BOX_CANCEL });
 
                     niketica::util::ui::clearFocusables(registry);
-                    niketica::util::ui::addFocusable(registry, box.buttonConfirm);
-                    niketica::util::ui::addFocusable(registry, box.buttonCancel);
+                    niketica::util::ui::addFocusable(registry, panel.buttonConfirm);
+                    niketica::util::ui::addFocusable(registry, panel.buttonCancel);
 
                     removeFocusOnMainButtons();
                 }
@@ -294,6 +294,50 @@ namespace niketica::scene
         
         addChildToContainer(containerBox, textInfo1);
         addChildToContainer(containerBox, textInfo2);
+        addChildToContainer(containerBox, buttonContainer);
+
+        auto& anchor = registry->get_or_emplace<niketica::component::UIAnchor>(containerBox);
+        anchor.horizontal = niketica::component::AlignmentHorizontal::CENTER;
+        anchor.vertical = niketica::component::AlignmentVertical::CENTER;
+        anchor.offset.x = width * -0.5f;
+        anchor.offset.y = height * -0.5f;
+        registry->emplace<niketica::component::UIContainerLayoutDirty>(containerBox);
+
+        return
+        {
+            containerBox,
+            buttonConfirmC,
+            buttonCancel
+        };
+    }
+    
+    UISamplesScene::ConfirmationPanel UISamplesScene::createConfirmationPanel(const std::string& text)
+    {
+        std::vector<std::string> lines = niketica::util::string::splitLines(text);
+        return createConfirmationPanel(lines);
+    }
+
+    UISamplesScene::ConfirmationPanel UISamplesScene::createConfirmationPanel(const std::vector<std::string>& lines)
+    {
+        float width = 500.0f;
+        float height = 180.0f;
+        auto containerBox = createContainerRect("204523", "09140A", glm::vec2{width, height}, 16.0f);
+        auto buttonConfirmC = createButton("Confirm", BUTTON_CONFIRM_SIZE, BUTTON_PADDING);
+        auto buttonCancel = createButton("Cancel", BUTTON_CONFIRM_SIZE, BUTTON_PADDING);
+
+        auto buttonContainer = createContainer({ BUTTON_CONFIRM_SIZE.x * 2.0f, BUTTON_CONFIRM_SIZE.y }, 20.0f, niketica::component::UILayoutType::HORIZONTAL);
+        addChildToContainer(buttonContainer, buttonConfirmC);
+        addChildToContainer(buttonContainer, buttonCancel);
+        niketica::component::UIMargin marginButtons;
+        marginButtons.top = 20.0f;
+        registry->emplace<niketica::component::UIMargin>(buttonContainer, marginButtons);
+
+        for (const auto& line : lines)
+        {
+            const auto label = createTextLabel(line.c_str(), 20.0f);
+            addChildToContainer(containerBox, label);
+        }
+        
         addChildToContainer(containerBox, buttonContainer);
 
         auto& anchor = registry->get_or_emplace<niketica::component::UIAnchor>(containerBox);
