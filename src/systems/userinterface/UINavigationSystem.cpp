@@ -5,13 +5,14 @@ namespace niketica::systems
 
     void UINavigationSystem::update(float dt)
     {
-        auto inputView = registry->view<niketica::component::InputComponent, niketica::component::InputRepeatConfig>();
-        auto& input = inputView.get<niketica::component::InputComponent>(inputView.front());
-        const auto& repeatConfig = inputView.get<niketica::component::InputRepeatConfig>(inputView.front());
-
         // There should always be exactly one UIFocus component.
         auto viewFocus = registry->view<niketica::component::UIFocus>();
         auto& focus = viewFocus.get<niketica::component::UIFocus>(viewFocus.front());
+        if (focus.focusables.empty()) return;
+        
+        auto inputView = registry->view<niketica::component::InputComponent, niketica::component::InputRepeatConfig>();
+        auto& input = inputView.get<niketica::component::InputComponent>(inputView.front());
+        const auto& repeatConfig = inputView.get<niketica::component::InputRepeatConfig>(inputView.front());
 
         bool focusChanged = false;
 
