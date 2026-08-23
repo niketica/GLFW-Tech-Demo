@@ -78,36 +78,41 @@ namespace niketica::scene
                     removeFocusOnMainButtons();
                 }
                     break;
+                case ButtonType::CREATE_CONFIRM_BOX:
+                {
+                    createConfirmBox();
+                    removeFocusOnMainButtons();
+                }
+                    break;
+                case ButtonType::CREATE_CHECKBOX_BOX:
+                {
+                    createCheckboxBox();
+                    removeFocusOnMainButtons();
+                }
+                    break;
+                case ButtonType::CREATE_RADIO_BOX:
+                {
+                    createRadioBox();
+                    removeFocusOnMainButtons();
+                }
+                    break;
+                case ButtonType::CREATE_DROPDOWN_BOX:
+                {
+                    createDropdownBox();
+                    removeFocusOnMainButtons();
+                }
+                    break;
+                case ButtonType::CREATE_DRAGABLE_BOX:
+                {
+                    createDragableBox();
+                    removeFocusOnMainButtons();
+                }
+                    break;
                 case ButtonType::INFO_BOX_OK:
                 {
                     auto root = getContainerRoot(entity);
                     destroyContainer(root);
                     setFocusOnMainButtons();
-                }
-                    break;
-                case ButtonType::CREATE_CONFIRM_BOX:
-                {
-                    std::cout << "Not yet implemented!" << std::endl;
-                }
-                    break;
-                case ButtonType::CREATE_CHECKBOX_BOX:
-                {
-                    std::cout << "Not yet implemented!" << std::endl;
-                }
-                    break;
-                case ButtonType::CREATE_RADIO_BOX:
-                {
-                    std::cout << "Not yet implemented!" << std::endl;
-                }
-                    break;
-                case ButtonType::CREATE_DROPDOWN_BOX:
-                {
-                    std::cout << "Not yet implemented!" << std::endl;
-                }
-                    break;
-                case ButtonType::CREATE_DRAGABLE_BOX:
-                {
-                    std::cout << "Not yet implemented!" << std::endl;
                 }
                     break;
                 }
@@ -213,58 +218,6 @@ namespace niketica::scene
         return button;
     }
     
-    void UISamplesScene::createInfoButton()
-    {
-        buttonInfo = createButton("Create Info Box", BUTTON_MAIN_SIZE, BUTTON_PADDING);
-        auto& anchor = registry->get_or_emplace<niketica::component::UIAnchor>(buttonInfo);
-        anchor.horizontal = niketica::component::AlignmentHorizontal::LEFT;
-        anchor.vertical = niketica::component::AlignmentVertical::TOP;
-        anchor.offset.x = BUTTON_MAIN_OFFSET_X;
-        anchor.offset.y = buttonMainOffsetY;
-
-        registry->emplace<ButtonScene>(buttonInfo, ButtonScene{ ButtonType::CREATE_INFO_BOX });
-    }
-
-    void UISamplesScene::createTempButton()
-    {
-        buttonTemp = createButton("Create Temporary Box", BUTTON_MAIN_SIZE, BUTTON_PADDING);
-        auto& anchor = registry->get_or_emplace<niketica::component::UIAnchor>(buttonTemp);
-        anchor.horizontal = niketica::component::AlignmentHorizontal::LEFT;
-        anchor.vertical = niketica::component::AlignmentVertical::TOP;
-        anchor.offset.x = BUTTON_MAIN_OFFSET_X;
-        anchor.offset.y = buttonMainOffsetY;
-
-        registry->emplace<ButtonScene>(buttonTemp, ButtonScene{ ButtonType::CREATE_TEMP_BOX });
-    }
-    
-    void UISamplesScene::createConfirmButton()
-    {
-        // TODO implementation
-        // Similar to info box, but instead of OK, have Confirm and Cancel
-        // Wrap a container around Confirm and Cancel with horizontal aligment
-    }
-
-    void UISamplesScene::createCheckboxButton()
-    {
-        // TODO implementation
-    }
-
-    void UISamplesScene::createRadioButton()
-    {
-        // TODO implementation
-    }
-    
-    void UISamplesScene::createDropdownButton()
-    {
-        // TODO implementation
-    }
-    
-    void UISamplesScene::createDragableButton()
-    {
-        // TODO implementation
-    }
-    
-
     void UISamplesScene::createInfoBox()
     {
         float width = 300.0f;
@@ -311,6 +264,38 @@ namespace niketica::scene
 
         niketica::util::ui::clearFocusables(registry);
         registry->emplace<niketica::component::TimeToLive>(containerBox, niketica::component::TimeToLive{ 3.0f });
+    }
+    
+    void UISamplesScene::createConfirmBox()
+    {
+        // TODO implementation
+        // Similar to info box, but instead of OK, have Confirm and Cancel
+        // Wrap a container around Confirm and Cancel with horizontal aligment
+        std::cout << "Not yet implemented!" << std::endl;
+    }
+
+    void UISamplesScene::createCheckboxBox()
+    {
+        // TODO implementation
+        std::cout << "Not yet implemented!" << std::endl;
+    }
+
+    void UISamplesScene::createRadioBox()
+    {
+        // TODO implementation
+        std::cout << "Not yet implemented!" << std::endl;
+    }
+    
+    void UISamplesScene::createDropdownBox()
+    {
+        // TODO implementation
+        std::cout << "Not yet implemented!" << std::endl;
+    }
+    
+    void UISamplesScene::createDragableBox()
+    {
+        // TODO implementation
+        std::cout << "Not yet implemented!" << std::endl;
     }
 
     entt::entity UISamplesScene::createButton(const char* text, const glm::vec2& size, const float padding)

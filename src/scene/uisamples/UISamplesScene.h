@@ -80,16 +80,14 @@ namespace niketica::scene
         // Main demo buttons
         void createMainButtons();
         entt::entity createMainButton(const char* text, ButtonType type);
-        void createInfoButton();
-        void createTempButton();
-        void createConfirmButton();
-        void createCheckboxButton();
-        void createRadioButton();
-        void createDropdownButton();
-        void createDragableButton();
 
         void createInfoBox();
         void createTempBox();
+        void createConfirmBox();
+        void createCheckboxBox();
+        void createRadioBox();
+        void createDropdownBox();
+        void createDragableBox();
 
         entt::entity createButton(const char* text, const glm::vec2& size, const float padding);
         entt::entity createTextLabel(const char* text, float fontSize);
