@@ -62,7 +62,7 @@ namespace niketica::scene
 
         const glm::vec2 BUTTON_MAIN_SIZE = { 320.0f, 60.0f };
         const glm::vec2 BUTTON_OK_SIZE = { 60.0f, 40.0f};
-        const glm::vec2 BUTTON_CONFIRM_SIZE = { 60.0f, 40.0f};
+        const glm::vec2 BUTTON_CONFIRM_SIZE = { 100.0f, 40.0f};
         const float BUTTON_PADDING = 20.0f;
         const float BUTTON_MAIN_OFFSET_X = 100.0f;
         const float BUTTON_MAIN_OFFSET_Y_START = -200.0f;

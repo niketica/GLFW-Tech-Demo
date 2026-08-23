@@ -109,6 +109,8 @@ namespace niketica::scene
                 }
                     break;
                 case ButtonType::INFO_BOX_OK:
+                case ButtonType::CONFIRM_BOX_CONFIRM:
+                case ButtonType::CONFIRM_BOX_CANCEL:
                 {
                     auto root = getContainerRoot(entity);
                     destroyContainer(root);
@@ -268,8 +270,8 @@ namespace niketica::scene
     
     void UISamplesScene::createConfirmBox()
     {
-        float width = 300.0f;
-        float height = 160.0f;
+        float width = 500.0f;
+        float height = 180.0f;
         auto containerBox = createContainerRect("204523", "09140A", glm::vec2{width, height}, 16.0f);
         auto textInfo1 = createTextLabel("This is a confirmation box.", 20.0f);
         auto textInfo2 = createTextLabel("Click Confirm or Cancel to close it.", 20.0f);
