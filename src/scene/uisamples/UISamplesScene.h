@@ -44,6 +44,12 @@ namespace niketica::scene
             ButtonType type = ButtonType::UNDEFINED;
         };
 
+        struct InfoPanel
+        {
+            entt::entity rootContainer;
+            std::vector<entt::entity> textLabels;
+        };
+
         struct TempPanel
         {
             entt::entity rootContainer;
@@ -99,7 +105,8 @@ namespace niketica::scene
         void createMainButtons();
         entt::entity createMainButton(const char* text, ButtonType type);
 
-        void createInfoBox();
+        InfoPanel createInfoPanel(const std::string& text);
+        InfoPanel createInfoPanel(const std::vector<std::string>& lines);
         TempPanel createTempPanel(const float ttl, const std::string& text);
         TempPanel createTempPanel(const float ttl, const std::vector<std::string>& lines);
         ConfirmationPanel createConfirmationPanel(const std::string& text);

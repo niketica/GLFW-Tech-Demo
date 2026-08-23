@@ -68,7 +68,7 @@ namespace niketica::scene
                 {
                 case ButtonType::CREATE_INFO_BOX:
                 {
-                    createInfoBox();
+                    createInfoPanel("This is an info box.\nClick OK to close it.");
                     removeFocusOnMainButtons();
                 }
                     break;
@@ -228,29 +228,58 @@ namespace niketica::scene
         return button;
     }
     
-    void UISamplesScene::createInfoBox()
+    UISamplesScene::InfoPanel UISamplesScene::createInfoPanel(const std::string& text)
     {
-        float width = 300.0f;
-        float height = 160.0f;
-        auto containerBox = createContainerRect("204523", "09140A", glm::vec2{width, height}, 16.0f);
-        auto textInfo1 = createTextLabel("This is an info box.", 20.0f);
-        auto textInfo2 = createTextLabel("Click OK to close it.", 20.0f);
-        auto okButton = createButton("OK", BUTTON_OK_SIZE, BUTTON_PADDING);
-        addChildToContainer(containerBox, textInfo1);
-        addChildToContainer(containerBox, textInfo2);
-        addChildToContainer(containerBox, okButton);
+        std::vector<std::string> lines = niketica::util::string::splitLines(text);
+        return createInfoPanel(lines);
+    }
+    
+    UISamplesScene::InfoPanel UISamplesScene::createInfoPanel(const std::vector<std::string>& lines)
+    {
+        float fontSize = 20.0f;
+        float spacing = 20.0f;
+        float baseHeight = 100.0f;
+        float baseWidth = 40.0f;
+        float height = baseHeight + ((fontSize + spacing) * (float)lines.size());
+        float width = baseWidth;
+        for (const auto& line : lines)
+        {
+            auto lineWidth = baseWidth + (float)((float)line.length() * (fontSize * 0.6));
+            if (lineWidth > width)
+            {
+                width = lineWidth;
+            }
+        }
 
-        auto& anchor = registry->get_or_emplace<niketica::component::UIAnchor>(containerBox);
+        auto containerPanel = createContainerRect("204523", "09140A", glm::vec2{width, height}, 16.0f);
+        std::vector<entt::entity> textLabels;
+        for (const auto& line : lines)
+        {
+            const auto label = createTextLabel(line.c_str(), fontSize);
+            addChildToContainer(containerPanel, label);
+            textLabels.emplace_back(label);
+        }
+
+        auto okButton = createButton("OK", BUTTON_OK_SIZE, BUTTON_PADDING);
+        addChildToContainer(containerPanel, okButton);
+
+        auto& anchor = registry->get_or_emplace<niketica::component::UIAnchor>(containerPanel);
         anchor.horizontal = niketica::component::AlignmentHorizontal::CENTER;
         anchor.vertical = niketica::component::AlignmentVertical::CENTER;
         anchor.offset.x = width * -0.5f;
         anchor.offset.y = height * -0.5f;
-        registry->emplace<niketica::component::UIContainerLayoutDirty>(containerBox);
+        registry->emplace<niketica::component::UIContainerLayoutDirty>(containerPanel);
 
         niketica::util::ui::clearFocusables(registry);
         niketica::util::ui::addFocusable(registry, okButton);
 
         registry->emplace<ButtonScene>(okButton, ButtonScene{ ButtonType::INFO_BOX_OK });
+
+        return
+        {
+            containerPanel,
+            textLabels
+        };
     }
     
     UISamplesScene::TempPanel UISamplesScene::createTempPanel(const float ttl, const std::string& text)
