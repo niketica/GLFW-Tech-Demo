@@ -56,14 +56,30 @@ namespace niketica::scene
         const glm::vec2 BUTTON_MAIN_SIZE = { 320.0f, 60.0f };
         const glm::vec2 BUTTON_OK_SIZE = { 60.0f, 40.0f};
         const float BUTTON_PADDING = 20.0f;
+        const float BUTTON_MAIN_OFFSET_X = 100.0f;
+        const float BUTTON_MAIN_OFFSET_Y_START = -200.0f;
+        const float BUTTON_MAIN_OFFSET_Y_SPACING = (BUTTON_MAIN_SIZE.y + 20.0f) * -1.0f;
+        float buttonMainOffsetY = BUTTON_MAIN_OFFSET_Y_START;
 
-        entt::entity buttonCreateInfoBox;
-        entt::entity buttonTest;
+        entt::entity buttonInfo;
+        entt::entity buttonTemp;
+        entt::entity buttonConfirm;
+        entt::entity buttonCheckbox;
+        entt::entity buttonRadio;
+        entt::entity buttonDropdown;
         entt::entity textTTL;
 
         void init();
+
+        // Main demo buttons
         void createInfoButton();
         void createTempButton();
+        void createConfirmButton();
+        void createCheckboxButton();
+        void createRadioButton();
+        void createDropdownButton();
+        void createDragableButton();
+
         void createInfoBox();
         void createTempBox();
 

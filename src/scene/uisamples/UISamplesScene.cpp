@@ -19,38 +19,33 @@ namespace niketica::scene
         auto windowView = registry->view<niketica::component::Window>();
         const auto &windowComponent = windowView.get<niketica::component::Window>(windowView.front());
 
+        auto textColor = niketica::util::color::colorFromHexRGB("09140A");
         niketica::builder::UITextLabelBuilder textLabelBuilder = { registry, engineServices };
         textLabelBuilder
-            .withText("User Interface Sample")
+            .withText("User Interface Samples")
             .withFontSize(48.0f)
             .withFontType(niketica::component::FontType::OPEN_SANS_REGULAR)
-            .withColor(glm::vec4{1.0f, 0.0f, 0.0f, 1.0f})
+            .withColor(textColor)
             .withPosition(glm::vec2{ 100.0f, (float)windowComponent.height - 100.0f })
             .withAnchor({ niketica::component::AlignmentHorizontal::LEFT, niketica::component::AlignmentVertical::TOP, { 100.0f, -100.0f } })
             .build();
-        
-        // niketica::builder::UIRectangleBuilder rectBuilder = { registry, engineServices };
-        // rectBuilder
-        //     .withPosition(glm::vec3{400.0f, 400.0f, 0.0f})
-        //     .withSize(glm::vec2{400.0f, 400.0f})
-        //     .withFillColor(glm::vec4{0.8f, 0.6f, 0.8f, 1.0f})
-        //     .withBorderColor(glm::vec4{0.8f, 0.2f, 0.0f, 1.0f})
-        //     .withBorderThickness(10.0f)
-        //     .build();
-        
-        // rectBuilder = { registry, engineServices };
-        // rectBuilder
-        //     .withPosition(glm::vec3{600.0f, 200.0f, 0.0f})
-        //     .withSize(glm::vec2{1200.0f, 300.0f})
-        //     .withoutFill()
-        //     .withBorderColor(glm::vec4{0.0f, 0.2f, 0.8f, 1.0f})
-        //     .withBorderThickness(10.0f)
-        //     .build();
 
         niketica::util::ui::clearFocusables(registry);
-        //createInfoBox();
+        buttonMainOffsetY = BUTTON_MAIN_OFFSET_Y_START;
         createInfoButton();
+        buttonMainOffsetY += BUTTON_MAIN_OFFSET_Y_SPACING;
         createTempButton();
+        buttonMainOffsetY += BUTTON_MAIN_OFFSET_Y_SPACING;
+        createConfirmButton();
+        buttonMainOffsetY += BUTTON_MAIN_OFFSET_Y_SPACING;
+        createCheckboxButton();
+        buttonMainOffsetY += BUTTON_MAIN_OFFSET_Y_SPACING;
+        createRadioButton();
+        buttonMainOffsetY += BUTTON_MAIN_OFFSET_Y_SPACING;
+        createDropdownButton();
+        buttonMainOffsetY += BUTTON_MAIN_OFFSET_Y_SPACING;
+        createDragableButton();
+
         setFocusOnMainButtons();
 
         registry->emplace<niketica::component::UIGlobalLayoutDirty>(registry->create());
@@ -151,29 +146,55 @@ namespace niketica::scene
     
     void UISamplesScene::createInfoButton()
     {
-        buttonCreateInfoBox = createButton("Create Info Box", BUTTON_MAIN_SIZE, BUTTON_PADDING);
-        const auto& size = registry->get_or_emplace<niketica::component::UISize>(buttonCreateInfoBox);
-        auto& anchor = registry->get_or_emplace<niketica::component::UIAnchor>(buttonCreateInfoBox);
+        buttonInfo = createButton("Create Info Box", BUTTON_MAIN_SIZE, BUTTON_PADDING);
+        auto& anchor = registry->get_or_emplace<niketica::component::UIAnchor>(buttonInfo);
         anchor.horizontal = niketica::component::AlignmentHorizontal::LEFT;
         anchor.vertical = niketica::component::AlignmentVertical::TOP;
-        anchor.offset.x = 100.0f;
-        anchor.offset.y = -200.0f - size.height;
+        anchor.offset.x = BUTTON_MAIN_OFFSET_X;
+        anchor.offset.y = buttonMainOffsetY;
 
-        registry->emplace<ButtonScene>(buttonCreateInfoBox, ButtonScene{ ButtonType::CREATE_INFO_BOX });
+        registry->emplace<ButtonScene>(buttonInfo, ButtonScene{ ButtonType::CREATE_INFO_BOX });
     }
 
     void UISamplesScene::createTempButton()
     {
-        buttonTest = createButton("Create Temporary Box", BUTTON_MAIN_SIZE, BUTTON_PADDING);
-        const auto& size = registry->get_or_emplace<niketica::component::UISize>(buttonTest);
-        auto& anchor = registry->get_or_emplace<niketica::component::UIAnchor>(buttonTest);
+        buttonTemp = createButton("Create Temporary Box", BUTTON_MAIN_SIZE, BUTTON_PADDING);
+        auto& anchor = registry->get_or_emplace<niketica::component::UIAnchor>(buttonTemp);
         anchor.horizontal = niketica::component::AlignmentHorizontal::LEFT;
         anchor.vertical = niketica::component::AlignmentVertical::TOP;
-        anchor.offset.x = 100.0f;
-        anchor.offset.y = -300.0f - size.height;
+        anchor.offset.x = BUTTON_MAIN_OFFSET_X;
+        anchor.offset.y = buttonMainOffsetY;
 
-        registry->emplace<ButtonScene>(buttonTest, ButtonScene{ ButtonType::CREATE_TEMP_BOX });
+        registry->emplace<ButtonScene>(buttonTemp, ButtonScene{ ButtonType::CREATE_TEMP_BOX });
     }
+    
+    void UISamplesScene::createConfirmButton()
+    {
+        // TODO implementation
+        // Similar to info box, but instead of OK, have Confirm and Cancel
+        // Wrap a container around Confirm and Cancel with horizontal aligment
+    }
+
+    void UISamplesScene::createCheckboxButton()
+    {
+        // TODO implementation
+    }
+
+    void UISamplesScene::createRadioButton()
+    {
+        // TODO implementation
+    }
+    
+    void UISamplesScene::createDropdownButton()
+    {
+        // TODO implementation
+    }
+    
+    void UISamplesScene::createDragableButton()
+    {
+        // TODO implementation
+    }
+    
 
     void UISamplesScene::createInfoBox()
     {
@@ -351,13 +372,20 @@ namespace niketica::scene
 
     void UISamplesScene::setFocusOnMainButtons()
     {
-        niketica::util::ui::setFocusables(registry, {buttonCreateInfoBox, buttonTest});
+        niketica::util::ui::setFocusables
+        (
+            registry,
+            {
+                buttonInfo,
+                buttonTemp
+            }
+        );
     }
 
     void UISamplesScene::removeFocusOnMainButtons()
     {
-        niketica::util::ui::updateFocusedVisualsContainer(registry, false, buttonCreateInfoBox);
-        niketica::util::ui::updateFocusedVisualsContainer(registry, false, buttonTest);
+        niketica::util::ui::updateFocusedVisualsContainer(registry, false, buttonInfo);
+        niketica::util::ui::updateFocusedVisualsContainer(registry, false, buttonTemp);
     }
 
     
