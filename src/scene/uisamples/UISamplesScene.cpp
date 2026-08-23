@@ -74,7 +74,8 @@ namespace niketica::scene
                     break;
                 case ButtonType::CREATE_TEMP_BOX:
                 {
-                    createTempBox();
+                    auto panel = createTempPanel("This is a temporary box and\nwill close automatically.\nTime to live: ");
+                    textTTL = panel.textLabels.back();
                     removeFocusOnMainButtons();
                 }
                     break;
@@ -251,28 +252,57 @@ namespace niketica::scene
 
         registry->emplace<ButtonScene>(okButton, ButtonScene{ ButtonType::INFO_BOX_OK });
     }
-
-    void UISamplesScene::createTempBox()
+    
+    UISamplesScene::TempPanel UISamplesScene::createTempPanel(const std::string& text)
     {
-        float width = 400.0f;
-        float height = 120.0f;
-        auto containerBox = createContainerRect("204523", "09140A", glm::vec2{width, height}, 16.0f);
-        auto textInfo1 = createTextLabel("This is a temporary box and", 20.0f);
-        auto textInfo2 = createTextLabel("will close automatically.", 20.0f);
-        textTTL = createTextLabel("Time to live: ", 20.0f);
-        addChildToContainer(containerBox, textInfo1);
-        addChildToContainer(containerBox, textInfo2);
-        addChildToContainer(containerBox, textTTL);
+        std::vector<std::string> lines = niketica::util::string::splitLines(text);
+        return createTempPanel(lines);
+    }
 
-        auto& anchor = registry->get_or_emplace<niketica::component::UIAnchor>(containerBox);
+    UISamplesScene::TempPanel UISamplesScene::createTempPanel(const std::vector<std::string>& lines)
+    {
+        float ttl = 3.0f;
+        float fontSize = 20.0f;
+        float spacing = 16.0f;
+        float baseHeight = 40.0f;
+        float baseWidth = 40.0f;
+        float height = baseHeight + ((fontSize + spacing) * (float)lines.size());
+        float width = baseWidth;
+        for (const auto& line : lines)
+        {
+            auto lineWidth = baseWidth + (float)((float)line.length() * (fontSize * 0.6));
+            if (lineWidth > width)
+            {
+                width = lineWidth;
+            }
+        }
+
+        // "This is a temporary box and\nwill close automatically.\nTime to live: "
+
+        auto containerPanel = createContainerRect("204523", "09140A", glm::vec2{width, height}, spacing);
+        std::vector<entt::entity> textLabels;
+        for (const auto& line : lines)
+        {
+            const auto label = createTextLabel(line.c_str(), fontSize);
+            addChildToContainer(containerPanel, label);
+            textLabels.emplace_back(label);
+        }
+
+        auto& anchor = registry->get_or_emplace<niketica::component::UIAnchor>(containerPanel);
         anchor.horizontal = niketica::component::AlignmentHorizontal::CENTER;
         anchor.vertical = niketica::component::AlignmentVertical::CENTER;
         anchor.offset.x = width * -0.5f;
         anchor.offset.y = height * -0.5f;
-        registry->emplace<niketica::component::UIContainerLayoutDirty>(containerBox);
+        registry->emplace<niketica::component::UIContainerLayoutDirty>(containerPanel);
 
         niketica::util::ui::clearFocusables(registry);
-        registry->emplace<niketica::component::TimeToLive>(containerBox, niketica::component::TimeToLive{ 3.0f });
+        registry->emplace<niketica::component::TimeToLive>(containerPanel, niketica::component::TimeToLive{ ttl });
+
+        return
+        {
+            containerPanel,
+            textLabels
+        };
     }
     
     UISamplesScene::ConfirmationPanel UISamplesScene::createConfirmationPanel(const std::string& text)
@@ -309,11 +339,12 @@ namespace niketica::scene
         niketica::component::UIMargin marginButtons;
         marginButtons.top = marginButtonsValue;
         registry->emplace<niketica::component::UIMargin>(buttonContainer, marginButtons);
-
+        std::vector<entt::entity> textLabels;
         for (const auto& line : lines)
         {
             const auto label = createTextLabel(line.c_str(), fontSize);
             addChildToContainer(containerBox, label);
+            textLabels.emplace_back(label);
         }
         
         addChildToContainer(containerBox, buttonContainer);
@@ -328,6 +359,7 @@ namespace niketica::scene
         return
         {
             containerBox,
+            textLabels,
             buttonConfirmC,
             buttonCancel
         };
