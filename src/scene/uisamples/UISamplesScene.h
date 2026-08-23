@@ -44,6 +44,13 @@ namespace niketica::scene
             ButtonType type = ButtonType::UNDEFINED;
         };
 
+        struct ConfirmationPanel
+        {
+            entt::entity rootContainer;
+            entt::entity buttonConfirm;
+            entt::entity buttonCancel;
+        };
+
         UISamplesScene(
             entt::registry* registry,
             niketica::engine::EngineServices* engineServices
@@ -86,7 +93,7 @@ namespace niketica::scene
 
         void createInfoBox();
         void createTempBox();
-        void createConfirmBox();
+        ConfirmationPanel createConfirmBox();
         void createCheckboxBox();
         void createRadioBox();
         void createDropdownBox();

@@ -80,7 +80,14 @@ namespace niketica::scene
                     break;
                 case ButtonType::CREATE_CONFIRM_BOX:
                 {
-                    createConfirmBox();
+                    auto box = createConfirmBox();
+                    registry->emplace<ButtonScene>(box.buttonConfirm, ButtonScene{ ButtonType::CONFIRM_BOX_CONFIRM });
+                    registry->emplace<ButtonScene>(box.buttonCancel, ButtonScene{ ButtonType::CONFIRM_BOX_CANCEL });
+
+                    niketica::util::ui::clearFocusables(registry);
+                    niketica::util::ui::addFocusable(registry, box.buttonConfirm);
+                    niketica::util::ui::addFocusable(registry, box.buttonCancel);
+
                     removeFocusOnMainButtons();
                 }
                     break;
@@ -268,7 +275,7 @@ namespace niketica::scene
         registry->emplace<niketica::component::TimeToLive>(containerBox, niketica::component::TimeToLive{ 3.0f });
     }
     
-    void UISamplesScene::createConfirmBox()
+    UISamplesScene::ConfirmationPanel UISamplesScene::createConfirmBox()
     {
         float width = 500.0f;
         float height = 180.0f;
@@ -296,12 +303,12 @@ namespace niketica::scene
         anchor.offset.y = height * -0.5f;
         registry->emplace<niketica::component::UIContainerLayoutDirty>(containerBox);
 
-        niketica::util::ui::clearFocusables(registry);
-        niketica::util::ui::addFocusable(registry, buttonConfirmC);
-        niketica::util::ui::addFocusable(registry, buttonCancel);
-
-        registry->emplace<ButtonScene>(buttonConfirmC, ButtonScene{ ButtonType::CONFIRM_BOX_CONFIRM });
-        registry->emplace<ButtonScene>(buttonCancel, ButtonScene{ ButtonType::CONFIRM_BOX_CANCEL });
+        return
+        {
+            containerBox,
+            buttonConfirmC,
+            buttonCancel
+        };
     }
 
     void UISamplesScene::createCheckboxBox()
