@@ -268,10 +268,35 @@ namespace niketica::scene
     
     void UISamplesScene::createConfirmBox()
     {
-        // TODO implementation
-        // Similar to info box, but instead of OK, have Confirm and Cancel
-        // Wrap a container around Confirm and Cancel with horizontal aligment
-        std::cout << "Not yet implemented!" << std::endl;
+        float width = 300.0f;
+        float height = 160.0f;
+        auto containerBox = createContainerRect("204523", "09140A", glm::vec2{width, height}, 16.0f);
+        auto textInfo1 = createTextLabel("This is a confirmation box.", 20.0f);
+        auto textInfo2 = createTextLabel("Click Confirm or Cancel to close it.", 20.0f);
+        auto buttonConfirmC = createButton("Confirm", BUTTON_CONFIRM_SIZE, BUTTON_PADDING);
+        auto buttonCancel = createButton("Cancel", BUTTON_CONFIRM_SIZE, BUTTON_PADDING);
+
+        auto buttonContainer = createContainer({ BUTTON_CONFIRM_SIZE.x * 2.0f, BUTTON_CONFIRM_SIZE.y }, 20.0f, niketica::component::UILayoutType::HORIZONTAL);
+        addChildToContainer(buttonContainer, buttonConfirmC);
+        addChildToContainer(buttonContainer, buttonCancel);
+        
+        addChildToContainer(containerBox, textInfo1);
+        addChildToContainer(containerBox, textInfo2);
+        addChildToContainer(containerBox, buttonContainer);
+
+        auto& anchor = registry->get_or_emplace<niketica::component::UIAnchor>(containerBox);
+        anchor.horizontal = niketica::component::AlignmentHorizontal::CENTER;
+        anchor.vertical = niketica::component::AlignmentVertical::CENTER;
+        anchor.offset.x = width * -0.5f;
+        anchor.offset.y = height * -0.5f;
+        registry->emplace<niketica::component::UIContainerLayoutDirty>(containerBox);
+
+        niketica::util::ui::clearFocusables(registry);
+        niketica::util::ui::addFocusable(registry, buttonConfirmC);
+        niketica::util::ui::addFocusable(registry, buttonCancel);
+
+        registry->emplace<ButtonScene>(buttonConfirmC, ButtonScene{ ButtonType::CONFIRM_BOX_CONFIRM });
+        registry->emplace<ButtonScene>(buttonCancel, ButtonScene{ ButtonType::CONFIRM_BOX_CANCEL });
     }
 
     void UISamplesScene::createCheckboxBox()
@@ -336,21 +361,6 @@ namespace niketica::scene
     {
         auto fillColorVec4 = niketica::util::color::colorFromHexRGB(fillColor);
         auto borderColorVec4 = niketica::util::color::colorFromHexRGB(borderColor);
-
-        niketica::component::UIAlignment aligment;
-        aligment.horizontal = niketica::component::AlignmentHorizontal::CENTER;
-        aligment.vertical = niketica::component::AlignmentVertical::CENTER;
-
-        niketica::component::UILayout layout;
-        layout.type = niketica::component::UILayoutType::VERTICAL;
-        niketica::component::UIPadding padding;
-        niketica::component::UIContentPadding contentPadding;
-        niketica::component::UISpacing spacingCmpnt;
-        spacingCmpnt.spacing = spacing;
-        niketica::component::UISize uiSize;
-        uiSize.width = size.x;
-        uiSize.height = size.y;
-
         niketica::builder::UIRectangleBuilder rectBuilder = { registry, engineServices };
         auto entity = rectBuilder
             .withSize(size)
@@ -359,18 +369,22 @@ namespace niketica::scene
             .withBorderThickness(4.0f)
             .build();
 
-        registry->emplace<niketica::component::UIAlignment>(entity, aligment);
-        registry->emplace<niketica::component::UILayout>(entity, layout);
-        registry->emplace<niketica::component::UIPadding>(entity, padding);
-        registry->emplace<niketica::component::UIContentPadding>(entity, contentPadding);
-        registry->emplace<niketica::component::UISpacing>(entity, spacingCmpnt);
-        registry->emplace<niketica::component::UISize>(entity, uiSize);
+        makeContainer(entity, size, spacing, niketica::component::UILayoutType::VERTICAL);
 
         return entity;
     }
 
     void UISamplesScene::addChildToContainer(entt::entity container, entt::entity child)
     {
+        if (!registry->all_of<niketica::component::Transform>(child))
+        {
+            registry->emplace<niketica::component::Transform>(child);
+        }
+        if (!registry->all_of<niketica::component::LocalTransform>(child))
+        {
+            registry->emplace<niketica::component::LocalTransform>(child);
+        }
+
         niketica::component::ParentTransform parentTransform = { container };
         registry->emplace<niketica::component::ParentTransform>(child, parentTransform);
 
@@ -422,6 +436,38 @@ namespace niketica::scene
             }
         }
         registry->destroy(entity);
+    }
+
+    entt::entity UISamplesScene::createContainer(const glm::vec2& size, const float spacing, const niketica::component::UILayoutType layout)
+    {
+        auto entity = registry->create();
+        makeContainer(entity, size, spacing, layout);
+        return entity;
+    }
+
+    void UISamplesScene::makeContainer(entt::entity entity, const glm::vec2& size, const float spacing, const niketica::component::UILayoutType layout)
+    {
+        niketica::component::UIAlignment aligment;
+        aligment.horizontal = niketica::component::AlignmentHorizontal::CENTER;
+        aligment.vertical = niketica::component::AlignmentVertical::CENTER;
+
+        niketica::component::UILayout layoutCmpnt;
+        layoutCmpnt.type = layout;
+        niketica::component::UIPadding padding;
+        niketica::component::UIContentPadding contentPadding;
+        niketica::component::UISpacing spacingCmpnt;
+        spacingCmpnt.spacing = spacing;
+        niketica::component::UISize uiSize;
+        uiSize.width = size.x;
+        uiSize.height = size.y;
+
+        registry->emplace<niketica::component::UIAlignment>(entity, aligment);
+        registry->emplace<niketica::component::UILayout>(entity, layoutCmpnt);
+        registry->emplace<niketica::component::UIPadding>(entity, padding);
+        registry->emplace<niketica::component::UIContentPadding>(entity, contentPadding);
+        registry->emplace<niketica::component::UISpacing>(entity, spacingCmpnt);
+        registry->emplace<niketica::component::UISize>(entity, uiSize);
+        registry->emplace<niketica::component::UIChildren>(entity);
     }
     
 }

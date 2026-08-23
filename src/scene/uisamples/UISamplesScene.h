@@ -34,7 +34,9 @@ namespace niketica::scene
             CREATE_RADIO_BOX,
             CREATE_DROPDOWN_BOX,
             CREATE_DRAGABLE_BOX,
-            INFO_BOX_OK
+            INFO_BOX_OK,
+            CONFIRM_BOX_CONFIRM,
+            CONFIRM_BOX_CANCEL
         };
 
         struct ButtonScene
@@ -60,6 +62,7 @@ namespace niketica::scene
 
         const glm::vec2 BUTTON_MAIN_SIZE = { 320.0f, 60.0f };
         const glm::vec2 BUTTON_OK_SIZE = { 60.0f, 40.0f};
+        const glm::vec2 BUTTON_CONFIRM_SIZE = { 60.0f, 40.0f};
         const float BUTTON_PADDING = 20.0f;
         const float BUTTON_MAIN_OFFSET_X = 100.0f;
         const float BUTTON_MAIN_OFFSET_Y_START = -200.0f;
@@ -88,6 +91,9 @@ namespace niketica::scene
         void createRadioBox();
         void createDropdownBox();
         void createDragableBox();
+
+        entt::entity createContainer(const glm::vec2& size, const float spacing, const niketica::component::UILayoutType layout);
+        void makeContainer(entt::entity, const glm::vec2& size, const float spacing, const niketica::component::UILayoutType layout);
 
         entt::entity createButton(const char* text, const glm::vec2& size, const float padding);
         entt::entity createTextLabel(const char* text, float fontSize);
