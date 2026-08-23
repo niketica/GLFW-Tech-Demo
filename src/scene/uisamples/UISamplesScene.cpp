@@ -74,7 +74,7 @@ namespace niketica::scene
                     break;
                 case ButtonType::CREATE_TEMP_BOX:
                 {
-                    auto panel = createTempPanel("This is a temporary box and\nwill close automatically.\nTime to live: ");
+                    auto panel = createTempPanel(3.0f, "This is a temporary box and\nwill close automatically.\nTime to live: ");
                     textTTL = panel.textLabels.back();
                     removeFocusOnMainButtons();
                 }
@@ -253,15 +253,14 @@ namespace niketica::scene
         registry->emplace<ButtonScene>(okButton, ButtonScene{ ButtonType::INFO_BOX_OK });
     }
     
-    UISamplesScene::TempPanel UISamplesScene::createTempPanel(const std::string& text)
+    UISamplesScene::TempPanel UISamplesScene::createTempPanel(const float ttl, const std::string& text)
     {
         std::vector<std::string> lines = niketica::util::string::splitLines(text);
-        return createTempPanel(lines);
+        return createTempPanel(ttl, lines);
     }
 
-    UISamplesScene::TempPanel UISamplesScene::createTempPanel(const std::vector<std::string>& lines)
+    UISamplesScene::TempPanel UISamplesScene::createTempPanel(const float ttl, const std::vector<std::string>& lines)
     {
-        float ttl = 3.0f;
         float fontSize = 20.0f;
         float spacing = 16.0f;
         float baseHeight = 40.0f;

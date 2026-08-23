@@ -90,7 +90,7 @@ namespace niketica::scene
         entt::entity buttonRadio;
         entt::entity buttonDropdown;
         entt::entity buttonDragable;
-        
+
         entt::entity textTTL;
 
         void init();
@@ -100,8 +100,8 @@ namespace niketica::scene
         entt::entity createMainButton(const char* text, ButtonType type);
 
         void createInfoBox();
-        TempPanel createTempPanel(const std::string& text);
-        TempPanel createTempPanel(const std::vector<std::string>& lines);
+        TempPanel createTempPanel(const float ttl, const std::string& text);
+        TempPanel createTempPanel(const float ttl, const std::vector<std::string>& lines);
         ConfirmationPanel createConfirmationPanel(const std::string& text);
         ConfirmationPanel createConfirmationPanel(const std::vector<std::string>& lines);
         void createCheckboxBox();
