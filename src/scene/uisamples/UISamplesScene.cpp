@@ -319,22 +319,36 @@ namespace niketica::scene
 
     UISamplesScene::ConfirmationPanel UISamplesScene::createConfirmationPanel(const std::vector<std::string>& lines)
     {
-        float width = 500.0f;
-        float height = 180.0f;
+        float fontSize = 20.0f;
+        float spacing = 20.0f;
+        float marginButtonsValue = 20.0f;
+        float baseHeight = 100.0f;
+        float baseWidth = 40.0f;
+        float height = baseHeight + ((fontSize + spacing) * (float)lines.size());
+        float width = baseWidth;
+        for (const auto& line : lines)
+        {
+            auto lineWidth = baseWidth + (float)((float)line.length() * (fontSize * 0.6));
+            if (lineWidth > width)
+            {
+                width = lineWidth;
+            }
+        }
+
         auto containerBox = createContainerRect("204523", "09140A", glm::vec2{width, height}, 16.0f);
         auto buttonConfirmC = createButton("Confirm", BUTTON_CONFIRM_SIZE, BUTTON_PADDING);
         auto buttonCancel = createButton("Cancel", BUTTON_CONFIRM_SIZE, BUTTON_PADDING);
 
-        auto buttonContainer = createContainer({ BUTTON_CONFIRM_SIZE.x * 2.0f, BUTTON_CONFIRM_SIZE.y }, 20.0f, niketica::component::UILayoutType::HORIZONTAL);
+        auto buttonContainer = createContainer({ BUTTON_CONFIRM_SIZE.x * 2.0f, BUTTON_CONFIRM_SIZE.y }, spacing, niketica::component::UILayoutType::HORIZONTAL);
         addChildToContainer(buttonContainer, buttonConfirmC);
         addChildToContainer(buttonContainer, buttonCancel);
         niketica::component::UIMargin marginButtons;
-        marginButtons.top = 20.0f;
+        marginButtons.top = marginButtonsValue;
         registry->emplace<niketica::component::UIMargin>(buttonContainer, marginButtons);
 
         for (const auto& line : lines)
         {
-            const auto label = createTextLabel(line.c_str(), 20.0f);
+            const auto label = createTextLabel(line.c_str(), fontSize);
             addChildToContainer(containerBox, label);
         }
         
