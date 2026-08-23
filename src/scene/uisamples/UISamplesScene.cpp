@@ -275,42 +275,6 @@ namespace niketica::scene
         registry->emplace<niketica::component::TimeToLive>(containerBox, niketica::component::TimeToLive{ 3.0f });
     }
     
-    UISamplesScene::ConfirmationPanel UISamplesScene::createConfirmBox()
-    {
-        float width = 500.0f;
-        float height = 180.0f;
-        auto containerBox = createContainerRect("204523", "09140A", glm::vec2{width, height}, 16.0f);
-        auto textInfo1 = createTextLabel("This is a confirmation box.", 20.0f);
-        auto textInfo2 = createTextLabel("Click Confirm or Cancel to close it.", 20.0f);
-        auto buttonConfirmC = createButton("Confirm", BUTTON_CONFIRM_SIZE, BUTTON_PADDING);
-        auto buttonCancel = createButton("Cancel", BUTTON_CONFIRM_SIZE, BUTTON_PADDING);
-
-        auto buttonContainer = createContainer({ BUTTON_CONFIRM_SIZE.x * 2.0f, BUTTON_CONFIRM_SIZE.y }, 20.0f, niketica::component::UILayoutType::HORIZONTAL);
-        addChildToContainer(buttonContainer, buttonConfirmC);
-        addChildToContainer(buttonContainer, buttonCancel);
-        niketica::component::UIMargin marginButtons;
-        marginButtons.top = 20.0f;
-        registry->emplace<niketica::component::UIMargin>(buttonContainer, marginButtons);
-        
-        addChildToContainer(containerBox, textInfo1);
-        addChildToContainer(containerBox, textInfo2);
-        addChildToContainer(containerBox, buttonContainer);
-
-        auto& anchor = registry->get_or_emplace<niketica::component::UIAnchor>(containerBox);
-        anchor.horizontal = niketica::component::AlignmentHorizontal::CENTER;
-        anchor.vertical = niketica::component::AlignmentVertical::CENTER;
-        anchor.offset.x = width * -0.5f;
-        anchor.offset.y = height * -0.5f;
-        registry->emplace<niketica::component::UIContainerLayoutDirty>(containerBox);
-
-        return
-        {
-            containerBox,
-            buttonConfirmC,
-            buttonCancel
-        };
-    }
-    
     UISamplesScene::ConfirmationPanel UISamplesScene::createConfirmationPanel(const std::string& text)
     {
         std::vector<std::string> lines = niketica::util::string::splitLines(text);

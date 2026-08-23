@@ -95,7 +95,6 @@ namespace niketica::scene
         void createTempBox();
         ConfirmationPanel createConfirmationPanel(const std::string& text);
         ConfirmationPanel createConfirmationPanel(const std::vector<std::string>& lines);
-        ConfirmationPanel createConfirmBox();
         void createCheckboxBox();
         void createRadioBox();
         void createDropdownBox();
