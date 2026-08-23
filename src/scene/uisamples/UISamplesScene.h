@@ -53,6 +53,10 @@ namespace niketica::scene
         std::unique_ptr<niketica::systems::ISystemContext> systemContext;
         niketica::engine::EngineServices* engineServices;
 
+        const glm::vec2 BUTTON_MAIN_SIZE = { 320.0f, 60.0f };
+        const glm::vec2 BUTTON_OK_SIZE = { 60.0f, 40.0f};
+        const float BUTTON_PADDING = 20.0f;
+
         entt::entity buttonCreateInfoBox;
         entt::entity buttonTest;
 
@@ -62,7 +66,7 @@ namespace niketica::scene
         void createInfoBox();
         void createTempBox();
 
-        entt::entity createButton(const char* text);
+        entt::entity createButton(const char* text, const glm::vec2& size, const float padding);
         entt::entity createTextLabel(const char* text, float fontSize);
         entt::entity createContainerRect(const char* fillColor, const char* borderColor, const glm::vec2 size, float spacing = 0.0f);
         void addChildToContainer(entt::entity container, entt::entity child);

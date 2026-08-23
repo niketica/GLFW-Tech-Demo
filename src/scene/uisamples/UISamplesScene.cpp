@@ -136,7 +136,7 @@ namespace niketica::scene
     
     void UISamplesScene::createInfoButton()
     {
-        buttonCreateInfoBox = createButton("Create Info Box");
+        buttonCreateInfoBox = createButton("Create Info Box", BUTTON_MAIN_SIZE, BUTTON_PADDING);
         const auto& size = registry->get_or_emplace<niketica::component::UISize>(buttonCreateInfoBox);
         auto& anchor = registry->get_or_emplace<niketica::component::UIAnchor>(buttonCreateInfoBox);
         anchor.horizontal = niketica::component::AlignmentHorizontal::LEFT;
@@ -149,7 +149,7 @@ namespace niketica::scene
 
     void UISamplesScene::createTempButton()
     {
-        buttonTest = createButton("Create Temporary Box");
+        buttonTest = createButton("Create Temporary Box", BUTTON_MAIN_SIZE, BUTTON_PADDING);
         const auto& size = registry->get_or_emplace<niketica::component::UISize>(buttonTest);
         auto& anchor = registry->get_or_emplace<niketica::component::UIAnchor>(buttonTest);
         anchor.horizontal = niketica::component::AlignmentHorizontal::LEFT;
@@ -166,7 +166,7 @@ namespace niketica::scene
         float height = 300.0f;
         auto containerBox = createContainerRect("204523", "09140A", glm::vec2{width, height}, 16.0f);
         auto textInfo = createTextLabel("This is an info box.", 20.0f);
-        auto okButton = createButton("OK");
+        auto okButton = createButton("OK", BUTTON_OK_SIZE, 0.0f);
         addChildToContainer(containerBox, textInfo);
         addChildToContainer(containerBox, okButton);
 
@@ -204,14 +204,10 @@ namespace niketica::scene
         registry->emplace<niketica::component::TimeToLive>(containerBox, niketica::component::TimeToLive{ 3.0f });
     }
 
-    entt::entity UISamplesScene::createButton(const char* text)
+    entt::entity UISamplesScene::createButton(const char* text, const glm::vec2& size, const float padding)
     {
         auto textLabel = createTextLabel(text, 20.0f);
-        const auto& textSize = registry->get_or_emplace<niketica::component::LocalTransform>(textLabel).size;
-
-        float padding = 20.0f;
-        auto buttonSize = getSizeWithPadding(textSize, padding);
-        auto button = createContainerRect("152E18", "09140A", buttonSize);
+        auto button = createContainerRect("152E18", "09140A", size);
         setPadding(button, padding);
         addChildToContainer(button, textLabel);
         return button;
