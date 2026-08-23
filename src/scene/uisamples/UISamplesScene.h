@@ -29,6 +29,11 @@ namespace niketica::scene
             UNDEFINED,
             CREATE_INFO_BOX,
             CREATE_TEMP_BOX,
+            CREATE_CONFIRM_BOX,
+            CREATE_CHECKBOX_BOX,
+            CREATE_RADIO_BOX,
+            CREATE_DROPDOWN_BOX,
+            CREATE_DRAGABLE_BOX,
             INFO_BOX_OK
         };
 
@@ -67,11 +72,14 @@ namespace niketica::scene
         entt::entity buttonCheckbox;
         entt::entity buttonRadio;
         entt::entity buttonDropdown;
+        entt::entity buttonDragable;
         entt::entity textTTL;
 
         void init();
 
         // Main demo buttons
+        void createMainButtons();
+        entt::entity createMainButton(const char* text, ButtonType type);
         void createInfoButton();
         void createTempButton();
         void createConfirmButton();

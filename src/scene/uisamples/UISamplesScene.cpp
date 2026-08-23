@@ -30,22 +30,7 @@ namespace niketica::scene
             .withAnchor({ niketica::component::AlignmentHorizontal::LEFT, niketica::component::AlignmentVertical::TOP, { 100.0f, -100.0f } })
             .build();
 
-        niketica::util::ui::clearFocusables(registry);
-        buttonMainOffsetY = BUTTON_MAIN_OFFSET_Y_START;
-        createInfoButton();
-        buttonMainOffsetY += BUTTON_MAIN_OFFSET_Y_SPACING;
-        createTempButton();
-        buttonMainOffsetY += BUTTON_MAIN_OFFSET_Y_SPACING;
-        createConfirmButton();
-        buttonMainOffsetY += BUTTON_MAIN_OFFSET_Y_SPACING;
-        createCheckboxButton();
-        buttonMainOffsetY += BUTTON_MAIN_OFFSET_Y_SPACING;
-        createRadioButton();
-        buttonMainOffsetY += BUTTON_MAIN_OFFSET_Y_SPACING;
-        createDropdownButton();
-        buttonMainOffsetY += BUTTON_MAIN_OFFSET_Y_SPACING;
-        createDragableButton();
-
+        createMainButtons();
         setFocusOnMainButtons();
 
         registry->emplace<niketica::component::UIGlobalLayoutDirty>(registry->create());
@@ -74,7 +59,6 @@ namespace niketica::scene
         for (auto entity : viewButtonActivated)
         {
             registry->remove<niketica::component::ButtonActivated>(entity);
-            std::cout << "INFO::UISamplesScene::update - Button activated!" << std::endl;
 
             if (registry->all_of<ButtonScene>(entity))
             {
@@ -99,6 +83,31 @@ namespace niketica::scene
                     auto root = getContainerRoot(entity);
                     destroyContainer(root);
                     setFocusOnMainButtons();
+                }
+                    break;
+                case ButtonType::CREATE_CONFIRM_BOX:
+                {
+                    std::cout << "Not yet implemented!" << std::endl;
+                }
+                    break;
+                case ButtonType::CREATE_CHECKBOX_BOX:
+                {
+                    std::cout << "Not yet implemented!" << std::endl;
+                }
+                    break;
+                case ButtonType::CREATE_RADIO_BOX:
+                {
+                    std::cout << "Not yet implemented!" << std::endl;
+                }
+                    break;
+                case ButtonType::CREATE_DROPDOWN_BOX:
+                {
+                    std::cout << "Not yet implemented!" << std::endl;
+                }
+                    break;
+                case ButtonType::CREATE_DRAGABLE_BOX:
+                {
+                    std::cout << "Not yet implemented!" << std::endl;
                 }
                     break;
                 }
@@ -142,6 +151,66 @@ namespace niketica::scene
     {        
         systemContext.release();
         init();
+    }
+    
+    void UISamplesScene::createMainButtons()
+    {
+        buttonMainOffsetY = BUTTON_MAIN_OFFSET_Y_START;
+        buttonInfo = createMainButton("Create Info Box", ButtonType::CREATE_INFO_BOX);
+        buttonMainOffsetY += BUTTON_MAIN_OFFSET_Y_SPACING;
+        buttonTemp = createMainButton("Create Temporary Box", ButtonType::CREATE_TEMP_BOX);
+        buttonMainOffsetY += BUTTON_MAIN_OFFSET_Y_SPACING;
+        buttonConfirm = createMainButton("Create Confirm Box", ButtonType::CREATE_CONFIRM_BOX);
+        buttonMainOffsetY += BUTTON_MAIN_OFFSET_Y_SPACING;
+        buttonCheckbox = createMainButton("Create Checkbox Box", ButtonType::CREATE_CHECKBOX_BOX);
+        buttonMainOffsetY += BUTTON_MAIN_OFFSET_Y_SPACING;
+        buttonRadio = createMainButton("Create Radio Box", ButtonType::CREATE_RADIO_BOX);
+        buttonMainOffsetY += BUTTON_MAIN_OFFSET_Y_SPACING;
+        buttonDropdown = createMainButton("Create Dropdown Box", ButtonType::CREATE_DROPDOWN_BOX);
+        buttonMainOffsetY += BUTTON_MAIN_OFFSET_Y_SPACING;
+        buttonDragable = createMainButton("Create Dragable Box", ButtonType::CREATE_DRAGABLE_BOX);
+    }
+
+    void UISamplesScene::setFocusOnMainButtons()
+    {
+        niketica::util::ui::setFocusables
+        (
+            registry,
+            {
+                buttonInfo,
+                buttonTemp,
+                buttonConfirm,
+                buttonCheckbox,
+                buttonRadio,
+                buttonDropdown,
+                buttonDragable
+            }
+        );
+    }
+
+    void UISamplesScene::removeFocusOnMainButtons()
+    {
+        niketica::util::ui::updateFocusedVisualsContainer(registry, false, buttonInfo);
+        niketica::util::ui::updateFocusedVisualsContainer(registry, false, buttonTemp);
+        niketica::util::ui::updateFocusedVisualsContainer(registry, false, buttonConfirm);
+        niketica::util::ui::updateFocusedVisualsContainer(registry, false, buttonCheckbox);
+        niketica::util::ui::updateFocusedVisualsContainer(registry, false, buttonRadio);
+        niketica::util::ui::updateFocusedVisualsContainer(registry, false, buttonDropdown);
+        niketica::util::ui::updateFocusedVisualsContainer(registry, false, buttonDragable);
+    }
+
+    entt::entity UISamplesScene::createMainButton(const char* text, ButtonType type)
+    {
+        auto button = createButton(text, BUTTON_MAIN_SIZE, BUTTON_PADDING);
+        auto& anchor = registry->get_or_emplace<niketica::component::UIAnchor>(button);
+        anchor.horizontal = niketica::component::AlignmentHorizontal::LEFT;
+        anchor.vertical = niketica::component::AlignmentVertical::TOP;
+        anchor.offset.x = BUTTON_MAIN_OFFSET_X;
+        anchor.offset.y = buttonMainOffsetY;
+
+        registry->emplace<ButtonScene>(button, ButtonScene{ type });
+
+        return button;
     }
     
     void UISamplesScene::createInfoButton()
@@ -369,24 +438,5 @@ namespace niketica::scene
         }
         registry->destroy(entity);
     }
-
-    void UISamplesScene::setFocusOnMainButtons()
-    {
-        niketica::util::ui::setFocusables
-        (
-            registry,
-            {
-                buttonInfo,
-                buttonTemp
-            }
-        );
-    }
-
-    void UISamplesScene::removeFocusOnMainButtons()
-    {
-        niketica::util::ui::updateFocusedVisualsContainer(registry, false, buttonInfo);
-        niketica::util::ui::updateFocusedVisualsContainer(registry, false, buttonTemp);
-    }
-
     
 }
