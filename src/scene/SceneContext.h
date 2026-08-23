@@ -6,6 +6,7 @@
 #include <entt/entt.hpp>
 
 #include "component/Components.h"
+#include "engine/util/EngineUtils.h"
 #include "engine/core/EngineServices.h"
 #include "engine/core/scene/ISceneContext.h"
 #include "engine/core/scene/IScene.h"

@@ -26,6 +26,8 @@ namespace niketica::scene
             {
                 registry->destroy(entity);
             }
+        
+            niketica::util::ui::clearFocusables(registry);
 
             engineServices->getRenderContext()->reset();
             currentScene = it->second.get();
@@ -45,7 +47,7 @@ namespace niketica::scene
         if (!viewSceneSwitch.empty())
         {
             auto entity = viewSceneSwitch.front();
-            auto& sceneSwitch = registry->get<niketica::component::SceneSwitchInstruction>(entity);
+            const auto& sceneSwitch = registry->get<niketica::component::SceneSwitchInstruction>(entity);
             setCurrentScene(sceneSwitch.nextScene);
         }
 

@@ -4,7 +4,7 @@
 
 #include "component/Components.h"
 
-namespace niketica::util
+namespace niketica::util::screen
 {
 
     static inline const glm::vec2 screenToVirtual

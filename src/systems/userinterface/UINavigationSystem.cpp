@@ -183,7 +183,7 @@ namespace niketica::systems
         const auto& renderSettings = viewRenderSettings.get<niketica::component::RenderSettings>(viewRenderSettings.front());
         auto viewViewport = registry->view<niketica::component::Viewport>();
         const auto& viewport = viewViewport.get<niketica::component::Viewport>(viewViewport.front());
-        const auto virtualMouse = niketica::util::screenToVirtual(mousePos, viewport, renderSettings);
+        const auto virtualMouse = niketica::util::screen::screenToVirtual(mousePos, viewport, renderSettings);
 
         return virtualMouse.x >= buttonPos.x
             && virtualMouse.x <= buttonPos.x + buttonSize.x
