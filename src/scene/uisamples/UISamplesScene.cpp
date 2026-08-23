@@ -234,8 +234,8 @@ namespace niketica::scene
 
     entt::entity UISamplesScene::createTextLabel(const char* text, float fontSize)
     {
-        auto textNormalColor = niketica::util::colorFromHexRGB("000000");
-        auto textHighlightColor = niketica::util::colorFromHexRGB("FFFFFF");
+        auto textNormalColor = niketica::util::color::colorFromHexRGB("000000");
+        auto textHighlightColor = niketica::util::color::colorFromHexRGB("FFFFFF");
 
         niketica::builder::UITextLabelBuilder textLabelBuilder = { registry, engineServices };
         auto entity = textLabelBuilder
@@ -259,8 +259,8 @@ namespace niketica::scene
 
     entt::entity UISamplesScene::createContainerRect(const char* fillColor, const char* borderColor, const glm::vec2 size, float spacing)
     {
-        auto fillColorVec4 = niketica::util::colorFromHexRGB(fillColor);
-        auto borderColorVec4 = niketica::util::colorFromHexRGB(borderColor);
+        auto fillColorVec4 = niketica::util::color::colorFromHexRGB(fillColor);
+        auto borderColorVec4 = niketica::util::color::colorFromHexRGB(borderColor);
 
         niketica::component::UIAlignment aligment;
         aligment.horizontal = niketica::component::AlignmentHorizontal::CENTER;

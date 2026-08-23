@@ -101,7 +101,7 @@ add_library(engine
     
     # common
     src/engine/core/Engine.cpp
-    src/engine/util/ColorUtil.cpp
+    src/engine/util/color/ColorUtil.cpp
 
     # builders
     src/engine/builder/userinterface/UITextLabelBuilder.cpp

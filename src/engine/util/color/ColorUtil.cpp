@@ -1,6 +1,6 @@
-#include "engine/util/ColorUtil.h"
+#include "engine/util/color/ColorUtil.h"
 
-namespace niketica::util
+namespace niketica::util::color
 {
 
     uint32_t colorFromHexOpenGL(const char* hex, float alphaOverride)

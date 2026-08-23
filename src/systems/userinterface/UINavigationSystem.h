@@ -4,7 +4,7 @@
 
 #include "component/Components.h"
 #include "engine/config/Config.h"
-#include "engine/util/ScreenUtil.h"
+#include "engine/util/EngineUtils.h"
 #include "engine/core/systems/ISystem.h"
 #include "engine/core/EngineServices.h"
 

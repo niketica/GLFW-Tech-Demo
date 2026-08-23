@@ -6,7 +6,7 @@
 #include <algorithm>
 #include <glm/glm.hpp>
 
-namespace niketica::util
+namespace niketica::util::color
 {
 
 
