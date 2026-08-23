@@ -277,8 +277,6 @@ namespace niketica::scene
             }
         }
 
-        // "This is a temporary box and\nwill close automatically.\nTime to live: "
-
         auto containerPanel = createContainerRect("204523", "09140A", glm::vec2{width, height}, spacing);
         std::vector<entt::entity> textLabels;
         for (const auto& line : lines)
