@@ -5,7 +5,7 @@
 
 #include "component/Components.h"
 
-namespace niketica::util
+namespace niketica::util::ui
 {
 
     static inline void setFocusables(entt::registry* registry, const std::vector<entt::entity>& newFocusables)
@@ -74,6 +74,24 @@ namespace niketica::util
                 updateFocusedVisualsContainer(registry, focus, child);
             }
         }
+    }
+
+    static inline void updateTextSize(entt::registry* registry, entt::entity entity)
+    {
+        const auto& text = registry->get<niketica::component::Text>(entity);
+
+        auto width = (float)((float)text.value.length() * (text.fontSize * 0.6));
+        auto height = (float)text.fontSize;
+
+        auto& local = registry->get<niketica::component::LocalTransform>(entity).size;
+        local.x = width;
+        local.y = height;
+
+        auto& uiSize = registry->get<niketica::component::UISize>(entity);
+        uiSize.widthMode = niketica::component::UISizeMode::PIXELS;
+        uiSize.heightMode = niketica::component::UISizeMode::PIXELS;
+        uiSize.width = width;
+        uiSize.height = height;
     }
 
 }

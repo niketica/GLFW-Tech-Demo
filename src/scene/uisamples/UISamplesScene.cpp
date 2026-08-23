@@ -47,7 +47,7 @@ namespace niketica::scene
         //     .withBorderThickness(10.0f)
         //     .build();
 
-        niketica::util::clearFocusables(registry);
+        niketica::util::ui::clearFocusables(registry);
         //createInfoBox();
         createInfoButton();
         createTempButton();
@@ -121,6 +121,21 @@ namespace niketica::scene
                 setFocusOnMainButtons();
             }
         }
+
+        if (textTTL != entt::null && registry->all_of<niketica::component::Text>(textTTL))
+        {
+            // For now we can just assume this particular entity always has a parent.
+            const auto& parent = registry->get<niketica::component::ParentTransform>(textTTL).parent;
+            const auto& ttl = registry->get<niketica::component::TimeToLive>(parent);
+            auto& text = registry->get<niketica::component::Text>(textTTL);
+
+            auto remaining = ttl.timeToLive - ttl.currentLiveTime;
+            std::string strRemaining = niketica::util::string::parseFloat(remaining, 2);
+            text.value = "Remaining time to live: " + strRemaining;
+
+            niketica::util::ui::updateTextSize(registry, textTTL);
+            registry->emplace_or_replace<niketica::component::UIContainerLayoutDirty>(parent);
+        }
     }
     
     void UISamplesScene::render()
@@ -162,12 +177,14 @@ namespace niketica::scene
 
     void UISamplesScene::createInfoBox()
     {
-        float width = 400.0f;
-        float height = 300.0f;
+        float width = 300.0f;
+        float height = 160.0f;
         auto containerBox = createContainerRect("204523", "09140A", glm::vec2{width, height}, 16.0f);
-        auto textInfo = createTextLabel("This is an info box.", 20.0f);
-        auto okButton = createButton("OK", BUTTON_OK_SIZE, 0.0f);
-        addChildToContainer(containerBox, textInfo);
+        auto textInfo1 = createTextLabel("This is an info box.", 20.0f);
+        auto textInfo2 = createTextLabel("Click OK to close it.", 20.0f);
+        auto okButton = createButton("OK", BUTTON_OK_SIZE, BUTTON_PADDING);
+        addChildToContainer(containerBox, textInfo1);
+        addChildToContainer(containerBox, textInfo2);
         addChildToContainer(containerBox, okButton);
 
         auto& anchor = registry->get_or_emplace<niketica::component::UIAnchor>(containerBox);
@@ -177,8 +194,8 @@ namespace niketica::scene
         anchor.offset.y = height * -0.5f;
         registry->emplace<niketica::component::UIContainerLayoutDirty>(containerBox);
 
-        niketica::util::clearFocusables(registry);
-        niketica::util::addFocusable(registry, okButton);
+        niketica::util::ui::clearFocusables(registry);
+        niketica::util::ui::addFocusable(registry, okButton);
 
         registry->emplace<ButtonScene>(okButton, ButtonScene{ ButtonType::INFO_BOX_OK });
     }
@@ -186,12 +203,14 @@ namespace niketica::scene
     void UISamplesScene::createTempBox()
     {
         float width = 400.0f;
-        float height = 300.0f;
+        float height = 120.0f;
         auto containerBox = createContainerRect("204523", "09140A", glm::vec2{width, height}, 16.0f);
-        auto textInfo1 = createTextLabel("This is a temporary box and.", 20.0f);
+        auto textInfo1 = createTextLabel("This is a temporary box and", 20.0f);
         auto textInfo2 = createTextLabel("will close automatically.", 20.0f);
+        textTTL = createTextLabel("Time to live: ", 20.0f);
         addChildToContainer(containerBox, textInfo1);
         addChildToContainer(containerBox, textInfo2);
+        addChildToContainer(containerBox, textTTL);
 
         auto& anchor = registry->get_or_emplace<niketica::component::UIAnchor>(containerBox);
         anchor.horizontal = niketica::component::AlignmentHorizontal::CENTER;
@@ -200,7 +219,7 @@ namespace niketica::scene
         anchor.offset.y = height * -0.5f;
         registry->emplace<niketica::component::UIContainerLayoutDirty>(containerBox);
 
-        niketica::util::clearFocusables(registry);
+        niketica::util::ui::clearFocusables(registry);
         registry->emplace<niketica::component::TimeToLive>(containerBox, niketica::component::TimeToLive{ 3.0f });
     }
 
@@ -332,13 +351,13 @@ namespace niketica::scene
 
     void UISamplesScene::setFocusOnMainButtons()
     {
-        niketica::util::setFocusables(registry, {buttonCreateInfoBox, buttonTest});
+        niketica::util::ui::setFocusables(registry, {buttonCreateInfoBox, buttonTest});
     }
 
     void UISamplesScene::removeFocusOnMainButtons()
     {
-        niketica::util::updateFocusedVisualsContainer(registry, false, buttonCreateInfoBox);
-        niketica::util::updateFocusedVisualsContainer(registry, false, buttonTest);
+        niketica::util::ui::updateFocusedVisualsContainer(registry, false, buttonCreateInfoBox);
+        niketica::util::ui::updateFocusedVisualsContainer(registry, false, buttonTest);
     }
 
     

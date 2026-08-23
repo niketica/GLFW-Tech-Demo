@@ -1,5 +1,6 @@
 #pragma once
 
+#include <string>
 #include <vector>
 #include <cstdlib>
 #include <glm/glm.hpp>
@@ -11,8 +12,7 @@
 #include "engine/core/EngineServices.h"
 #include "engine/core/scene/IScene.h"
 #include "engine/core/systems/ISystemContext.h"
-#include "engine/util/ColorUtil.h"
-#include "engine/util/UserInterfaceUtil.h"
+#include "engine/util/EngineUtils.h"
 #include "systems/SystemContext.h"
 #include "engine/builder/userinterface/UITextLabelBuilder.h"
 #include "engine/builder/userinterface/UIRectangleBuilder.h"
@@ -59,6 +59,7 @@ namespace niketica::scene
 
         entt::entity buttonCreateInfoBox;
         entt::entity buttonTest;
+        entt::entity textTTL;
 
         void init();
         void createInfoButton();

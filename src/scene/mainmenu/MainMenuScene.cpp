@@ -214,7 +214,7 @@ namespace niketica::scene
         anchor.offset.y = panelHeight * -0.5f;
 
         registry->emplace<niketica::component::UIActive>(panel);
-        niketica::util::setFocusables(registry, {buttonStart, buttonOptions, buttonQuit});
+        niketica::util::ui::setFocusables(registry, {buttonStart, buttonOptions, buttonQuit});
     }
 
     void MainMenuScene::createOptionsMenuPanel()
@@ -272,7 +272,7 @@ namespace niketica::scene
         anchor.offset.y = panelHeight * -0.5f;
 
         registry->emplace<niketica::component::UIActive>(panel);
-        niketica::util::setFocusables(registry,
+        niketica::util::ui::setFocusables(registry,
             {
                 buttonResolution800x600,
                 buttonResolution1600x900,
@@ -394,7 +394,7 @@ namespace niketica::scene
         anchor.offset.y = panelHeight * -0.5f;
 
         registry->emplace<niketica::component::UIActive>(panel);
-        niketica::util::setFocusables(registry, {buttonSnake, buttonTetris, buttonUISamples, buttonBack});        
+        niketica::util::ui::setFocusables(registry, {buttonSnake, buttonTetris, buttonUISamples, buttonBack});        
     }
 
     entt::entity MainMenuScene::createDropdown()
