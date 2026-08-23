@@ -188,8 +188,10 @@ namespace niketica::scene
         float width = 400.0f;
         float height = 300.0f;
         auto containerBox = createContainerRect("204523", "09140A", glm::vec2{width, height}, 16.0f);
-        auto textInfo = createTextLabel("This is a temporary box and will close automatically.", 20.0f);
-        addChildToContainer(containerBox, textInfo);
+        auto textInfo1 = createTextLabel("This is a temporary box and.", 20.0f);
+        auto textInfo2 = createTextLabel("will close automatically.", 20.0f);
+        addChildToContainer(containerBox, textInfo1);
+        addChildToContainer(containerBox, textInfo2);
 
         auto& anchor = registry->get_or_emplace<niketica::component::UIAnchor>(containerBox);
         anchor.horizontal = niketica::component::AlignmentHorizontal::CENTER;
