@@ -137,6 +137,13 @@ namespace niketica::systems
         {
             auto& childLocal = registry->get<niketica::component::LocalTransform>(child);
             cursorY -= childLocal.size.y;
+
+            if (registry->all_of<niketica::component::UIMargin>(child))
+            {
+                const auto& margin = registry->get<niketica::component::UIMargin>(child);
+                cursorY -= margin.top;
+            }
+
             childLocal.position.y = cursorY;
             cursorY -= spacing;
         }
@@ -226,6 +233,13 @@ namespace niketica::systems
         for (auto child : children.children)
         {
             auto& childLocal = registry->get<niketica::component::LocalTransform>(child);
+            
+            if (registry->all_of<niketica::component::UIMargin>(child))
+            {
+                const auto& margin = registry->get<niketica::component::UIMargin>(child);
+                cursorX -= margin.left;
+            }
+
             childLocal.position.x = cursorX;
             cursorX += childLocal.size.x;
             cursorX += spacing;

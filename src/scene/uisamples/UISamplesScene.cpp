@@ -281,6 +281,9 @@ namespace niketica::scene
         auto buttonContainer = createContainer({ BUTTON_CONFIRM_SIZE.x * 2.0f, BUTTON_CONFIRM_SIZE.y }, 20.0f, niketica::component::UILayoutType::HORIZONTAL);
         addChildToContainer(buttonContainer, buttonConfirmC);
         addChildToContainer(buttonContainer, buttonCancel);
+        niketica::component::UIMargin marginButtons;
+        marginButtons.top = 20.0f;
+        registry->emplace<niketica::component::UIMargin>(buttonContainer, marginButtons);
         
         addChildToContainer(containerBox, textInfo1);
         addChildToContainer(containerBox, textInfo2);
