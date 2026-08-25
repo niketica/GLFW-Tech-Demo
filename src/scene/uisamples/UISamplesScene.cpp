@@ -80,14 +80,7 @@ namespace niketica::scene
                     break;
                 case ButtonType::CREATE_CONFIRM_BOX:
                 {
-                    auto panel = createConfirmationPanel("This is a confirmation box.\nClick Confirm or Cancel to close it.");
-                    registry->emplace<ButtonScene>(panel.buttonConfirm, ButtonScene{ ButtonType::CONFIRM_BOX_CONFIRM });
-                    registry->emplace<ButtonScene>(panel.buttonCancel, ButtonScene{ ButtonType::CONFIRM_BOX_CANCEL });
-
-                    niketica::util::ui::clearFocusables(registry);
-                    niketica::util::ui::addFocusable(registry, panel.buttonConfirm);
-                    niketica::util::ui::addFocusable(registry, panel.buttonCancel);
-
+                    createConfirmationPanel("This is a confirmation box.\nClick Confirm or Cancel to close it.");
                     removeFocusOnMainButtons();
                 }
                     break;
@@ -332,10 +325,16 @@ namespace niketica::scene
         };
     }
     
-    UISamplesScene::ConfirmationPanel UISamplesScene::createConfirmationPanel(const std::string& text)
+    void UISamplesScene::createConfirmationPanel(const std::string& text)
     {
-        std::vector<std::string> lines = niketica::util::string::splitLines(text);
-        return createConfirmationPanel(lines);
+        niketica::factory::ui::ConfirmationPanelFactory factory = { registry, engineServices };
+        auto panel = factory.createConfirmationPanel(text);
+        registry->emplace<ButtonScene>(panel.buttonConfirm, ButtonScene{ ButtonType::CONFIRM_BOX_CONFIRM });
+        registry->emplace<ButtonScene>(panel.buttonCancel, ButtonScene{ ButtonType::CONFIRM_BOX_CANCEL });
+
+        niketica::util::ui::clearFocusables(registry);
+        niketica::util::ui::addFocusable(registry, panel.buttonConfirm);
+        niketica::util::ui::addFocusable(registry, panel.buttonCancel);
     }
 
     UISamplesScene::ConfirmationPanel UISamplesScene::createConfirmationPanel(const std::vector<std::string>& lines)

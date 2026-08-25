@@ -109,7 +109,7 @@ namespace niketica::scene
         InfoPanel createInfoPanel(const std::vector<std::string>& lines);
         void createTempPanel(const float ttl, const std::string& text);
         TempPanel createTempPanel(const float ttl, const std::vector<std::string>& lines);
-        ConfirmationPanel createConfirmationPanel(const std::string& text);
+        void createConfirmationPanel(const std::string& text);
         ConfirmationPanel createConfirmationPanel(const std::vector<std::string>& lines);
         void createCheckboxBox();
         void createRadioBox();
