@@ -227,102 +227,11 @@ namespace niketica::scene
         registry->emplace<ButtonScene>(panel.buttonOK, ButtonScene{ ButtonType::INFO_BOX_OK });
     }
     
-    UISamplesScene::InfoPanel UISamplesScene::createInfoPanel(const std::vector<std::string>& lines)
-    {
-        float fontSize = 20.0f;
-        float spacing = 20.0f;
-        float baseHeight = 100.0f;
-        float baseWidth = 40.0f;
-        float height = baseHeight + ((fontSize + spacing) * (float)lines.size());
-        float width = baseWidth;
-        for (const auto& line : lines)
-        {
-            auto lineWidth = baseWidth + (float)((float)line.length() * (fontSize * 0.6));
-            if (lineWidth > width)
-            {
-                width = lineWidth;
-            }
-        }
-
-        auto containerPanel = createContainerRect("204523", "09140A", glm::vec2{width, height}, 16.0f);
-        std::vector<entt::entity> textLabels;
-        for (const auto& line : lines)
-        {
-            const auto label = createTextLabel(line.c_str(), fontSize);
-            addChildToContainer(containerPanel, label);
-            textLabels.emplace_back(label);
-        }
-
-        auto okButton = createButton("OK", BUTTON_OK_SIZE, BUTTON_PADDING);
-        addChildToContainer(containerPanel, okButton);
-
-        auto& anchor = registry->get_or_emplace<niketica::component::UIAnchor>(containerPanel);
-        anchor.horizontal = niketica::component::AlignmentHorizontal::CENTER;
-        anchor.vertical = niketica::component::AlignmentVertical::CENTER;
-        anchor.offset.x = width * -0.5f;
-        anchor.offset.y = height * -0.5f;
-        registry->emplace<niketica::component::UIContainerLayoutDirty>(containerPanel);
-
-        niketica::util::ui::clearFocusables(registry);
-        niketica::util::ui::addFocusable(registry, okButton);
-
-        registry->emplace<ButtonScene>(okButton, ButtonScene{ ButtonType::INFO_BOX_OK });
-
-        return
-        {
-            containerPanel,
-            textLabels
-        };
-    }
-    
     void UISamplesScene::createTempPanel(const float ttl, const std::string& text)
     {
         niketica::factory::ui::TempPanelFactory factory = { registry, engineServices };
         auto panel = factory.createTempPanel(ttl, text);
         textTTL = panel.textLabels.back();
-    }
-
-    UISamplesScene::TempPanel UISamplesScene::createTempPanel(const float ttl, const std::vector<std::string>& lines)
-    {
-        float fontSize = 20.0f;
-        float spacing = 16.0f;
-        float baseHeight = 40.0f;
-        float baseWidth = 40.0f;
-        float height = baseHeight + ((fontSize + spacing) * (float)lines.size());
-        float width = baseWidth;
-        for (const auto& line : lines)
-        {
-            auto lineWidth = baseWidth + (float)((float)line.length() * (fontSize * 0.6));
-            if (lineWidth > width)
-            {
-                width = lineWidth;
-            }
-        }
-
-        auto containerPanel = createContainerRect("204523", "09140A", glm::vec2{width, height}, spacing);
-        std::vector<entt::entity> textLabels;
-        for (const auto& line : lines)
-        {
-            const auto label = createTextLabel(line.c_str(), fontSize);
-            addChildToContainer(containerPanel, label);
-            textLabels.emplace_back(label);
-        }
-
-        auto& anchor = registry->get_or_emplace<niketica::component::UIAnchor>(containerPanel);
-        anchor.horizontal = niketica::component::AlignmentHorizontal::CENTER;
-        anchor.vertical = niketica::component::AlignmentVertical::CENTER;
-        anchor.offset.x = width * -0.5f;
-        anchor.offset.y = height * -0.5f;
-        registry->emplace<niketica::component::UIContainerLayoutDirty>(containerPanel);
-
-        niketica::util::ui::clearFocusables(registry);
-        registry->emplace<niketica::component::TimeToLive>(containerPanel, niketica::component::TimeToLive{ ttl });
-
-        return
-        {
-            containerPanel,
-            textLabels
-        };
     }
     
     void UISamplesScene::createConfirmationPanel(const std::string& text)
@@ -335,60 +244,6 @@ namespace niketica::scene
         niketica::util::ui::clearFocusables(registry);
         niketica::util::ui::addFocusable(registry, panel.buttonConfirm);
         niketica::util::ui::addFocusable(registry, panel.buttonCancel);
-    }
-
-    UISamplesScene::ConfirmationPanel UISamplesScene::createConfirmationPanel(const std::vector<std::string>& lines)
-    {
-        float fontSize = 20.0f;
-        float spacing = 20.0f;
-        float marginButtonsValue = 20.0f;
-        float baseHeight = 100.0f;
-        float baseWidth = 40.0f;
-        float height = baseHeight + ((fontSize + spacing) * (float)lines.size());
-        float width = baseWidth;
-        for (const auto& line : lines)
-        {
-            auto lineWidth = baseWidth + (float)((float)line.length() * (fontSize * 0.6));
-            if (lineWidth > width)
-            {
-                width = lineWidth;
-            }
-        }
-
-        auto containerBox = createContainerRect("204523", "09140A", glm::vec2{width, height}, 16.0f);
-        auto buttonConfirmC = createButton("Confirm", BUTTON_CONFIRM_SIZE, BUTTON_PADDING);
-        auto buttonCancel = createButton("Cancel", BUTTON_CONFIRM_SIZE, BUTTON_PADDING);
-
-        auto buttonContainer = createContainer({ BUTTON_CONFIRM_SIZE.x * 2.0f, BUTTON_CONFIRM_SIZE.y }, spacing, niketica::component::UILayoutType::HORIZONTAL);
-        addChildToContainer(buttonContainer, buttonConfirmC);
-        addChildToContainer(buttonContainer, buttonCancel);
-        niketica::component::UIMargin marginButtons;
-        marginButtons.top = marginButtonsValue;
-        registry->emplace<niketica::component::UIMargin>(buttonContainer, marginButtons);
-        std::vector<entt::entity> textLabels;
-        for (const auto& line : lines)
-        {
-            const auto label = createTextLabel(line.c_str(), fontSize);
-            addChildToContainer(containerBox, label);
-            textLabels.emplace_back(label);
-        }
-        
-        addChildToContainer(containerBox, buttonContainer);
-
-        auto& anchor = registry->get_or_emplace<niketica::component::UIAnchor>(containerBox);
-        anchor.horizontal = niketica::component::AlignmentHorizontal::CENTER;
-        anchor.vertical = niketica::component::AlignmentVertical::CENTER;
-        anchor.offset.x = width * -0.5f;
-        anchor.offset.y = height * -0.5f;
-        registry->emplace<niketica::component::UIContainerLayoutDirty>(containerBox);
-
-        return
-        {
-            containerBox,
-            textLabels,
-            buttonConfirmC,
-            buttonCancel
-        };
     }
 
     void UISamplesScene::createCheckboxBox()
@@ -501,11 +356,6 @@ namespace niketica::scene
         padding.left = value;
         padding.right = value;
     }
-
-    glm::vec2 UISamplesScene::getSizeWithPadding(glm::vec2 size, float padding) const
-    {
-        return glm::vec2{ size.x + padding, size.y + padding };
-    }
     
     entt::entity UISamplesScene::getContainerRoot(entt::entity entity)
     {
@@ -528,13 +378,6 @@ namespace niketica::scene
             }
         }
         registry->destroy(entity);
-    }
-
-    entt::entity UISamplesScene::createContainer(const glm::vec2& size, const float spacing, const niketica::component::UILayoutType layout)
-    {
-        auto entity = registry->create();
-        makeContainer(entity, size, spacing, layout);
-        return entity;
     }
 
     void UISamplesScene::makeContainer(entt::entity entity, const glm::vec2& size, const float spacing, const niketica::component::UILayoutType layout)

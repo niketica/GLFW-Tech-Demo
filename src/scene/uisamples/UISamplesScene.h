@@ -81,8 +81,6 @@ namespace niketica::scene
         niketica::engine::EngineServices* engineServices;
 
         const glm::vec2 BUTTON_MAIN_SIZE = { 320.0f, 60.0f };
-        const glm::vec2 BUTTON_OK_SIZE = { 60.0f, 40.0f};
-        const glm::vec2 BUTTON_CONFIRM_SIZE = { 100.0f, 40.0f};
         const float BUTTON_PADDING = 20.0f;
         const float BUTTON_MAIN_OFFSET_X = 100.0f;
         const float BUTTON_MAIN_OFFSET_Y_START = -200.0f;
@@ -106,17 +104,13 @@ namespace niketica::scene
         entt::entity createMainButton(const char* text, ButtonType type);
 
         void createInfoPanel(const std::string& text);
-        InfoPanel createInfoPanel(const std::vector<std::string>& lines);
         void createTempPanel(const float ttl, const std::string& text);
-        TempPanel createTempPanel(const float ttl, const std::vector<std::string>& lines);
         void createConfirmationPanel(const std::string& text);
-        ConfirmationPanel createConfirmationPanel(const std::vector<std::string>& lines);
         void createCheckboxBox();
         void createRadioBox();
         void createDropdownBox();
         void createDragableBox();
 
-        entt::entity createContainer(const glm::vec2& size, const float spacing, const niketica::component::UILayoutType layout);
         void makeContainer(entt::entity, const glm::vec2& size, const float spacing, const niketica::component::UILayoutType layout);
 
         entt::entity createButton(const char* text, const glm::vec2& size, const float padding);
@@ -124,7 +118,6 @@ namespace niketica::scene
         entt::entity createContainerRect(const char* fillColor, const char* borderColor, const glm::vec2 size, float spacing = 0.0f);
         void addChildToContainer(entt::entity container, entt::entity child);
 
-        glm::vec2 getSizeWithPadding(glm::vec2 size, float padding) const;
         void setPadding(entt::entity entity, const float value);
 
         entt::entity getContainerRoot(entt::entity entity);
