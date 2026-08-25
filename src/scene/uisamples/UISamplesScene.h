@@ -16,6 +16,7 @@
 #include "systems/SystemContext.h"
 #include "engine/builder/userinterface/UITextLabelBuilder.h"
 #include "engine/builder/userinterface/UIRectangleBuilder.h"
+#include "engine/factory/userinterface/InfoPanelFactory.h"
 
 namespace niketica::scene
 {
@@ -105,7 +106,7 @@ namespace niketica::scene
         void createMainButtons();
         entt::entity createMainButton(const char* text, ButtonType type);
 
-        InfoPanel createInfoPanel(const std::string& text);
+        void createInfoPanel(const std::string& text);
         InfoPanel createInfoPanel(const std::vector<std::string>& lines);
         TempPanel createTempPanel(const float ttl, const std::string& text);
         TempPanel createTempPanel(const float ttl, const std::vector<std::string>& lines);

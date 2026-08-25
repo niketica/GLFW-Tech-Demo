@@ -109,6 +109,10 @@ add_library(engine
     src/engine/builder/userinterface/UIPanelBuilder.cpp
     src/engine/builder/userinterface/UIRectangleBuilder.cpp
 
+    # factories
+    src/engine/factory/userinterface/BasePanelFactory.cpp
+    src/engine/factory/userinterface/InfoPanelFactory.cpp
+
     # asset handling
     src/engine/adapter/asset/FileLoader.cpp
     src/engine/adapter/asset/IAssetLoader.cpp

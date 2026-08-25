@@ -228,10 +228,11 @@ namespace niketica::scene
         return button;
     }
     
-    UISamplesScene::InfoPanel UISamplesScene::createInfoPanel(const std::string& text)
+    void UISamplesScene::createInfoPanel(const std::string& text)
     {
-        std::vector<std::string> lines = niketica::util::string::splitLines(text);
-        return createInfoPanel(lines);
+        niketica::factory::ui::InfoPanelFactory factory = { registry, engineServices };
+        auto panel = factory.createInfoPanel(text);
+        registry->emplace<ButtonScene>(panel.buttonOK, ButtonScene{ ButtonType::INFO_BOX_OK });
     }
     
     UISamplesScene::InfoPanel UISamplesScene::createInfoPanel(const std::vector<std::string>& lines)
