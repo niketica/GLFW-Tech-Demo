@@ -14,9 +14,8 @@
 #include "engine/core/systems/ISystemContext.h"
 #include "engine/util/EngineUtils.h"
 #include "systems/SystemContext.h"
-#include "engine/builder/userinterface/UITextLabelBuilder.h"
-#include "engine/builder/userinterface/UIRectangleBuilder.h"
-#include "engine/factory/userinterface/InfoPanelFactory.h"
+#include "engine/builder/Builders.h"
+#include "engine/factory/Factories.h"
 
 namespace niketica::scene
 {
@@ -108,7 +107,7 @@ namespace niketica::scene
 
         void createInfoPanel(const std::string& text);
         InfoPanel createInfoPanel(const std::vector<std::string>& lines);
-        TempPanel createTempPanel(const float ttl, const std::string& text);
+        void createTempPanel(const float ttl, const std::string& text);
         TempPanel createTempPanel(const float ttl, const std::vector<std::string>& lines);
         ConfirmationPanel createConfirmationPanel(const std::string& text);
         ConfirmationPanel createConfirmationPanel(const std::vector<std::string>& lines);

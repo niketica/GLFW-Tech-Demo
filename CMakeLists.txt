@@ -112,6 +112,7 @@ add_library(engine
     # factories
     src/engine/factory/userinterface/BasePanelFactory.cpp
     src/engine/factory/userinterface/InfoPanelFactory.cpp
+    src/engine/factory/userinterface/TempPanelFactory.cpp
 
     # asset handling
     src/engine/adapter/asset/FileLoader.cpp

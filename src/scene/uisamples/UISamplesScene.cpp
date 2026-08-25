@@ -74,8 +74,7 @@ namespace niketica::scene
                     break;
                 case ButtonType::CREATE_TEMP_BOX:
                 {
-                    auto panel = createTempPanel(3.0f, "This is a temporary box and\nwill close automatically.\nTime to live: ");
-                    textTTL = panel.textLabels.back();
+                    createTempPanel(3.0f, "This is a temporary box and\nwill close automatically.\nTime to live: ");
                     removeFocusOnMainButtons();
                 }
                     break;
@@ -283,10 +282,11 @@ namespace niketica::scene
         };
     }
     
-    UISamplesScene::TempPanel UISamplesScene::createTempPanel(const float ttl, const std::string& text)
+    void UISamplesScene::createTempPanel(const float ttl, const std::string& text)
     {
-        std::vector<std::string> lines = niketica::util::string::splitLines(text);
-        return createTempPanel(ttl, lines);
+        niketica::factory::ui::TempPanelFactory factory = { registry, engineServices };
+        auto panel = factory.createTempPanel(ttl, text);
+        textTTL = panel.textLabels.back();
     }
 
     UISamplesScene::TempPanel UISamplesScene::createTempPanel(const float ttl, const std::vector<std::string>& lines)
