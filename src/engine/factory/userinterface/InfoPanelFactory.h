@@ -25,6 +25,7 @@ namespace niketica::factory::ui
         ~InfoPanelFactory() = default;
 
         InfoPanel createInfoPanel(const std::string& text);
+        InfoPanel createInfoPanel();
 
     private:
         const glm::vec2 BUTTON_OK_SIZE = { 60.0f, 40.0f};

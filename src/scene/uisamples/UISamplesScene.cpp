@@ -248,8 +248,48 @@ namespace niketica::scene
 
     void UISamplesScene::createCheckboxBox()
     {
-        // TODO implementation
-        std::cout << "Not yet implemented!" << std::endl;
+        niketica::factory::ui::InfoPanelFactory factory = { registry, engineServices };
+        auto panel = factory.createInfoPanel();
+        registry->emplace<ButtonScene>(panel.buttonOK, ButtonScene{ ButtonType::INFO_BOX_OK });
+
+        auto& rootChildren = registry->get<niketica::component::UIChildren>(panel.rootContainer).children;
+        rootChildren.clear();
+        addChildToContainer(panel.rootContainer, createCheckbox("Checkbox 1"));
+        addChildToContainer(panel.rootContainer, createCheckbox("Checkbox 2"));
+        addChildToContainer(panel.rootContainer, createCheckbox("Checkbox 3"));
+        addChildToContainer(panel.rootContainer, panel.buttonOK);
+
+        float panelWidth = 0.0f;
+        float panelHeight = 60.0f;
+        float spacing = 20.0f;
+
+        for (auto child : rootChildren)
+        {
+            if (registry->all_of<niketica::component::UISize>(child))
+            {
+                const auto& childUISize = registry->get<niketica::component::UISize>(child);
+                if (childUISize.width > panelWidth)
+                {
+                    panelWidth = childUISize.width;
+                }
+                panelHeight += childUISize.height;
+                panelHeight += spacing;
+            }
+            else
+            {
+                const auto& childLocal = registry->get<niketica::component::LocalTransform>(child);
+                if (childLocal.size.x > panelWidth)
+                {
+                    panelWidth = childLocal.size.x;
+                }
+                panelHeight += childLocal.size.y;
+                panelHeight += spacing;
+            }
+        }
+
+        auto& rootUISize = registry->get<niketica::component::UISize>(panel.rootContainer);
+        rootUISize.width = panelWidth;
+        rootUISize.height = panelHeight;
     }
 
     void UISamplesScene::createRadioBox()
@@ -331,9 +371,11 @@ namespace niketica::scene
         {
             registry->emplace<niketica::component::LocalTransform>(child);
         }
-
-        niketica::component::ParentTransform parentTransform = { container };
-        registry->emplace<niketica::component::ParentTransform>(child, parentTransform);
+        if (!registry->all_of<niketica::component::ParentTransform>(child))
+        {
+            niketica::component::ParentTransform parentTransform = { container };
+            registry->emplace<niketica::component::ParentTransform>(child, parentTransform);
+        }
 
         if (registry->any_of<niketica::component::UIChildren>(container))
         {
@@ -403,6 +445,38 @@ namespace niketica::scene
         registry->emplace<niketica::component::UISpacing>(entity, spacingCmpnt);
         registry->emplace<niketica::component::UISize>(entity, uiSize);
         registry->emplace<niketica::component::UIChildren>(entity);
+    }
+    
+    entt::entity UISamplesScene::createContainer
+    (
+        const glm::vec2& size,
+        const float spacing,
+        const niketica::component::UILayoutType layout
+    )
+    {
+        auto entity = registry->create();
+        makeContainer(entity, size, spacing, layout);
+        return entity;
+    }
+
+    entt::entity UISamplesScene::createCheckbox(const char* text)
+    {
+        const float checkboxSize = 40.0f;
+        auto checkbox = createContainerRect("FFFFFF", "000000", glm::vec2{checkboxSize, checkboxSize}, 16.0f);
+        const auto label = createTextLabel(text, 16.0f);
+
+        const float width = 200.0f;
+        const float height = checkboxSize;
+        
+        auto checkboxContainer = createContainer({ width, height }, 20.0f, niketica::component::UILayoutType::HORIZONTAL);
+        addChildToContainer(checkboxContainer, checkbox);
+        addChildToContainer(checkboxContainer, label);
+
+        niketica::component::LocalTransform transform;
+        transform.size = { width, height, 0.0f };
+        registry->emplace<niketica::component::LocalTransform>(checkboxContainer, transform);
+        
+        return checkboxContainer;
     }
     
 }

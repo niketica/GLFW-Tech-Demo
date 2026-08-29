@@ -7,6 +7,11 @@ namespace niketica::factory::ui
         std::vector<std::string> lines = niketica::util::string::splitLines(text);
         return createInfoPanel(lines);
     }
+
+    InfoPanelFactory::InfoPanel InfoPanelFactory::createInfoPanel()
+    {
+        return createInfoPanel(std::vector<std::string>{});
+    }
     
     InfoPanelFactory::InfoPanel InfoPanelFactory::createInfoPanel(const std::vector<std::string>& lines)
     {

@@ -125,6 +125,9 @@ namespace niketica::scene
 
         void setFocusOnMainButtons();
         void removeFocusOnMainButtons();
+        
+        entt::entity createContainer(const glm::vec2& size, const float spacing, const niketica::component::UILayoutType layout);
+        entt::entity createCheckbox(const char* text);
 
     };
 }
